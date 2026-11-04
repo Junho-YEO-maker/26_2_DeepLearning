@@ -3,6 +3,7 @@
 불량 샘플 K장 시나리오에서 생성 데이터(copy-paste / SD LoRA inpaint)가
 실제 불량 몇 장을 대신하는지 측정하는 과제. 데이터는 VisA pcb1~4.
 
+## 폴더 구조
 ```
 26_2_DeepLearning/
 ├─ Dataset/                 # 두 팀이 공유하는 모든 데이터
