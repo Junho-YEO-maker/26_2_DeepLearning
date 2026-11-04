@@ -1,0 +1,6 @@
+# 공통 (팀별 추가 패키지는 각 팀 폴더 README에 기록)
+numpy
+pandas
+pillow
+pyyaml
+tqdm

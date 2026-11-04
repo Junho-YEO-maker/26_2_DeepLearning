@@ -1,0 +1,18 @@
+# 원본·생성 이미지는 Google Drive에만 둔다 (git 제외)
+Dataset/visa/raw/*
+!Dataset/visa/raw/.gitkeep
+Dataset/generated/**/images/
+Dataset/generated/**/masks/
+
+# 분할표·manifest·결과 csv는 git에 포함
+
+# 파이썬/노트북
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+wandb/
+runs/
