@@ -11,7 +11,7 @@ AUG_NAMESPACE = 7017
 METHOD_IDS = {'copypaste': 1, 'ctransgan': 2, 'sd_lora': 3, 'classic': 4}
 PCB_IDS = {'pcb1': 1, 'pcb2': 2, 'pcb3': 3}
 SPLIT_SEEDS = range(5)
-K_VALUES = (1, 2, 4, 8, 16, 24)
+K_VALUES = (1, 2, 4, 8, 10, 16, 24)
 
 
 def _entropy(method, pcb, k, split_seed):

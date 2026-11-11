@@ -67,7 +67,8 @@ class KShot:
         self.data_root = Path(data_root) if data_root else ROOT / RAW_PREFIX
         banned = read_rows(self.splits / 'test.csv') + read_rows(self.splits / 'val_normal.csv')
         self.banned = {r['image'] for r in banned} | {r['image_sha256'] for r in banned}
-        pool = {r['image'] for r in read_rows(self.splits / 'pool.csv')}
+        pool_rows = read_rows(self.splits / 'pool.csv')
+        pool = {r['image'] for r in pool_rows}
         self.k_rows = read_rows(self.splits / f'train_K{k}_seed{seed}.csv')
         assert all(r['image'] in pool for r in self.k_rows), 'K장이 pool 밖에 있음'
         self.normal_rows = read_rows(self.splits / 'train_normal.csv')
@@ -75,7 +76,8 @@ class KShot:
             self._guard(r)
         for pcb in PCBS:
             for t in TYPES:
-                assert len(self.defects(pcb, t)) == k, f'{pcb} {t}: K={k}장이 아님'
+                n_pool = sum(r['category'] == pcb and r['defect_type'] == t for r in pool_rows)
+                assert len(self.defects(pcb, t)) == min(k, n_pool), f'{pcb} {t}: K={k}장이 아님'   # K=10이면 pcb2 bent는 8장
 
     def _guard(self, row):
         assert row['image'] not in self.banned and row['image_sha256'] not in self.banned, \

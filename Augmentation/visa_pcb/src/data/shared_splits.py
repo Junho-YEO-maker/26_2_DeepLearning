@@ -53,9 +53,11 @@ class SharedSplits:
         assert pcb in PCBS
         rows = [r for r in read_rows(self.splits / f'train_K{k}_seed{seed}.csv') if r['category'] == pcb]
         assert all(r['image'] in self.pool and r['label'] == '1' for r in rows)
+        pool = read_rows(self.splits / 'pool.csv')
         for t in TYPES:
             n = sum(r['defect_type'] == t for r in rows)
-            assert n == k, f'{pcb} {t}: {n}장 ≠ K={k}'
+            n_pool = sum(r['category'] == pcb and r['defect_type'] == t for r in pool)
+            assert n == min(k, n_pool), f'{pcb} {t}: {n}장 ≠ K={k}'   # K=10이면 pcb2 bent는 풀 8장 전부
         return self._guard(rows)
 
     def normal_rows(self, pcb):
