@@ -1,6 +1,7 @@
 """results.csv → K 곡선 요약, PatchCore 대비 짝지은 비교, 교차 K / 수확체감 K (README 6.2–6.3절).
 
   python -m AnomalyDetection.ad.analyze --res 512 [--target 0.10]
+  python -m AnomalyDetection.ad.analyze --res 512 --per-type      # 결함 종류별 (results_per_type.csv)
 
 - 짝: 같은 (PCB, seed). PatchCore·kNN(K=0)은 seed와 무관하므로 모든 seed에 같은 값을 쓴다.
 - 유의미: 짝지은 부트스트랩 95% CI가 0을 포함하지 않고(개선 방향), 평균 개선이 2%p 이상.
@@ -38,12 +39,29 @@ def main():
     ap.add_argument('--res', type=int, required=True)
     ap.add_argument('--metric', default='fnr_at_fpr1')
     ap.add_argument('--target', type=float)
-    ap.add_argument('--results', default=str(RESULTS / 'results.csv'))
+    ap.add_argument('--results')
+    ap.add_argument('--per-type', action='store_true', help='결함 종류별로 따로 분석 (results_per_type.csv)')
+    ap.add_argument('--aug', help='이 증강만 분석 (예: none)')
     a = ap.parse_args()
 
-    df = pd.read_csv(a.results)
+    if a.per_type:
+        df = pd.read_csv(a.results or RESULTS / 'results_per_type.csv')
+        df = df[(df.res == a.res) & (df.regime == 'main')]
+        df = df.drop_duplicates(['model', 'category', 'K', 'seed', 'aug', 'res', 'defect_type'], keep='last')
+        for t, g in df.groupby('defect_type'):
+            n = g[g.model == 'patchcore'].set_index('category')['n_test'].to_dict()
+            print(f'\n################ {t}  (시험 불량 수: {n}) ################')
+            analyze(g.drop(columns='defect_type'), a)
+        return
+    df = pd.read_csv(a.results or RESULTS / 'results.csv')
     df = df[(df.res == a.res) & (df.regime == 'main')]
     df = df.drop_duplicates(['model', 'category', 'K', 'seed', 'aug', 'res'], keep='last')
+    analyze(df, a)
+
+
+def analyze(df, a):
+    if a.aug:
+        df = df[(df.aug == a.aug) | (df.model == 'patchcore')]
     pc = df[df.model == 'patchcore'].set_index('category')[a.metric]
     seeds = sorted(df[df.K > 0].seed.unique()) or [0]
     if pc.empty:
