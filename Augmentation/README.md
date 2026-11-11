@@ -83,3 +83,16 @@ python -m tests.smoke_seeds
 [1~3단계 실행 코드와 실측 결과](visa_pcb/README.md) · [1~6단계 전체 계획](visa_pcb/PLAN.md)
 
 이 실험은 자체 분할(PCB당 gen_train 불량 33장, seed 7017)을 쓴다. 이 분할은 공유 시험셋과 겹치므로 **여기서 만든 결과물(`outputs/`)은 K장 실험에 넘기지 않는다.** 생성 방법끼리의 품질 비교에만 쓴다.
+
+
+## B팀 전달용 K1_seed0 결과
+
+Google Drive의 `내 드라이브/DL_TP/runs/shared_30e32db/Dataset/generated/` 아래에 두 결과가 있다.
+
+| 방법 | Drive 하위 폴더 | GitHub manifest |
+|---|---|---|
+| Copy-paste | `copypaste/K1_seed0/` | [manifest.csv](../Dataset/generated/copypaste/K1_seed0/manifest.csv) |
+| cTransGAN | `ctransgan/K1_seed0/` | [manifest.csv](../Dataset/generated/ctransgan/K1_seed0/manifest.csv) |
+
+각 폴더에 생성 이미지와 마스크 480쌍이 있다. Drive 폴더 소유자에게 두 폴더의 뷰어 권한을 요청한다.
+학습할 때 각 폴더의 `images/`, `masks/`를 레포의 `Dataset/generated/{방법}/K1_seed0/` 아래에 두면 manifest의 상대 경로와 일치한다.
