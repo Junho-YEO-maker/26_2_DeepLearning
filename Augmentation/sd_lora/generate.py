@@ -21,6 +21,8 @@ NEGATIVE = 'blurry, cartoon, drawing, text, watermark'
 
 
 def main(a):
+    from sd_lora._compat import disable_old_torchao
+    disable_old_torchao()
     from diffusers import StableDiffusionInpaintPipeline
     from PIL import Image
 

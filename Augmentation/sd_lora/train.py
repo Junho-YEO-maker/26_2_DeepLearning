@@ -52,6 +52,8 @@ def make_sample(data, rng, res, mask_dilate):
 def train_one(ks, pcb, args, out_dir):
     from diffusers import AutoencoderKL, DDPMScheduler, UNet2DConditionModel, StableDiffusionInpaintPipeline
     from diffusers.utils import convert_state_dict_to_diffusers
+    from sd_lora._compat import disable_old_torchao
+    disable_old_torchao()
     from peft import LoraConfig
     from peft.utils import get_peft_model_state_dict
     from transformers import CLIPTextModel, CLIPTokenizer
