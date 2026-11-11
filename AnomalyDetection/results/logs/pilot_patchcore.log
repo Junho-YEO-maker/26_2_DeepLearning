@@ -1,0 +1,8 @@
+device=mps
+patchcore  pcb1 K=0 s=0 none      res=256  FNR@1%=0.300 macro=0.181 AUROC=0.9654  (355s)
+patchcore  pcb2 K=0 s=0 none      res=256  FNR@1%=0.452 macro=0.350 AUROC=0.9333  (364s)
+patchcore  pcb3 K=0 s=0 none      res=256  FNR@1%=0.517 macro=0.450 AUROC=0.9641  (358s)
+device=mps
+patchcore  pcb1 K=0 s=0 none      res=512  FNR@1%=0.067 macro=0.042 AUROC=0.9971  (978s)
+patchcore  pcb2 K=0 s=0 none      res=512  FNR@1%=0.210 macro=0.252 AUROC=0.9648  (994s)
+patchcore  pcb3 K=0 s=0 none      res=512  FNR@1%=0.183 macro=0.220 AUROC=0.9883  (1031s)

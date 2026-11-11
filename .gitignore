@@ -19,3 +19,6 @@ runs/
 
 # 로컬에 받아 둔 VisA 원본 사본
 Dataset/visa/VisA_official/
+
+# AD 팀 이미지·임베딩 캐시
+Dataset/cache/

@@ -1,0 +1,36 @@
+# AnomalyDetection 팀 공통 설정 (README 12절). 모델·K·seed·증강·해상도는 명령줄 인자로 넘긴다.
+# 실제 값은 코드 상수와 같다. 바꾸면 코드도 같이 바꾸고 results.csv의 git_commit으로 추적한다.
+paths:
+  splits: Dataset/visa/splits
+  raw: Dataset/visa/raw          # --data-root 로 바꿀 수 있음
+  generated: Dataset/generated
+  cache: Dataset/cache           # git 제외
+  results: AnomalyDetection/results
+features:
+  backbone: wide_resnet50_2 (ImageNet), layer2+layer3, 1024 dim   # ad/features.py
+patchcore:
+  coreset_ratio: 0.01
+  max_patches: 400000
+knn_mlp:
+  knn: 5
+  mlp: {hidden: 256, dropout: 0.2, steps: 600, batch: 64, lr: 1.0e-3, balanced_batch: true}
+devnet:
+  head: {hidden: 256, steps: 600, batch: 64, lr: 1.0e-3}
+  deviation_loss: {ref: N(0,1), n_ref: 5000, margin: 5.0}
+classifier:
+  backbone: resnet18 (ImageNet), full fine-tune
+  steps: 400
+  batch: 16
+  lr: 1.0e-4
+classic:   # ad/augment.py
+  rotation_deg: 3
+  translate: 0.02
+  brightness: 0.10
+  contrast: 0.10
+  blur: {p: 0.2, sigma_max: 1.0}
+  flips: none
+  copies: {defect: 10, normal: 1}   # 임베딩 모델용 오프라인 증강본 수
+eval:
+  fpr: 0.01
+  bootstrap: 10000
+  min_gain: 0.02
