@@ -34,3 +34,20 @@ python -m tests.smoke_stage3
 - [VisA 데이터 및 클래스 매핑](https://github.com/amazon-science/spot-diff). 데이터 CC BY 4.0, 클래스 매핑 Apache-2.0. 라이선스는 `upstream/`에 있습니다.
 - [Conditional TransGAN 논문](https://doi.org/10.1155/2023/2024237), Wang et al., 2023. [저자 저장소](https://github.com/long-deep/pcb-detect)는 조사에 참고했습니다. 논문 기반 독립 구현을 제공합니다.
 - [SeaS](https://openaccess.thecvf.com/content/ICCV2025/papers/Dai_SeaS_Few-shot_Industrial_Anomaly_Image_Generation_with_Separation_and_Sharing_ICCV_2025_paper.pdf)의 고정 학습/평가 분리에서 착안해 VisA 다중 라벨 층화와 정상 80/20 분할을 적용했습니다.
+
+## 이상탐지팀 공용 분할로 copy-paste 실행
+
+저장소 루트의 `Dataset/visa/splits` 아래 공용 `test.csv`, `val_normal.csv`,
+`train_normal.csv`, `train_K{k}_seed{s}.csv`를 사용합니다. `defect_type`은 K장
+목록에 필요합니다. PCB1–3에서 종류당 K장을 검증합니다.
+
+```bash
+cd Augmentation/visa_pcb
+python -m src.generate.team_copy_paste --k 2 --seed 0 --per-class 40
+```
+
+생성물은 `Dataset/generated/copypaste/K2_seed0`에 저장합니다. manifest의 경로는
+저장소 루트 기준이며 `category, defect_type, base_normal_image`를 포함합니다.
+원본 전체 해상도와 마스크 클래스 ID 1–4를 유지합니다. 공유 시험·검증 정상은
+입력으로 사용하지 않습니다. 시나리오의 seed 0은 공용 CSV 선택에 사용하고,
+생성 난수는 기본 seed 7017과 해당 시나리오 seed를 조합합니다.
