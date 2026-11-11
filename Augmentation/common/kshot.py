@@ -5,7 +5,7 @@
   - 정상 바탕: train_normal.csv 의 해당 PCB 정상만 (test, val_normal 은 열 수 없음)
   - 결함 위치·모양: K장 중 하나의 결함 마스크를 바탕 기판의 같은 부품 자리로 옮긴다
     (기판 정렬: 평행이동 + PCB1의 180° 회전, 그다음 종류별 jitter: bent·missing 5px, melt·scratch 30px).
-    copy-paste(visa_pcb/src/generate/k_copypaste.py)의 함수를 그대로 쓴다. 방법끼리는 "마스크 안을 무엇으로 채우나"만 다르다.
+    copy-paste(copypaste/generate.py)도 이 모듈의 함수를 쓴다. 방법끼리는 "마스크 안을 무엇으로 채우나"만 다르다.
   - 출력: 원본 해상도 JPEG(q75, 4:2:0, 원본과 같음) + 종류 ID 마스크 PNG + manifest.csv
 
 Augmentation 폴더에서 `python -m {방법}.{스크립트}` 로 실행하면 `from common.kshot import ...` 가 된다.
@@ -20,6 +20,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 LANCZOS = getattr(Image, "Resampling", Image).LANCZOS   # Pillow 9 미만(AnomalyDiffusion 환경)도 지원
+BILINEAR = getattr(Image, "Resampling", Image).BILINEAR
 
 ROOT = Path(__file__).resolve().parents[2]          # 저장소 루트
 SPLITS = ROOT / 'Dataset/visa/splits'
@@ -109,27 +110,60 @@ class KShot:
 
 # ---------- 마스크·크롭 ----------
 
-_VISA_PCB = Path(__file__).resolve().parents[1] / 'visa_pcb'
+# ---------- 기판 정렬 (copy-paste와 같은 규칙. 원래 AD 팀 copy-paste 생성기 2c713be) ----------
+
+ALIGN_SCALE = 4                     # 정렬은 1/4 크기에서 계산
+JITTER_BY_TYPE = {'bent': 5, 'missing': 5, 'melt': 30, 'scratch': 30}   # 부품 위치에 묶인 결함은 작게
 
 
-def _copypaste():
-    """copy-paste 구현(visa_pcb/src/generate/k_copypaste.py). 기판 정렬과 종류별 jitter를 여기서 그대로 가져와
-    모든 방법이 결함 위치를 같은 규칙으로 정하게 한다(규칙을 고치면 거기 한 곳만 고친다)."""
-    import importlib
-    import sys
-    if str(_VISA_PCB) not in sys.path:
-        sys.path.insert(0, str(_VISA_PCB))
-    return importlib.import_module('src.generate.k_copypaste')
+def _small(img):
+    return np.asarray(img.resize((img.width // ALIGN_SCALE, img.height // ALIGN_SCALE),
+                                 BILINEAR), np.float32)
 
 
-def board_transform(donor_img, base_img):
-    """donor 좌표 → base 좌표: dict(rot180, dx, dy, score). VisA PCB1에는 기판이 180° 돌아간 사진이 섞여 있다."""
-    return _copypaste().board_transform(donor_img, base_img)
+def board_mask(img):
+    """파란 기판 영역(B − R > 30). 배경(회색 카펫, 초록 천)과 흰 부품은 빠진다."""
+    s = _small(img)
+    return ((s[..., 2] - s[..., 0]) > 30).astype(np.float32)
+
+
+def _phase_corr(a, b):
+    """a를 b에 맞추는 평행이동(dy, dx)."""
+    A, B = np.fft.fft2(a - a.mean()), np.fft.fft2(b - b.mean())
+    R = A.conj() * B
+    r = np.fft.ifft2(R / (np.abs(R) + 1e-9)).real
+    y, x = np.unravel_index(r.argmax(), r.shape)
+    y = y - r.shape[0] if y > r.shape[0] // 2 else y
+    x = x - r.shape[1] if x > r.shape[1] // 2 else x
+    return int(y), int(x)
+
+
+def board_transform(donor, target):
+    """donor 좌표 → target 좌표 변환. VisA PCB1은 기판이 180° 돌아간 사진이 섞여 있어서 0°/180° 둘 다 본다.
+    평행이동은 기판 마스크로 구하고, 기판 마스크는 180°에 거의 대칭이므로 회전은 기판 안 회색조 패턴(핀·글자)의
+    정규화 상관(NCC)으로 고른다. 돌아가는 값: dict(rot180, dy, dx, score) — 원본 해상도 픽셀 단위."""
+    sa, sb = _small(donor), _small(target)
+    ma, mb = ((sa[..., 2] - sa[..., 0]) > 30), ((sb[..., 2] - sb[..., 0]) > 30)
+    ga, gb = sa.mean(2), sb.mean(2)
+    best = None
+    for rot in (False, True):
+        m, g = (ma[::-1, ::-1], ga[::-1, ::-1]) if rot else (ma, ga)
+        dy, dx = _phase_corr(m.astype(np.float32), mb.astype(np.float32))
+        moved = np.roll(g, (dy, dx), (0, 1))
+        region = mb & np.roll(m, (dy, dx), (0, 1))
+        if region.sum() < 50:
+            score = -1.0
+        else:
+            u, v = moved[region], gb[region]
+            score = float(((u - u.mean()) * (v - v.mean())).mean() / (u.std() * v.std() + 1e-6))
+        if best is None or score > best['score']:
+            best = dict(rot180=rot, dy=dy * ALIGN_SCALE, dx=dx * ALIGN_SCALE, score=score)
+    return best
 
 
 def jitter_for(defect_type):
-    """종류별 위치 흔들림 (copy-paste와 같음: bent·missing 5px, melt·scratch 30px)."""
-    return int(_copypaste().JITTER_BY_TYPE[defect_type])
+    """종류별 위치 흔들림: bent·missing 5px, melt·scratch 30px."""
+    return int(JITTER_BY_TYPE[defect_type])
 
 
 def shift_mask(m, dx, dy):
