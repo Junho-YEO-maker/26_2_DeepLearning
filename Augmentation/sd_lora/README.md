@@ -3,7 +3,12 @@
 Stable Diffusion 1.5 인페인팅 모델에 **K장만으로** LoRA를 학습해서 결함을 그려 넣는다.
 조건 (K, seed)마다 PCB별 LoRA 1개(결함 4종류는 프롬프트로 구분), 9개 조건이면 LoRA 27개.
 
-## 실행 (A100 서버)
+## 실행 (Colab, 권장)
+[colab/sd_lora_kshot.ipynb](../../colab/sd_lora_kshot.ipynb)를 Colab에서 열고 GPU 런타임(T4 또는 A100) → **모두 실행**.
+LoRA와 결과는 Drive `MyDrive/DL_TP/runs/sd_lora/`에 저장되고, 세션이 끊기면 다시 모두 실행해서 이어 간다.
+T4에서는 fp16 + gradient checkpointing으로 자동 전환된다(A100은 bf16).
+
+## 실행 (GPU 서버)
 ```bash
 cd Augmentation
 pip install -r sd_lora/requirements.txt          # torch는 서버 CUDA에 맞게 먼저

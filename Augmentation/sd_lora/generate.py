@@ -25,12 +25,12 @@ def main(a):
     from PIL import Image
 
     ks = KShot(a.k, a.seed, a.data_root)
-    writer = ManifestWriter('sd_lora', a.k, a.seed, force=a.force)
+    writer = ManifestWriter('sd_lora', a.k, a.seed, out_root=a.out_root, force=a.force)
     pipe = StableDiffusionInpaintPipeline.from_pretrained(a.base_model, torch_dtype=torch.float16,
                                                           safety_checker=None).to('cuda')
     pipe.set_progress_bar_config(disable=True)
     for pcb in a.pcb:
-        lora = HERE / 'runs' / f'K{a.k}_seed{a.seed}' / pcb
+        lora = Path(a.runs_dir) / f'K{a.k}_seed{a.seed}' / pcb
         assert (lora / 'pytorch_lora_weights.safetensors').exists(), f'LoRA 없음: {lora} (train 먼저)'
         pipe.unload_lora_weights()
         pipe.load_lora_weights(lora)
@@ -81,6 +81,8 @@ def parser():
     p.add_argument('--feather', type=int, default=3)
     p.add_argument('--base-model', default=BASE_MODEL)
     p.add_argument('--data-root')
+    p.add_argument('--runs-dir', default=str(HERE / 'runs'), help='train.py와 같은 LoRA 위치')
+    p.add_argument('--out-root', help='기본: <저장소>/Dataset/generated/sd_lora')
     p.add_argument('--force', action='store_true')
     return p
 

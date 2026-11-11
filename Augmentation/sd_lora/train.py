@@ -65,17 +65,26 @@ def train_one(ks, pcb, args, out_dir):
             image, ids = ks.load(row)
             data.append((image, ids, t))
 
+    # A100 등(compute capability ≥ 8)은 bf16, Colab T4는 fp16 + GradScaler + gradient checkpointing.
+    # 고정 가중치는 이 dtype으로, 학습하는 LoRA 가중치만 fp32로 둔다.
+    dt = torch.bfloat16 if torch.cuda.get_device_capability()[0] >= 8 else torch.float16
     tok = CLIPTokenizer.from_pretrained(args.base_model, subfolder='tokenizer')
-    te = CLIPTextModel.from_pretrained(args.base_model, subfolder='text_encoder').to(dev).eval()
-    vae = AutoencoderKL.from_pretrained(args.base_model, subfolder='vae').to(dev).eval()
-    unet = UNet2DConditionModel.from_pretrained(args.base_model, subfolder='unet').to(dev)
+    te = CLIPTextModel.from_pretrained(args.base_model, subfolder='text_encoder').to(dev, dtype=dt).eval()
+    vae = AutoencoderKL.from_pretrained(args.base_model, subfolder='vae').to(dev, dtype=dt).eval()
+    unet = UNet2DConditionModel.from_pretrained(args.base_model, subfolder='unet').to(dev, dtype=dt)
     sched = DDPMScheduler.from_pretrained(args.base_model, subfolder='scheduler')
     for m in (te, vae, unet):
         m.requires_grad_(False)
     unet.add_adapter(LoraConfig(r=args.rank, lora_alpha=args.rank, init_lora_weights='gaussian',
                                 target_modules=['to_q', 'to_k', 'to_v', 'to_out.0']))
     params = [p for p in unet.parameters() if p.requires_grad]
+    for p in params:
+        p.data = p.data.float()
+    if dt == torch.float16 or args.grad_ckpt:
+        unet.enable_gradient_checkpointing()
+    scaler = torch.amp.GradScaler('cuda', enabled=dt == torch.float16)
     opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=1e-2)
+    print(f'  {pcb}: {torch.cuda.get_device_name()} dtype={dt} 학습 이미지 {len(data)}장', flush=True)
     with torch.no_grad():
         ids = tok([PROMPT[t] for t in TYPES], padding='max_length', max_length=tok.model_max_length,
                   truncation=True, return_tensors='pt').input_ids.to(dev)
@@ -86,10 +95,10 @@ def train_one(ks, pcb, args, out_dir):
     start, losses = time.time(), []
     for step in range(args.steps):
         batch = [make_sample(data, rng, args.res, args.mask_dilate) for _ in range(args.batch)]
-        img = torch.stack([b[0] for b in batch]).to(dev)
-        msk = torch.stack([b[1] for b in batch]).to(dev)
+        img = torch.stack([b[0] for b in batch]).to(dev, dtype=dt)
+        msk = torch.stack([b[1] for b in batch]).to(dev, dtype=dt)
         cond = torch.stack([emb[prompt_to_type[b[2]]] for b in batch])
-        with torch.no_grad(), torch.autocast('cuda', dtype=torch.bfloat16):
+        with torch.no_grad():
             sf = vae.config.scaling_factor
             lat = vae.encode(img).latent_dist.sample() * sf
             masked = vae.encode(img * (msk < 0.5)).latent_dist.sample() * sf
@@ -97,14 +106,16 @@ def train_one(ks, pcb, args, out_dir):
         noise = torch.randn_like(lat)
         ts = torch.randint(0, sched.config.num_train_timesteps, (lat.shape[0],), device=dev)
         noisy = sched.add_noise(lat, noise, ts)
-        with torch.autocast('cuda', dtype=torch.bfloat16):
+        with torch.autocast('cuda', dtype=dt):
             pred = unet(torch.cat([noisy, small, masked], 1), ts, cond).sample
         target = noise if sched.config.prediction_type == 'epsilon' else sched.get_velocity(lat, noise, ts)
         loss = F.mse_loss(pred.float(), target.float())
         opt.zero_grad(set_to_none=True)
-        loss.backward()
+        scaler.scale(loss).backward()
+        scaler.unscale_(opt)
         torch.nn.utils.clip_grad_norm_(params, 1.0)
-        opt.step()
+        scaler.step(opt)
+        scaler.update()
         losses.append(loss.item())
         if (step + 1) % 100 == 0 or step == 0:
             print(f'  {pcb} step {step + 1}/{args.steps} loss {np.mean(losses[-100:]):.4f}', flush=True)
@@ -114,7 +125,7 @@ def train_one(ks, pcb, args, out_dir):
     StableDiffusionInpaintPipeline.save_lora_weights(out_dir, unet_lora_layers=lora, safe_serialization=True)
     info = dict(pcb=pcb, k=ks.k, seed=ks.seed, base_model=args.base_model, steps=args.steps, batch=args.batch,
                 lr=args.lr, rank=args.rank, res=args.res, mask_dilate=args.mask_dilate,
-                n_train_images=len(data), sources=[r['image'] for t in TYPES for r in ks.defects(pcb, t)],
+                n_train_images=len(data), gpu=torch.cuda.get_device_name(), dtype=str(dt), sources=[r['image'] for t in TYPES for r in ks.defects(pcb, t)],
                 final_loss=float(np.mean(losses[-100:])), minutes=(time.time() - start) / 60)
     (out_dir / 'train.json').write_text(json.dumps(info, indent=2, ensure_ascii=False))
     print(f'  저장: {out_dir}  ({info["minutes"]:.1f}분)', flush=True)
@@ -135,6 +146,8 @@ def parser():
     p.add_argument('--mask-dilate', type=int, default=8, help='결함 마스크를 몇 px 넓혀 인페인팅할지')
     p.add_argument('--base-model', default=BASE_MODEL)
     p.add_argument('--data-root', help='원본 pcb 폴더들의 부모 (기본: <저장소>/Dataset/visa/raw)')
+    p.add_argument('--grad-ckpt', action='store_true', help='gradient checkpointing (T4에서는 자동으로 켜짐)')
+    p.add_argument('--runs-dir', default=str(HERE / 'runs'), help='LoRA 저장 위치 (Colab에서는 Drive로)')
     p.add_argument('--force', action='store_true')
     return p
 
@@ -144,7 +157,7 @@ if __name__ == '__main__':
     assert torch.cuda.is_available(), 'GPU가 필요합니다'
     ks = KShot(a.k, a.seed, a.data_root)
     for pcb in a.pcb:
-        out = HERE / 'runs' / f'K{a.k}_seed{a.seed}' / pcb
+        out = Path(a.runs_dir) / f'K{a.k}_seed{a.seed}' / pcb
         if (out / 'pytorch_lora_weights.safetensors').exists() and not a.force:
             print(f'[건너뜀] {out}')
             continue
