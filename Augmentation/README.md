@@ -28,3 +28,9 @@ Dataset/generated/{방법}/K{k}_seed{s}/
 ## 실행 환경
 - Colab T4 기준 SD 1.5, 512px, fp16. SDXL 은 메모리 부족
 - 추가 패키지는 여기에 기록: 
+
+## VisA PCB A팀 생성 모델 비교
+
+[1~3단계 실행 코드와 실측 결과](visa_pcb/README.md) · [1~6단계 전체 계획](visa_pcb/PLAN.md)
+
+이 실험은 PCB당 고정 gen_train 불량 33장, seed 7017을 사용합니다. 위 K장 실험에 전달하려면 해당 K 목록과 시험셋을 적용해 소스 검증 및 생성기 실행을 반복합니다.

@@ -1,0 +1,521 @@
+{
+  "seed": 7017,
+  "normal_train_fraction": 0.8,
+  "pcb": {
+    "pcb1": {
+      "source_columns": [
+        "image",
+        "label",
+        "mask"
+      ],
+      "counts": {
+        "anomaly/gen_train": 33,
+        "anomaly/heldout": 67,
+        "normal/gen_train": 803,
+        "normal/heldout": 201
+      },
+      "dimensions": {
+        "1404x1070": 1104
+      },
+      "mask_modes": {
+        "L": 100
+      },
+      "mask_values_image_occurrences": {
+        "0": 100,
+        "1": 15,
+        "2": 54,
+        "3": 21,
+        "4": 20
+      },
+      "multilabel_images": 9,
+      "strata": [
+        {
+          "defect_ids": "1",
+          "total": 14,
+          "gen_train": 5,
+          "heldout": 9
+        },
+        {
+          "defect_ids": "1|2",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2",
+          "total": 46,
+          "gen_train": 15,
+          "heldout": 31
+        },
+        {
+          "defect_ids": "2|3",
+          "total": 5,
+          "gen_train": 2,
+          "heldout": 3
+        },
+        {
+          "defect_ids": "2|3|4",
+          "total": 1,
+          "gen_train": 1,
+          "heldout": 0
+        },
+        {
+          "defect_ids": "2|4",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "3",
+          "total": 14,
+          "gen_train": 4,
+          "heldout": 10
+        },
+        {
+          "defect_ids": "3|4",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "4",
+          "total": 17,
+          "gen_train": 6,
+          "heldout": 11
+        }
+      ],
+      "class_counts": {
+        "Bent": {
+          "gen_train": 5,
+          "heldout": 10
+        },
+        "Melt": {
+          "heldout": 36,
+          "gen_train": 18
+        },
+        "Scratch": {
+          "gen_train": 7,
+          "heldout": 14
+        },
+        "Missing": {
+          "heldout": 13,
+          "gen_train": 7
+        }
+      }
+    },
+    "pcb2": {
+      "source_columns": [
+        "image",
+        "label",
+        "mask"
+      ],
+      "counts": {
+        "anomaly/gen_train": 33,
+        "anomaly/heldout": 67,
+        "normal/gen_train": 800,
+        "normal/heldout": 201
+      },
+      "dimensions": {
+        "1404x1070": 1101
+      },
+      "mask_modes": {
+        "L": 100
+      },
+      "mask_values_image_occurrences": {
+        "0": 100,
+        "1": 15,
+        "2": 55,
+        "3": 20,
+        "4": 19
+      },
+      "multilabel_images": 9,
+      "strata": [
+        {
+          "defect_ids": "1",
+          "total": 12,
+          "gen_train": 4,
+          "heldout": 8
+        },
+        {
+          "defect_ids": "1|2",
+          "total": 3,
+          "gen_train": 1,
+          "heldout": 2
+        },
+        {
+          "defect_ids": "2",
+          "total": 48,
+          "gen_train": 16,
+          "heldout": 32
+        },
+        {
+          "defect_ids": "2|3",
+          "total": 4,
+          "gen_train": 1,
+          "heldout": 3
+        },
+        {
+          "defect_ids": "3",
+          "total": 14,
+          "gen_train": 5,
+          "heldout": 9
+        },
+        {
+          "defect_ids": "3|4",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "4",
+          "total": 17,
+          "gen_train": 5,
+          "heldout": 12
+        }
+      ],
+      "class_counts": {
+        "Bent": {
+          "gen_train": 5,
+          "heldout": 10
+        },
+        "Melt": {
+          "heldout": 37,
+          "gen_train": 18
+        },
+        "Scratch": {
+          "heldout": 13,
+          "gen_train": 7
+        },
+        "Missing": {
+          "heldout": 13,
+          "gen_train": 6
+        }
+      }
+    },
+    "pcb3": {
+      "source_columns": [
+        "image",
+        "label",
+        "mask"
+      ],
+      "counts": {
+        "anomaly/heldout": 67,
+        "anomaly/gen_train": 33,
+        "normal/gen_train": 804,
+        "normal/heldout": 202
+      },
+      "dimensions": {
+        "1562x960": 1106
+      },
+      "mask_modes": {
+        "L": 100
+      },
+      "mask_values_image_occurrences": {
+        "0": 100,
+        "1": 20,
+        "2": 43,
+        "3": 25,
+        "4": 20
+      },
+      "multilabel_images": 7,
+      "strata": [
+        {
+          "defect_ids": "1",
+          "total": 19,
+          "gen_train": 6,
+          "heldout": 13
+        },
+        {
+          "defect_ids": "1|2",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2",
+          "total": 38,
+          "gen_train": 13,
+          "heldout": 25
+        },
+        {
+          "defect_ids": "2|3",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|3|4",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|4",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "3",
+          "total": 20,
+          "gen_train": 6,
+          "heldout": 14
+        },
+        {
+          "defect_ids": "3|4",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "4",
+          "total": 16,
+          "gen_train": 6,
+          "heldout": 10
+        }
+      ],
+      "class_counts": {
+        "Bent": {
+          "heldout": 14,
+          "gen_train": 6
+        },
+        "Melt": {
+          "heldout": 29,
+          "gen_train": 14
+        },
+        "Scratch": {
+          "heldout": 17,
+          "gen_train": 8
+        },
+        "Missing": {
+          "heldout": 13,
+          "gen_train": 7
+        }
+      }
+    },
+    "pcb4": {
+      "source_columns": [
+        "image",
+        "label",
+        "mask"
+      ],
+      "counts": {
+        "anomaly/gen_train": 33,
+        "anomaly/heldout": 67,
+        "normal/gen_train": 804,
+        "normal/heldout": 201
+      },
+      "dimensions": {
+        "1358x1104": 1105
+      },
+      "mask_modes": {
+        "L": 100
+      },
+      "mask_values_image_occurrences": {
+        "0": 100,
+        "1": 8,
+        "2": 17,
+        "7": 42,
+        "4": 21,
+        "5": 30,
+        "3": 33,
+        "6": 13
+      },
+      "multilabel_images": 56,
+      "strata": [
+        {
+          "defect_ids": "1",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "1|2|7",
+          "total": 1,
+          "gen_train": 1,
+          "heldout": 0
+        },
+        {
+          "defect_ids": "1|5",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "1|7",
+          "total": 4,
+          "gen_train": 1,
+          "heldout": 3
+        },
+        {
+          "defect_ids": "2",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|3",
+          "total": 2,
+          "gen_train": 0,
+          "heldout": 2
+        },
+        {
+          "defect_ids": "2|3|7",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|4",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|4|5",
+          "total": 1,
+          "gen_train": 1,
+          "heldout": 0
+        },
+        {
+          "defect_ids": "2|4|7",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|5",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|5|6",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|5|7",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "2|7",
+          "total": 3,
+          "gen_train": 1,
+          "heldout": 2
+        },
+        {
+          "defect_ids": "3",
+          "total": 19,
+          "gen_train": 6,
+          "heldout": 13
+        },
+        {
+          "defect_ids": "3|4",
+          "total": 3,
+          "gen_train": 1,
+          "heldout": 2
+        },
+        {
+          "defect_ids": "3|4|5",
+          "total": 1,
+          "gen_train": 1,
+          "heldout": 0
+        },
+        {
+          "defect_ids": "3|6",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "3|7",
+          "total": 5,
+          "gen_train": 2,
+          "heldout": 3
+        },
+        {
+          "defect_ids": "4",
+          "total": 7,
+          "gen_train": 2,
+          "heldout": 5
+        },
+        {
+          "defect_ids": "4|5",
+          "total": 1,
+          "gen_train": 0,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "4|7",
+          "total": 6,
+          "gen_train": 2,
+          "heldout": 4
+        },
+        {
+          "defect_ids": "5",
+          "total": 12,
+          "gen_train": 4,
+          "heldout": 8
+        },
+        {
+          "defect_ids": "5|7",
+          "total": 10,
+          "gen_train": 3,
+          "heldout": 7
+        },
+        {
+          "defect_ids": "6",
+          "total": 2,
+          "gen_train": 1,
+          "heldout": 1
+        },
+        {
+          "defect_ids": "6|7",
+          "total": 9,
+          "gen_train": 3,
+          "heldout": 6
+        }
+      ],
+      "class_counts": {
+        "Burnt": {
+          "gen_train": 3,
+          "heldout": 5
+        },
+        "Scratch": {
+          "gen_train": 6,
+          "heldout": 11
+        },
+        "Missing": {
+          "heldout": 22,
+          "gen_train": 11
+        },
+        "Damage": {
+          "heldout": 14,
+          "gen_train": 7
+        },
+        "Extra": {
+          "gen_train": 10,
+          "heldout": 20
+        },
+        "Wrong Place": {
+          "heldout": 9,
+          "gen_train": 4
+        },
+        "Dirt": {
+          "gen_train": 14,
+          "heldout": 28
+        }
+      }
+    }
+  },
+  "split_sha256": {
+    "pcb1_split.csv": "827de9dc89ffc8926e0f6d1f37fec6985b31dd7c2f81ac7febc40eb81d46ee11",
+    "pcb2_split.csv": "3173586ebbeb8207e0577020256bf06f569418515f553a5d067d701de3067ec3",
+    "pcb3_split.csv": "1a60f404efe90848c6729ce14e5ad3a29a73d8351111fcc794d9e0a1a061d9bf",
+    "pcb4_split.csv": "558342b497b58fafb81631f2984e9abec16894ddfdb5945d1329db5c51463a1f"
+  }
+}

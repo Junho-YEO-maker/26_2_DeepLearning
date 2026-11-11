@@ -1,0 +1,18 @@
+seed: 7017
+data_root: /content/drive/MyDrive/DL_TP/data/VisA
+splits: splits
+output_root: outputs
+model: copy_paste
+n_per_pcb: 500
+long_side: 512
+rotation_degrees: [-180, 180]
+feather_pixels: 2.0
+metrics:
+  kid_subset_size: 25
+  kid_subsets: 100
+  lpips_pairs: 1000
+  inception_size: 299
+  lpips_size: 256
+  batch_size: 16
+  device: auto
+  cpu_threads: 4

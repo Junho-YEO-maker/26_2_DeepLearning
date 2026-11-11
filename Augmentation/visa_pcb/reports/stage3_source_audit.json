@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/long-deep/pcb-detect",
+  "commit": "93ea4e1f69e5d5929cd9f2ae08d5bff7138e19bb",
+  "notebook_sha256": "b567a38fbc6a6552a5455317a51b8c5bd35133b5df268c43a00e3c9834b746e8",
+  "license_file_present": false,
+  "generator_initialization": "TypeError: EncoderBlock.__init__() missing 3 required positional arguments: 'heads', 'p', and 'fwd_exp'",
+  "issues": [
+    "PixelShuffle class has no forward implementation",
+    "EncoderBlock requires heads,p,fwd_exp but caller omits them",
+    "Generator forward calls omit noise/embedding and block arguments",
+    "training cells contain undefined Variable, optim, loss_func, z_dim and placeholder data"
+  ],
+  "reuse": "Independent implementation from paper concepts; author code is inspected but not redistributed or executed as training."
+}

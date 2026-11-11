@@ -1,0 +1,82 @@
+{
+  "2cls_highshot.csv": {
+    "columns": [
+      "object",
+      "split",
+      "label",
+      "image",
+      "mask"
+    ],
+    "total_rows": 10821,
+    "pcb_counts": {
+      "pcb1/train/normal": 602,
+      "pcb1/train/anomaly": 60,
+      "pcb1/test/normal": 402,
+      "pcb1/test/anomaly": 40,
+      "pcb2/train/normal": 601,
+      "pcb2/train/anomaly": 60,
+      "pcb2/test/normal": 400,
+      "pcb2/test/anomaly": 40,
+      "pcb3/train/normal": 604,
+      "pcb3/train/anomaly": 60,
+      "pcb3/test/normal": 402,
+      "pcb3/test/anomaly": 40,
+      "pcb4/train/normal": 603,
+      "pcb4/train/anomaly": 60,
+      "pcb4/test/normal": 402,
+      "pcb4/test/anomaly": 40
+    }
+  },
+  "1cls.csv": {
+    "columns": [
+      "object",
+      "split",
+      "label",
+      "image",
+      "mask"
+    ],
+    "total_rows": 10821,
+    "pcb_counts": {
+      "pcb1/train/normal": 904,
+      "pcb1/test/normal": 100,
+      "pcb1/test/anomaly": 100,
+      "pcb2/train/normal": 901,
+      "pcb2/test/normal": 100,
+      "pcb2/test/anomaly": 100,
+      "pcb3/train/normal": 905,
+      "pcb3/test/normal": 101,
+      "pcb3/test/anomaly": 100,
+      "pcb4/train/normal": 904,
+      "pcb4/test/normal": 101,
+      "pcb4/test/anomaly": 100
+    }
+  },
+  "2cls_fewshot.csv": {
+    "columns": [
+      "object",
+      "split",
+      "label",
+      "image",
+      "mask"
+    ],
+    "total_rows": 10821,
+    "pcb_counts": {
+      "pcb1/train/normal": 201,
+      "pcb1/train/anomaly": 20,
+      "pcb1/test/normal": 803,
+      "pcb1/test/anomaly": 80,
+      "pcb2/train/normal": 200,
+      "pcb2/train/anomaly": 20,
+      "pcb2/test/normal": 801,
+      "pcb2/test/anomaly": 80,
+      "pcb3/train/normal": 201,
+      "pcb3/train/anomaly": 20,
+      "pcb3/test/normal": 805,
+      "pcb3/test/anomaly": 80,
+      "pcb4/train/normal": 201,
+      "pcb4/train/anomaly": 20,
+      "pcb4/test/normal": 804,
+      "pcb4/test/anomaly": 80
+    }
+  }
+}
