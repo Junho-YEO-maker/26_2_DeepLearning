@@ -1,0 +1,119 @@
+{
+  "args": {
+    "raw": "Dataset/visa/VisA_official/VisA_PCB",
+    "path_prefix": "Dataset/visa/raw",
+    "out": "Dataset/visa/splits",
+    "root": null,
+    "categories": [
+      "pcb1",
+      "pcb2",
+      "pcb3"
+    ],
+    "ks": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "pool_max": 10,
+    "test_min": 4,
+    "train_normal": 500,
+    "val_normal": 200,
+    "split_seed": 7017,
+    "force": false
+  },
+  "counts": {
+    "pcb1": {
+      "pool": {
+        "bent": 10,
+        "melt": 10,
+        "scratch": 10,
+        "missing": 10
+      },
+      "test_anomaly": 60,
+      "test_anomaly_multi": 9,
+      "normal_total": 1004,
+      "anomaly_total": 100,
+      "train_normal": 500,
+      "val_normal": 200,
+      "test_normal": 304
+    },
+    "pcb2": {
+      "pool": {
+        "bent": 8,
+        "melt": 10,
+        "scratch": 10,
+        "missing": 10
+      },
+      "test_anomaly": 62,
+      "test_anomaly_multi": 9,
+      "normal_total": 1001,
+      "anomaly_total": 100,
+      "train_normal": 500,
+      "val_normal": 200,
+      "test_normal": 301
+    },
+    "pcb3": {
+      "pool": {
+        "bent": 10,
+        "melt": 10,
+        "scratch": 10,
+        "missing": 10
+      },
+      "test_anomaly": 60,
+      "test_anomaly_multi": 7,
+      "normal_total": 1006,
+      "anomaly_total": 100,
+      "train_normal": 500,
+      "val_normal": 200,
+      "test_normal": 306
+    }
+  },
+  "rows": {
+    "test": 1093,
+    "val_normal": 600,
+    "train_normal": 1500,
+    "pool": 118
+  },
+  "test_anomaly_total": 182,
+  "files": [
+    "pool.csv",
+    "test.csv",
+    "train_K1_seed0.csv",
+    "train_K1_seed1.csv",
+    "train_K1_seed2.csv",
+    "train_K1_seed3.csv",
+    "train_K1_seed4.csv",
+    "train_K2_seed0.csv",
+    "train_K2_seed1.csv",
+    "train_K2_seed2.csv",
+    "train_K2_seed3.csv",
+    "train_K2_seed4.csv",
+    "train_K4_seed0.csv",
+    "train_K4_seed1.csv",
+    "train_K4_seed2.csv",
+    "train_K4_seed3.csv",
+    "train_K4_seed4.csv",
+    "train_K8_seed0.csv",
+    "train_K8_seed1.csv",
+    "train_K8_seed2.csv",
+    "train_K8_seed3.csv",
+    "train_K8_seed4.csv",
+    "train_normal.csv",
+    "val_normal.csv"
+  ],
+  "checks": [
+    "disjoint test/val_normal/train_normal/pool",
+    "no duplicate sha256",
+    "K nested within seed",
+    "K subset of pool",
+    "mask ids match labels"
+  ]
+}

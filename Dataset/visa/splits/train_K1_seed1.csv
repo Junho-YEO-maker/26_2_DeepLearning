@@ -1,0 +1,13 @@
+category,image,mask,label,split,defect_type,image_sha256
+pcb1,Dataset/visa/raw/pcb1/Data/Images/Anomaly/013.JPG,Dataset/visa/raw/pcb1/Data/Masks/Anomaly/013.png,1,train_K1_seed1,bent,a6af4b64c782a392aa0d3cd033ca64ab9a56b3ab5b907bd164fc8751a633855a
+pcb1,Dataset/visa/raw/pcb1/Data/Images/Anomaly/068.JPG,Dataset/visa/raw/pcb1/Data/Masks/Anomaly/068.png,1,train_K1_seed1,melt,2d5c96ec2cf8cc3fb2ded81671569a60604b395194613a9642c710ad7d67b221
+pcb1,Dataset/visa/raw/pcb1/Data/Images/Anomaly/094.JPG,Dataset/visa/raw/pcb1/Data/Masks/Anomaly/094.png,1,train_K1_seed1,scratch,91c679ca0959cbfc3e4f5e2053e59d70b04f540815be43d81314fae66aff671f
+pcb1,Dataset/visa/raw/pcb1/Data/Images/Anomaly/041.JPG,Dataset/visa/raw/pcb1/Data/Masks/Anomaly/041.png,1,train_K1_seed1,missing,e0afe15a69d18accaeecdd8202b25248407f5f60b5322713d061de275997c82d
+pcb2,Dataset/visa/raw/pcb2/Data/Images/Anomaly/003.JPG,Dataset/visa/raw/pcb2/Data/Masks/Anomaly/003.png,1,train_K1_seed1,bent,bb30a33d3516f0207e49de98cbdcc4d1834226b6571859bb26147bd40db62b3f
+pcb2,Dataset/visa/raw/pcb2/Data/Images/Anomaly/069.JPG,Dataset/visa/raw/pcb2/Data/Masks/Anomaly/069.png,1,train_K1_seed1,melt,9b72546c6bf3c7d7f11961fe805ce5d580896286ab5c63a99f3c48a9176474d5
+pcb2,Dataset/visa/raw/pcb2/Data/Images/Anomaly/097.JPG,Dataset/visa/raw/pcb2/Data/Masks/Anomaly/097.png,1,train_K1_seed1,scratch,0db2cf5dff69bb45fd02578ba70d0ead6e79152a3ee418f712390b6c3b46a13b
+pcb2,Dataset/visa/raw/pcb2/Data/Images/Anomaly/047.JPG,Dataset/visa/raw/pcb2/Data/Masks/Anomaly/047.png,1,train_K1_seed1,missing,1be7809506f2372505d7506c47502f75ec9ba094e306c9d394a067b368c6a8e3
+pcb3,Dataset/visa/raw/pcb3/Data/Images/Anomaly/019.JPG,Dataset/visa/raw/pcb3/Data/Masks/Anomaly/019.png,1,train_K1_seed1,bent,6e968a4208bd4d4be6c2bd3f10e62f6cbd367f47a8375e6f13d2dea9157c41df
+pcb3,Dataset/visa/raw/pcb3/Data/Images/Anomaly/032.JPG,Dataset/visa/raw/pcb3/Data/Masks/Anomaly/032.png,1,train_K1_seed1,melt,6c2022416c04453ed18f0f212e9a1646c15158ca0278e0a2573fa616aef73bc0
+pcb3,Dataset/visa/raw/pcb3/Data/Images/Anomaly/094.JPG,Dataset/visa/raw/pcb3/Data/Masks/Anomaly/094.png,1,train_K1_seed1,scratch,7d55609ce87413e99a59f43fb2fabe6a1c19e14575b194a175f8b3e031012d43
+pcb3,Dataset/visa/raw/pcb3/Data/Images/Anomaly/056.JPG,Dataset/visa/raw/pcb3/Data/Masks/Anomaly/056.png,1,train_K1_seed1,missing,ac8523250b454f87679cf42605ed2edc3245a0b1260bf42f18421b4019870ba3

@@ -19,7 +19,11 @@ python -m pip install -r requirements-stage2.txt
 python -m tests.smoke_stage1
 python -m tests.smoke_stage2
 python -m tests.smoke_stage3
+python -m tests.smoke_seeds          # K장 실험 생성 시드가 조건마다 다른지 검사
+python -m tests.smoke_k_copypaste    # 공유 분할표 → K장 copy-paste → 누수 검사 (더미 데이터)
 ```
+
+K장 실험(공유 분할표 `Dataset/visa/splits`)용 생성은 [Augmentation/README.md](../README.md)의 "실행" 절을 따릅니다.
 
 `src.generate.run`은 `generate(pcb, n, seed)`를 호출합니다. 모델과 PCB마다 `outputs/{model}/{pcb}/{images,masks,meta.csv}`를 생성하며, 출력 비율과 원본 정상·불량 마스크·생성 조건·seed를 기록합니다. 실제 PNG, 비교 그림, 모델 체크포인트는 Drive의 기존 실행 폴더에 있습니다. [B팀 파일 규약](B_TEAM_HANDOFF.md)
 
@@ -43,11 +47,10 @@ python -m tests.smoke_stage3
 
 ```bash
 cd Augmentation/visa_pcb
-python -m src.generate.team_copy_paste --k 2 --seed 0 --per-class 40
+python -m src.generate.k_copypaste --k 2 --seed 0      # 조건 하나
+python -m src.generate.k_copypaste --all               # K {1,2,4,8} × seed 0–4
 ```
 
-생성물은 `Dataset/generated/copypaste/K2_seed0`에 저장합니다. manifest의 경로는
-저장소 루트 기준이며 `category, defect_type, base_normal_image`를 포함합니다.
-원본 전체 해상도와 마스크 클래스 ID 1–4를 유지합니다. 공유 시험·검증 정상은
-입력으로 사용하지 않습니다. 시나리오의 seed 0은 공용 CSV 선택에 사용하고,
-생성 난수는 기본 seed 7017과 해당 시나리오 seed를 조합합니다.
+생성물은 `Dataset/generated/copypaste/K{k}_seed{s}`에 저장합니다. 원본 해상도, 마스크 클래스 ID 1–4,
+결함은 원래 자리 ±30px에 붙입니다. 출력 형식·시드 규칙·금지 사항은 [Augmentation/README.md](../README.md)에 있습니다.
+(이전 `team_copy_paste.py`는 임의 위치 붙여넣기로 결함이 기판 밖에 떨어지는 문제가 있어 `k_copypaste.py`로 통일했습니다. 62e66e4에서 볼 수 있습니다.)

@@ -16,3 +16,6 @@ __pycache__/
 *.safetensors
 wandb/
 runs/
+
+# 로컬에 받아 둔 VisA 원본 사본
+Dataset/visa/VisA_official/
