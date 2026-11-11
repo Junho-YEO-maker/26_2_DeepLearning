@@ -1,8 +1,0 @@
-/outputs/
-/checkpoints/
-/cache/
-/figures/
-/configs/*_runtime.yaml
-/reports/colab_*
-/results/copy_paste/
-/results/ctransgan/

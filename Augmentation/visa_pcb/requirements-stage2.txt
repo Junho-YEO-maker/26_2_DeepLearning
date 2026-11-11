@@ -1,5 +1,0 @@
--r requirements-stage1.txt
-# Install a compatible torch/torchvision pair, or keep the pair supplied by Colab.
-torch-fidelity==0.3.0
-lpips==0.1.4
-scikit-image==0.25.2

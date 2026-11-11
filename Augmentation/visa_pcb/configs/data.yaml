@@ -1,9 +1,0 @@
-seed: 7017
-project_root: /content/drive/MyDrive/DL_TP
-data_root: /content/drive/MyDrive/DL_TP/data/VisA
-pcb_types: [pcb1, pcb2, pcb3, pcb4]
-anomaly_train_fraction: 0.3333333333333333
-anomaly_rounding: floor
-normal_train_fraction: 0.8
-stratification: multilabel_integer_quota
-resize: null
