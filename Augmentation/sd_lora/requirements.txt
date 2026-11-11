@@ -1,0 +1,9 @@
+# torch는 서버 CUDA에 맞는 것을 먼저 설치 (예: pip install torch --index-url https://download.pytorch.org/whl/cu124)
+diffusers>=0.30
+transformers>=4.44
+peft>=0.12
+accelerate>=0.33
+safetensors
+numpy
+pillow
+pyyaml

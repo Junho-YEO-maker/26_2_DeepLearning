@@ -22,3 +22,10 @@ Dataset/visa/VisA_official/
 
 # AD 팀 이미지·임베딩 캐시
 Dataset/cache/
+
+# Augmentation 생성 모델 작업물 (A100 서버)
+Augmentation/sd_lora/runs/
+Augmentation/sd_lora/*.log
+Augmentation/anomalydiffusion/upstream/
+Augmentation/anomalydiffusion/work/
+Augmentation/anomalydiffusion/*.log

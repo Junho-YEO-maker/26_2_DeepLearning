@@ -17,10 +17,26 @@
 - 경로는 `Dataset/visa/raw/...`로 통일. 원본이 다른 곳에 있으면 코드에 `--data-root`로 넘긴다.
 - 마스크 픽셀값 = 종류 ID: 1=bent, 2=melt, 3=scratch, 4=missing
 
+## 폴더 (방법마다 따로)
+```
+Augmentation/
+├─ common/kshot.py     모든 방법이 같이 쓰는 것: 공유 분할 읽기(test/val 차단), 결함 위치 규칙, 원본에 다시 붙이기, manifest 기록·누수 검사
+├─ visa_pcb/           copypaste (src/generate/k_copypaste.py), ctransgan, 33장 비교 실험
+├─ sd_lora/            SD 인페인팅 + LoRA           → sd_lora/README.md
+└─ anomalydiffusion/   AnomalyDiffusion 공식 코드 어댑터 → anomalydiffusion/README.md
+```
+결과는 방법과 상관없이 전부 `Dataset/generated/{방법}/K{k}_seed{s}/` 한 곳에 같은 형식으로 쌓인다.
+
 ## 방법
-- `copypaste` : 불량 패치를 정상 이미지에 붙여넣기 (기준선). 모든 K × seed 0–4. **K장 실험용 코드 완료**
-- `ctransgan` : **생성 모델 1단계 (AD 팀 합의, 9절 ⑤)**. PCB1–3 × K {1, 2, 4} × seed 0, 조건 9개마다 해당 K장으로 새로 학습한다(33장 체크포인트 재사용 금지). T4에서 조건당 약 13분. K=1을 먼저 돌려 품질을 확인한다.
-- `sd_lora`   : SD inpainting + LoRA. **선택** — 1단계를 마치고 시간이 남으면 추가한다.
+| 방법 (aug 이름) | 성격 | 범위 | 상태 |
+|---|---|---|---|
+| `copypaste` | 학습 없음, 기준선 | 모든 K × seed 0–4 | 코드 완료 |
+| `ctransgan` | GAN | K {1,2,4} × seed 0 | 1단계 (AD 팀 합의 ⑤), 진행 중 |
+| `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | 코드 완료, A100 실행 대기 |
+| `anomalydiffusion` | 불량 생성 전용 diffusion | K {1,2,4} × seed 0 | 어댑터 완료, **보류**: copy-paste·sd_lora 결과에서 생성 쪽 이득이 보일 때만 실행 |
+
+- 생성 모델은 조건마다 **해당 K장으로만** 새로 학습한다(33장·풀 전체로 학습한 체크포인트 재사용 금지).
+- 결함 위치·모양은 모든 방법이 같은 규칙을 따른다: K장 결함 마스크를 기판 정렬(평행이동 + PCB1의 180° 회전) 후 같은 부품 자리 ± 종류별 jitter(bent·missing 5px, melt·scratch 30px). 규칙은 `visa_pcb/src/generate/k_copypaste.py` 한 곳에 있고 `common/kshot.py`가 그대로 가져다 쓴다. 방법끼리는 "마스크 안을 무엇으로 채우나"만 다르다.
 - 장수는 방법끼리 같게, 조건당 종류별 40장(PCB당 160장)으로 맞춘다(9절 ⑦). 장수 변화 실험(10/40/160)은 선택.
 
 ## 실행 (copy-paste)
@@ -33,7 +49,7 @@ python -m src.data.shared_splits --check ../../Dataset/generated/copypaste/K2_se
 ```
 - 조건마다 PCB 3개 × 종류 4개 × 40장 = 480장. 로컬 CPU에서 조건당 약 5분.
 - 이미 만든 조건은 건너뛴다. 다시 만들려면 `--force`.
-- 결함은 원래 있던 자리 ±30px에 붙인다(`--placement same`, 기본). 같은 PCB는 기판 위치가 거의 같아서 결함이 기판 밖 배경에 떨어지지 않는다. 2단계 기준선처럼 임의 위치·회전으로 붙이려면 `--placement random`.
+- 결함은 기판 정렬(평행이동 + PCB1의 180° 회전) 후 같은 부품 자리 ± 종류별 jitter(bent·missing 5px, melt·scratch 30px)에 붙이고, 패치에 약한 변형(반전, ±3°, 크기 ±10%, 밝기·대비 ±5%)을 건다(`--placement same`, 기본). JPEG는 원본과 같은 q75 4:2:0. 2단계 기준선처럼 임의 위치·회전으로 붙이려면 `--placement random`.
 - 새 생성 방법도 `src/data/shared_splits.py`의 `SharedSplits`로만 원본을 읽는다. test/val 이미지는 경로·해시 둘 다 막힌다.
 
 ## 출력 형식 (AD 팀 합의, 9절 ⑧)
