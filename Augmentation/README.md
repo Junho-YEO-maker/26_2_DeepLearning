@@ -91,8 +91,8 @@ Google Drive의 `내 드라이브/DL_TP/runs/shared_30e32db/Dataset/generated/` 
 
 | 방법 | Drive 하위 폴더 | GitHub manifest |
 |---|---|---|
-| Copy-paste | `copypaste/K1_seed0/` | [manifest.csv](../Dataset/generated/copypaste/K1_seed0/manifest.csv) |
-| cTransGAN | `ctransgan/K1_seed0/` | [manifest.csv](../Dataset/generated/ctransgan/K1_seed0/manifest.csv) |
+| Copy-paste | [Copy-paste 결과 폴더](https://drive.google.com/drive/folders/1iq6_Do7gF-LdFMsdR8yTaWZt2MD13dd5) | [manifest.csv](../Dataset/generated/copypaste/K1_seed0/manifest.csv) |
+| cTransGAN | [cTransGAN 결과 폴더](https://drive.google.com/drive/folders/1f-NIgH42YJ3bB72eTGDdtvYpmS42AOOn) | [manifest.csv](../Dataset/generated/ctransgan/K1_seed0/manifest.csv) |
 
-각 폴더에 생성 이미지와 마스크 480쌍이 있다. Drive 폴더 소유자에게 두 폴더의 뷰어 권한을 요청한다.
+각 폴더에 생성 이미지와 마스크 480쌍이 있다. 링크가 있는 모든 사용자가 뷰어로 열 수 있다.
 학습할 때 각 폴더의 `images/`, `masks/`를 레포의 `Dataset/generated/{방법}/K1_seed0/` 아래에 두면 manifest의 상대 경로와 일치한다.
