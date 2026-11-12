@@ -74,9 +74,9 @@ def train_one(ks, pcb, args, out_dir):
     else:
         dt = torch.float32
     tok = CLIPTokenizer.from_pretrained(args.base_model, subfolder='tokenizer')
-    te = CLIPTextModel.from_pretrained(args.base_model, subfolder='text_encoder').to(dev, dtype=dt).eval()
-    vae = AutoencoderKL.from_pretrained(args.base_model, subfolder='vae').to(dev, dtype=dt).eval()
-    unet = UNet2DConditionModel.from_pretrained(args.base_model, subfolder='unet').to(dev, dtype=dt)
+    te = CLIPTextModel.from_pretrained(args.base_model, subfolder='text_encoder', torch_dtype=dt).to(dev, dtype=dt).eval()
+    vae = AutoencoderKL.from_pretrained(args.base_model, subfolder='vae', torch_dtype=dt).to(dev, dtype=dt).eval()
+    unet = UNet2DConditionModel.from_pretrained(args.base_model, subfolder='unet', torch_dtype=dt).to(dev, dtype=dt)
     sched = DDPMScheduler.from_pretrained(args.base_model, subfolder='scheduler')
     for m in (te, vae, unet):
         m.requires_grad_(False)
