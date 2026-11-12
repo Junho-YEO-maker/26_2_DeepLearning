@@ -33,7 +33,7 @@ Augmentation/
 |---|---|---|---|
 | `copypaste` | 학습 없음, 기준선 | 모든 K × seed 0–4 | 코드 완료 |
 | `ctransgan` | GAN | K {1,2,4} × seed 0 | K1_seed0 결과만 있음. 코드(옛 `visa_pcb/`)는 삭제됨(d66851e) |
-| `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | 코드 완료, Colab 노트북 `colab/sd_lora_kshot.ipynb` |
+| `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | 코드 완료, 노트북 `colab/sd_lora_kshot.ipynb`, `kaggle/sd_lora_kshot.ipynb` |
 | `anomalydiffusion` | 불량 생성 전용 diffusion | K {1,2,4} × seed 0 | 어댑터 완료, **보류**: copy-paste·sd_lora 결과에서 생성 쪽 이득이 보일 때만 실행 |
 
 - 생성 모델은 조건마다 **해당 K장으로만** 새로 학습한다(33장·풀 전체로 학습한 체크포인트 재사용 금지).

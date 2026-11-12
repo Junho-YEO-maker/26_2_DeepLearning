@@ -8,6 +8,14 @@ Stable Diffusion 1.5 인페인팅 모델에 **K장만으로** LoRA를 학습해�
 LoRA와 결과는 Drive `MyDrive/DL_TP/runs/sd_lora/`에 저장되고, 세션이 끊기면 다시 모두 실행해서 이어 간다.
 T4에서는 fp16 + gradient checkpointing으로 자동 전환된다(A100은 bf16).
 
+## 실행 (Kaggle, Colab 할당량이 끝났을 때)
+[kaggle/sd_lora_kshot.ipynb](../../kaggle/sd_lora_kshot.ipynb)를 Kaggle에 Import → Settings에서 **GPU T4 x2**, **Internet On** → **Run All**
+(브라우저를 닫아도 돌게 하려면 Save Version → Save & Run All).
+- 원본은 VisA 공식 tar에서 pcb1–3만 받아 온다. 데이터를 따로 올릴 필요가 없고, 해시는 분할표와 대조한다.
+- GPU 2장이면 PCB를 나눠 동시에 학습한다(pcb1·pcb3 / pcb2).
+- 결과는 `/kaggle/working/sd_lora/`, 조건별 zip `sd_lora_K{k}_seed{s}.zip`을 Output 탭에서 받는다.
+- 이전 LoRA(이 노트북의 이전 Output이나, Colab Drive의 `lora/` 폴더를 Kaggle Dataset으로 올린 것)를 Add Input으로 붙이면 학습을 건너뛴다.
+
 ## 실행 (GPU 서버)
 ```bash
 cd Augmentation
