@@ -266,6 +266,41 @@ def paste_back(base, generated_crop, box, region, feather=4):
     return Image.fromarray(out)
 
 
+# ---------- 구조 결함 (bent·missing): 마스크 밖에 남는 원래 부품 ----------
+# VisA 주석은 휜 핀 토막·빠진 자리만 덮는다. 정상 바탕에는 그 핀이 곧게(또는 그대로) 있어서
+# 마스크 안만 다시 그리면 원래 핀이 마스크 밖에 남아 "다리가 하나 더" 생긴다.
+# 실제 불량과 바탕이 크게 다른 곳 중 마스크에 이어진 부분을 인페인팅 영역에 더해 원래 핀도 지운다.
+# 출력 마스크(정답 라벨)는 그대로 VisA 주석 모양을 쓴다.
+STRUCTURE_TYPES = ('bent', 'missing')
+
+
+def aligned_donor(donor_img, base_img, info):
+    """donor 이미지를 place_mask가 쓴 변환(180° 회전 + 실제 적용된 이동)으로 base 좌표에 옮긴다."""
+    im = donor_img.rotate(180) if info['align']['rot180'] else donor_img
+    dx, dy = info['applied_shift_xy']
+    return im.transform(base_img.size, Image.AFFINE, (1, 0, -dx, 0, 1, -dy), resample=BILINEAR)
+
+
+def change_region(donor_img, base_img, mask, info, pad=200, thresh=45, blur=2, open_px=4, touch=20):
+    """bool (base 좌표): mask ∪ (실제 불량과 바탕이 크게 다른 곳 중 mask에 이어진 부분, mask 주변 pad 안)."""
+    from scipy import ndimage
+    d = np.asarray(aligned_donor(donor_img, base_img, info).convert('L').filter(ImageFilter.GaussianBlur(blur)), np.int16)
+    b = np.asarray(base_img.convert('L').filter(ImageFilter.GaussianBlur(blur)), np.int16)
+    h, w = mask.shape
+    ys, xs = np.where(mask)
+    y0, y1 = max(ys.min() - pad, 0), min(ys.max() + pad + 1, h)
+    x0, x1 = max(xs.min() - pad, 0), min(xs.max() + pad + 1, w)
+    diff = np.abs(d - b)[y0:y1, x0:x1] > thresh
+    if open_px:
+        diff = ndimage.binary_opening(diff, iterations=open_px)      # 기판끼리 조금씩 다른 가장자리·테두리의 얇은 띠(~8px 미만) 제거, 핀(~20px)은 남는다
+    m = mask[y0:y1, x0:x1]
+    lab, _ = ndimage.label(diff)
+    ids = np.unique(lab[dilate(m, touch)])           # 마스크에서 touch px 안에 닿는 차이 덩어리 (핀 뿌리가 헤더에 가려져도)
+    out = mask.copy()
+    out[y0:y1, x0:x1] |= np.isin(lab, ids[ids > 0])
+    return out
+
+
 # ---------- 출력 ----------
 
 def rel(path):
