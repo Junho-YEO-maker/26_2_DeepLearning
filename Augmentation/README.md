@@ -23,6 +23,7 @@ Augmentation/
 ├─ common/kshot.py     모든 방법이 같이 쓰는 것: 공유 분할 읽기(test/val 차단), 결함 위치 규칙(기판 정렬 포함),
 │                      원본에 다시 붙이기, manifest 기록·누수 검사
 ├─ copypaste/          copy-paste 생성기 (AD 팀 버전, 기존 결과를 그대로 재현)
+├─ ctransgan/          Conditional TransGAN (K장용 축소 구현) → ctransgan/README.md
 ├─ sd_lora/            SD 인페인팅 + LoRA           → sd_lora/README.md
 └─ anomalydiffusion/   AnomalyDiffusion 공식 코드 어댑터 → anomalydiffusion/README.md
 ```
@@ -32,7 +33,7 @@ Augmentation/
 | 방법 (aug 이름) | 성격 | 범위 | 상태 |
 |---|---|---|---|
 | `copypaste` | 학습 없음, 기준선 | 모든 K × seed 0–4 | 코드 완료 |
-| `ctransgan` | GAN | K {1,2,4} × seed 0 | K1_seed0 결과만 있음. 코드(옛 `visa_pcb/`)는 삭제됨(d66851e) |
+| `ctransgan` | GAN (Transformer G/D) | K {1,2,4} × seed 0 | 코드 완료(`ctransgan/`), **K {1,2,4} × seed 0 생성 완료**(각 480장, CPU). 256×256 크롭을 직접 그림. bent·missing은 sd_lora v2와 같은 `change_region`으로 원래 핀까지 다시 그리고, jitter 대신 ±6px 정밀 정렬(→ ctransgan/README.md). 아래 B팀 전달 절의 Drive K1 결과는 옛 버전 |
 | `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | 코드 완료, 노트북 `colab/sd_lora_kshot.ipynb`, `kaggle/sd_lora_kshot.ipynb` |
 | `anomalydiffusion` | 불량 생성 전용 diffusion | K {1,2,4} × seed 0 | 어댑터 완료, **보류**: copy-paste·sd_lora 결과에서 생성 쪽 이득이 보일 때만 실행 |
 
@@ -89,6 +90,7 @@ Dataset/generated/{방법}/K{k}_seed{s}/
 ## 실행 환경
 - Colab T4 기준 SD 1.5, 512px, fp16. SDXL 은 메모리 부족
 - 추가 패키지는 여기에 기록:
+  - ctransgan: `torch>=2.0`, `scipy` (`ctransgan/requirements.txt`). GPU 없이 CPU 2코어에서 조건당 30–60분(K가 클수록 김)
 
 ## 예전 `visa_pcb/` (삭제됨, d66851e)
 33장 비교 실험, cTransGAN, 예전 copy-paste 코드가 있던 폴더. 11/12 팀 결정으로 삭제했다. 필요하면 `git show d66851e^:Augmentation/visa_pcb/<경로>`로 꺼낼 수 있다.
@@ -106,3 +108,7 @@ Google Drive의 `내 드라이브/DL_TP/runs/shared_30e32db/Dataset/generated/` 
 
 각 폴더에 생성 이미지와 마스크 480쌍이 있다. 링크가 있는 모든 사용자가 뷰어로 열 수 있다.
 학습할 때 각 폴더의 `images/`, `masks/`를 레포의 `Dataset/generated/{방법}/K1_seed0/` 아래에 두면 manifest의 상대 경로와 일치한다.
+
+> **cTransGAN은 다시 만들었다(11/15).** 위 Drive의 cTransGAN K1 폴더는 옛 `visa_pcb/` 구현으로 만든 것이고, 지금 레포의
+> `Dataset/generated/ctransgan/K1_seed0/manifest.csv`는 `ctransgan/`로 새로 만든 결과의 manifest다(둘은 서로 맞지 않는다).
+> 새 K1·K2·K4 이미지를 Drive에 올리면 위 링크를 바꾼다.
