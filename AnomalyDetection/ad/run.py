@@ -22,12 +22,12 @@ import numpy as np
 import torch
 
 from .augment import classic
-from .data import PCBS, Data
+from .data import GENERATED, PCBS, Data
 from .eval import done_keys, evaluate, record
 from .features import PatchFeatures, device, embed, to_tensor
 from .models import Classifier, EmbeddingHead, PatchCore
 
-GEN_METHODS = ('copypaste', 'ctransgan', 'sd_lora')
+BASIC_AUGS = ('none', 'classic')     # 그 밖의 aug 이름은 Dataset/generated/{aug}/ 폴더 (copypaste, ctransgan, sd_lora, sd_lora_v3 …)
 CLASSIC_COPIES_DEFECT, CLASSIC_COPIES_NORMAL = 10, 1
 
 
@@ -74,11 +74,14 @@ def main():
     ap.add_argument('--pcbs', nargs='+', default=list(PCBS))
     ap.add_argument('--ks', nargs='+', type=int, default=[0])
     ap.add_argument('--seeds', nargs='+', type=int, default=[0])
-    ap.add_argument('--augs', nargs='+', default=['none'], choices=['none', 'classic', *GEN_METHODS])
+    ap.add_argument('--augs', nargs='+', default=['none'],
+                    help='none, classic, 또는 Dataset/generated/ 아래 생성 폴더 이름')
     ap.add_argument('--res', nargs='+', type=int, default=[256])
     ap.add_argument('--data-root', help='원본 pcb 폴더들의 부모 (기본: Dataset/visa/raw)')
     ap.add_argument('--clf-steps', type=int, default=400)
     a = ap.parse_args()
+    for aug in a.augs:
+        assert aug in BASIC_AUGS or (GENERATED / aug).is_dir(), f'모르는 aug: {aug} (Dataset/generated/{aug} 없음)'
 
     data, dev = Data(a.data_root), device()
     print(f'device={dev}', flush=True)
@@ -118,7 +121,7 @@ def main():
                 for seed in (a.seeds if k > 0 else [0]):
                     for aug in (a.augs if k > 0 else ['none']):
                         defects = data.train_defects(pcb, k, seed)
-                        gen = data.generated_defects(aug, pcb, k, seed) if aug in GEN_METHODS else []
+                        gen = data.generated_defects(aug, pcb, k, seed) if aug not in BASIC_AUGS else []
                         # ---- 임베딩 모델
                         heads = [m for m in emb_models if todo(m, pcb, k, seed, aug, res) and (k > 0 or m == 'knn_mlp')]
                         if heads:

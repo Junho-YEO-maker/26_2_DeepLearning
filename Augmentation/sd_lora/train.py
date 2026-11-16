@@ -198,7 +198,7 @@ def parser():
     p.add_argument('--base-model', default=BASE_MODEL)
     p.add_argument('--data-root', help='원본 pcb 폴더들의 부모 (기본: <저장소>/Dataset/visa/raw)')
     p.add_argument('--grad-ckpt', action='store_true', help='gradient checkpointing (T4에서는 자동으로 켜짐)')
-    p.add_argument('--runs-dir', default=str(HERE / 'runs'), help='LoRA 저장 위치 (Colab에서는 Drive로)')
+    p.add_argument('--runs-dir', default=str(HERE / 'runs'), help='LoRA 저장 위치 (v3 단계 B: sd_lora/runs_v3)')
     p.add_argument('--force', action='store_true')
     return p
 

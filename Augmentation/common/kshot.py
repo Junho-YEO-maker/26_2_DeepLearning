@@ -204,6 +204,72 @@ def jitter_mask(m, defect_type, rng, jitter=None):
     return shift_mask(m, *(int(v) for v in rng.integers(-j, j + 1, 2)))[0]
 
 
+# ---------- 위치·모양 다양화 (sd_lora v3) ----------
+# K=1이면 종류당 결함이 1장뿐이라 같은 자리 ± jitter만으로는 40장이 거의 같다(K1_seed0 v2 진단, sd_lora/README.md).
+# 인페인팅은 마스크 안을 새로 그리므로, 마스크 모양·위치를 바꾸면 결함 모양도 같이 바뀐다.
+
+def _transform_blob(blob, out, f, s, r):
+    """덩어리 하나(bool)를 자기 중심 기준으로 반전·크기·회전해 out에 더한다."""
+    ys, xs = np.where(blob)
+    cy, cx = (ys.min() + ys.max()) // 2, (xs.min() + xs.max()) // 2
+    patch = Image.fromarray(blob[ys.min():ys.max() + 1, xs.min():xs.max() + 1].astype(np.uint8) * 255)
+    if f:
+        patch = patch.transpose(getattr(Image, 'Transpose', Image).FLIP_LEFT_RIGHT)
+    patch = patch.resize((max(1, round(patch.width * s)), max(1, round(patch.height * s))), BILINEAR)
+    p = np.asarray(patch.rotate(r, resample=BILINEAR, expand=True)) > 127
+    h, w = out.shape
+    ph, pw = p.shape
+    y0, x0 = cy - ph // 2, cx - pw // 2
+    ty0, tx0, ty1, tx1 = max(0, y0), max(0, x0), min(h, y0 + ph), min(w, x0 + pw)
+    if ty1 > ty0 and tx1 > tx0:
+        out[ty0:ty1, tx0:tx1] |= p[ty0 - y0:ty1 - y0, tx0 - x0:tx1 - x0]
+
+
+def augment_mask(m, rng, rot=(-30, 30), scale=(0.75, 1.35), flip=True, base_img=None, tol=0.1, tries=5):
+    """bool 마스크를 좌우 반전·크기·회전한다. 결함이 여러 덩어리면(pcb1 melt는 기판 가장자리에 5개)
+    덩어리마다 자기 중심 기준으로 같은 변형을 건다(전체 중심 기준이면 바깥 덩어리가 기판 밖으로 밀려난다).
+    base_img가 있으면 "기판 위 비율"이 원래 마스크보다 tol 넘게 줄지 않을 때만 받고, 아니면 원래 마스크를 돌려준다
+    (기판 마스크는 흰 부품을 빼므로 원래 마스크도 1.0이 아닐 수 있다). tries번 다시 뽑는다.
+    돌아가는 값: (마스크, condition dict). 변형을 못 했으면 dict는 비어 있다."""
+    from scipy import ndimage
+    lab, n = ndimage.label(m)
+    bm = board_mask(base_img) > 0 if base_img is not None else None
+    floor = _on_board(m, bm) - tol if bm is not None else None
+    for _ in range(tries):
+        f = bool(flip and rng.random() < 0.5)
+        s, r = float(rng.uniform(*scale)), float(rng.uniform(*rot))
+        out = np.zeros_like(m)
+        for i in range(1, n + 1):
+            _transform_blob(lab == i, out, f, s, r)
+        if out.any() and (bm is None or _on_board(out, bm) >= floor):
+            return out, {'flip': f, 'scale': round(s, 3), 'rotation_deg': round(r, 1)}
+    return m, {}
+
+
+def _on_board(m, bm):
+    """마스크 픽셀 중 기판 마스크(1/ALIGN_SCALE 크기) 위에 있는 비율."""
+    ys, xs = np.where(m)
+    return float(bm[np.minimum(ys // ALIGN_SCALE, bm.shape[0] - 1), np.minimum(xs // ALIGN_SCALE, bm.shape[1] - 1)].mean())
+
+
+def board_place(m, base_img, rng, tries=50, min_on_board=0.8):
+    """마스크를 base 기판(파란 영역) 위 임의 위치로 옮긴다. 결함 픽셀의 min_on_board 이상이 기판 위인 자리를
+    tries번 안에 찾는다(흰 실크 글자는 기판 마스크에서 빠지므로 1.0이 아니다). 못 찾으면 (None, None)."""
+    bm = board_mask(base_img) > 0
+    cand_y, cand_x = np.where(bm)
+    if not len(cand_y):
+        return None, None
+    ys, xs = np.where(m)
+    cy, cx = (ys.min() + ys.max()) // 2, (xs.min() + xs.max()) // 2
+    for _ in range(tries):
+        i = int(rng.integers(len(cand_y)))
+        ty, tx = int(cand_y[i]) * ALIGN_SCALE, int(cand_x[i]) * ALIGN_SCALE
+        out, _ = shift_mask(m, tx - cx, ty - cy)
+        if _on_board(out, bm) >= min_on_board:
+            return out, {'placement': 'board', 'center_xy': [tx, ty]}
+    return None, None
+
+
 def map_box(box, tf, image_wh):
     """donor 좌표의 창 (x0,y0,x1,y1)이 base 좌표에서 차지하는 창."""
     x0, y0, x1, y1 = box

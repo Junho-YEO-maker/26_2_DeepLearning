@@ -203,9 +203,9 @@ RQ1(정상만 vs 불량 추가)은 두 가지 방식으로 공정하게 비교�
 | ------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
 | `none`      | 실제 K장만 씁니다.                                                                                               | —                                           |
 | `classic`   | 이미지 전체에 거는 기본 변환: **회전 ±3°, 이동 ±2%, 밝기·대비 ±10%, 가우시안 블러(p=0.2, σ≤1)**. 뒤집기는 넣지 않습니다(기판 전체를 뒤집으면 라인에 없는 부품 배치가 됨). 임베딩 모델은 불량마다 10개·정상마다 1개의 증강본을 더하고, 분류기는 학습 중 매번 적용합니다. 코드: `ad/augment.py` | AnomalyDetection 팀 (9절 ⑥, Augmentation 팀 잠정안 ±10°·상하 반전보다 보수적으로 정함) |
-| `copypaste` | 실제 결함을 오려 정상 기판의 **같은 부품 위치**에 붙입니다. 먼저 결함 원본과 바탕의 기판 위치를 맞춥니다(기판 마스크 phase correlation + 회색조 NCC로 0°/180° 판정. **PCB1은 약 75%가 핀이 위, 25%가 핀이 아래인 180° 회전 사진이 섞여 있음**, PCB2·3도 수십 px씩 이동). 위치 흔들림은 bent·missing ±5px, melt·scratch ±30px. 결함 패치에는 **좌우 반전(p=0.5), 회전 ±3°, 크기 ±10%, 밝기·대비 ±5%** 만 겁니다(11/11 변경, 큰 회전 없음). 원본과 같은 JPEG quality 75·4:2:0으로 저장하고 마스크는 PNG(종류 ID 1–4). 코드: `Augmentation/visa_pcb/src/generate/k_copypaste.py`의 `PATCH_AUG` | Augmentation 팀 코드, 증강 설정은 AnomalyDetection 팀이 수정 |
+| `copypaste` | 실제 결함을 오려 정상 기판의 **같은 부품 위치**에 붙입니다. 먼저 결함 원본과 바탕의 기판 위치를 맞춥니다(기판 마스크 phase correlation + 회색조 NCC로 0°/180° 판정. **PCB1은 약 75%가 핀이 위, 25%가 핀이 아래인 180° 회전 사진이 섞여 있음**, PCB2·3도 수십 px씩 이동). 위치 흔들림은 bent·missing ±5px, melt·scratch ±30px. 결함 패치에는 **좌우 반전(p=0.5), 회전 ±3°, 크기 ±10%, 밝기·대비 ±5%** 만 겁니다(11/11 변경, 큰 회전 없음). 원본과 같은 JPEG quality 75·4:2:0으로 저장하고 마스크는 PNG(종류 ID 1–4). 코드: `Augmentation/copypaste/generate.py`, 위치 규칙 `Augmentation/common/kshot.py` | Augmentation 팀 코드, 증강 설정은 AnomalyDetection 팀이 수정 |
 | `ctransgan` | **생성 조건의 주 방법(1단계). 일주일 뒤(11/18 전후) 받아서 추가.** cTransGAN으로 결함 패치를 생성해 정상 기판에 넣습니다. 조건마다 해당 K장으로 새로 학습합니다(T4에서 조건당 약 13분). | Augmentation 팀                              |
-| `sd_lora`   | SD inpainting + LoRA. ctransgan 1단계를 마치고 시간이 남으면 추가합니다(선택).                                 | Augmentation 팀                              |
+| `sd_lora`   | SD inpainting + LoRA (v2, K1_seed0만). 결과·진단은 13.5절. 개선판은 `sd_lora_v3`(GPU 서버, `Augmentation/sd_lora/README.md`)로 따로 기록합니다. | Augmentation 팀                              |
 
 - `classic` 변환은 **정상 이미지에도 똑같이** 적용합니다. 불량에만 적용하면 모델이 결함이 아니라 "변환 흔적이 있으면 불량"이라는 지름길을 배웁니다.
 - copy-paste의 한계: 원래 있던 곧은 핀·부품을 지우지 않고 위에 덮으므로, bent·missing 일부 샘플에는 원래 핀이 겹쳐 보입니다. 정렬 전(11/11 첫 버전)에는 핀이 기판 밖 바닥에 붙는 샘플이 있었고, 그 결과물은 지우고 다시 만들었습니다.
@@ -352,7 +352,7 @@ RQ1(정상만 vs 불량 추가)은 두 가지 방식으로 공정하게 비교�
 - T4에서 조건당 약 13분 걸려서 11/17 마감은 가능합니다.
 - K=1은 품질이 낮을 수 있습니다. 먼저 돌려 보고 결과를 그대로 넘깁니다(5.3절).
 - 증강 이름은 `ctransgan`입니다(`results.csv`의 `aug` 열, `Dataset/generated/ctransgan/`).
-- **SD+LoRA**는 1단계를 마치고 시간이 남으면 추가합니다. 5.3절의 2단계(ctransgan 시드 1, 2 추가)와 SD+LoRA 중 무엇을 먼저 할지는 아직 정하지 않았습니다. AnomalyDetection 팀 의견은 **ctransgan 시드 추가가 먼저**입니다. 등가 샘플 수의 신뢰구간이 RQ3의 핵심이기 때문입니다.
+- **SD+LoRA**: v2 K1_seed0를 받아 평가했습니다(13.5절). 개선판 v3는 GPU 서버에서 진행합니다(`Augmentation/sd_lora/README.md`).
 
 ### 9.2 분할 CSV와 역할 분담 `[결정]`
 
@@ -378,10 +378,10 @@ RQ1(정상만 vs 불량 추가)은 두 가지 방식으로 공정하게 비교�
 | --------------------------------------------------------------------------------------- | ------------------- | ---- |
 | 분할 CSV 생성·커밋                                                                      | Augmentation 팀     | 완료 (2a98047) |
 | 분할 검증                                                                               | AnomalyDetection 팀 | 완료 (위 표) |
-| 생성 코드를 K장 소스·`train_normal` 바탕·시드 `s`에 연결 (`shared_splits.py`, `seeds.py`, `k_copypaste.py`) | Augmentation 팀     | copy-paste 완료, ctransgan 진행 |
+| 생성 코드를 K장 소스·`train_normal` 바탕·시드 `s`에 연결 (`Augmentation/common/kshot.py`) | Augmentation 팀     | copy-paste·sd_lora 완료, ctransgan은 K1_seed0 manifest만 |
 | 생성 manifest 누수 검사                                                                 | 양 팀               | Augmentation 팀 `check_manifest`가 생성 때 검사. AnomalyDetection 팀도 학습 전에 한 번 더 검사(5.2절 4번) |
 
-**시드 규칙.** 분할 시드 `s`(0–4)는 "어떤 K장을 뽑았나"만 뜻합니다. 생성 난수는 `SeedSequence([7017, 방법 ID, PCB, K, s] (+ 샘플 번호))`로 파생합니다(`Augmentation/visa_pcb/src/seeds.py`). 그래서 같은 (방법, PCB, K, s)는 항상 같은 결과를 내고, 조건끼리 난수열이 겹치지 않습니다. 실제로 쓴 값은 manifest의 `gen_seed` 열에 남습니다.
+**시드 규칙.** 분할 시드 `s`(0–4)는 "어떤 K장을 뽑았나"만 뜻합니다. 생성 난수는 `SeedSequence([7017, 방법 ID, PCB, K, s] (+ 샘플 번호))`로 파생합니다(`Augmentation/common/kshot.py`의 `gen_seed`, `rng_for`. copypaste는 예전 규칙 유지). 그래서 같은 (방법, PCB, K, s)는 항상 같은 결과를 내고, 조건끼리 난수열이 겹치지 않습니다. 실제로 쓴 값은 manifest의 `gen_seed` 열에 남습니다.
 ---
 
 ## 10. 아직 확인할 것
@@ -481,6 +481,7 @@ git_commit, timestamp
 
 코드: `AnomalyDetection/ad/` (data, features, augment, models, eval, run, analyze). 결과: `results/results.csv`, `results/results_per_type.csv`, 로그 `results/logs/`.
 로컬 실행 환경: Apple Silicon(MPS), 메모리 16GB. 원본은 `Dataset/visa/raw/`(VisA_20220922.tar의 pcb1–3, git 제외).
+13.5절 sd_lora는 Windows CPU(원본 `--data-root Dataset/visa/VisA_official/VisA_PCB`)에서 돌렸습니다. 이후 실험은 GPU 서버로 옮깁니다.
 
 ### 13.1 파일럿: PatchCore K=0, 해상도 256 vs 512 (11/11)
 
@@ -581,7 +582,9 @@ git_commit, timestamp
 | ----- | ---- |
 | 미세조정 분류기(ResNet-18) | **로컬 M1에서는 불가**: 512에서 실행 1회에 약 37분(장당 0.35초), 학습 중 macOS GPU 워치독 오류(`kIOGPUCommandBufferCallbackErrorImpactingInteractivity`) 발생. **Colab T4에서 실행** (아래 명령). 이 오류는 분류기 로그에만 있었고 PatchCore·임베딩 모델 로그에는 0건 |
 | DRAEM | 비용 때문에 보류 (7절) |
-| ctransgan / sd_lora | 11/18 전후 수령 후 `--augs ctransgan`으로 같은 틀에 추가 |
+| ctransgan | K1_seed0 manifest만 있음(이미지는 Drive). 받으면 `--augs ctransgan`, 먼저 `gen_check` |
+| sd_lora | v2 K1_seed0 완료(13.5절). v3는 GPU 서버에서 `gen_check` 합격 후 `--augs sd_lora_v3` |
+| 밝기·위치 지름길 제거 | **먼저 할 일** (13.5절). 모든 생성 증강 비교의 전제 |
 | 목표 미검률 | 5% 제안 (13.1) |
 
 ```bash
@@ -594,3 +597,45 @@ python -m AnomalyDetection.ad.plot --res 512 --model devnet
 ```
 
 그림: `results/kcurve_none_512.png`(모델별), `results/kcurve_devnet_512.png`·`kcurve_knn_mlp_512.png`(증강별), `results/kcurve_classic_512.png`, `results/kcurve_copypaste_512.png`.
+
+### 13.5 생성 증강 `sd_lora` v2와 촬영 조건 지름길 (11/13–11/16)
+
+K=1, seed 0, 해상도 512, PCB1–3. 로그 `results/logs/sd_lora_K1_seed0.log`. FNR@FPR1% (none·classic·copypaste는 13.3과 같은 seed 0 행):
+
+| 모델 | PCB | none | classic | copypaste | sd_lora |
+| ---- | --- | ---- | ------- | --------- | ------- |
+| KNN+MLP | pcb1 / pcb2 / pcb3 | 0.567 / 0.645 / 0.850 | 0.383 / 0.516 / 0.683 | 0.750 / 0.435 / 0.700 | 0.583 / 0.597 / 0.733 |
+| KNN+MLP | 평균 | 0.687 | **0.527** | 0.628 | 0.638 |
+| DevNet | pcb1 / pcb2 / pcb3 | 0.550 / 0.113 / 0.333 | 0.383 / 0.177 / 0.433 | 0.600 / 0.371 / 0.717 | 0.717 / 0.403 / 0.667 |
+| DevNet | 평균 | 0.332 | **0.331** | 0.563 | 0.596 |
+
+- sd_lora도 copypaste처럼 DevNet을 크게 나쁘게 합니다(+0.26). Melt(시험 불량의 약 65%)에서 가장 나빠집니다(DevNet pcb2 0.04 → 0.40, pcb3 0.39 → 0.79).
+- 시드 하나라 0.05 안쪽 차이는 판단하지 않습니다(같은 none을 이 PC에서 다시 돌리면 PCB별로 최대 0.05 다름).
+
+**진단** (`python -m AnomalyDetection.ad.gen_check --aug sd_lora --k 1 --seed 0`, 캐시 임베딩, 몇 분):
+
+| 확인 | 결과 |
+| ---- | ---- |
+| 생성 ↔ 자기 바탕 정상 거리 (정상끼리 최근접 거리 = 1) | melt 0.02–0.07, missing 0.04–0.15, scratch 0.20–0.39 → 임베딩에서는 결함이 거의 안 보임 |
+| 실제 시험 불량 vs 생성, 선형 구분 AUROC | 0.911. **대조(실제 시험 불량 vs 정상) 0.914와 같음** → 특징 공간에서 생성 = 정상 |
+| 바탕 정상을 정상 학습셋에서 제외 | DevNet 0.596 → 0.627, 효과 없음 (가설 기각) |
+| 실제:생성 = 1:1 (실제를 복제) | DevNet 0.596 → 0.519, MLP 0.638 → 0.562. 좋아지지만 DevNet은 여전히 none보다 나쁨 |
+
+**원인: VisA 불량 사진은 촬영 조건이 정상과 다릅니다** (`python -m AnomalyDetection.ad.shortcut_check`).
+결함과 무관한 전역 통계 8개(밝기, RGB 평균, 대비, 기판 면적·위치)만으로 로지스틱 회귀를 돌렸습니다.
+
+| PCB | train 정상 vs test 정상 | train 정상 vs test 불량 | 크게 다른 통계 (효과크기 d) |
+| --- | --- | --- | --- |
+| pcb1 | 0.503 | **0.927** | 기판 세로 위치 +2.08, 밝기 +0.86 |
+| pcb2 | 0.399–0.514 | **0.853–0.856** | 밝기 +1.9 (평균 회색 88 → 102) |
+| pcb3 | 0.527 | **0.755** | 밝기 +0.8, 기판 가로 위치 −0.82 |
+
+- 같은 비교를 백본 임베딩으로 하면 test 정상 0.49–0.56, test 불량 0.97–0.99입니다.
+- 해석: 실제 불량으로 학습한 모델은 결함뿐 아니라 "불량 사진의 촬영 조건"도 불량 신호로 씁니다. 생성 불량은 train 정상 사진 위에 만들어서 그 신호가 없고, 그래서 정상처럼 보입니다. copypaste가 실제 결함 픽셀을 붙였는데도 해로웠던 것(13.3)과 classic의 밝기 변환이 MLP에만 도움이 된 것도 이것으로 설명됩니다.
+- **영향 범위가 생성 증강보다 넓습니다.** 13.2의 K 곡선(DevNet K=8 0.093 등)도 일부는 이 지름길 덕일 수 있습니다. 시험 정상과 시험 불량이 서로 다른 촬영 조건이라 지름길이 시험셋에서도 통하기 때문입니다. 실제 라인에서는 이 이득이 없습니다.
+
+**다음 할 일 (GPU 서버)** `[제안]`
+
+1. `shortcut_check --photonorm --aug sd_lora`: 이미지마다 채널 평균을 train 정상 평균으로 맞춘 뒤(밝기·색 제거) none과 sd_lora를 다시 비교합니다. CPU에서는 PCB당 20분 이상 걸려 중단했고, 서버에서 돌립니다.
+2. 1에서 지름길이 확인되면, `features.py` 입력 단계에 밝기 정규화를 넣고 PCB1은 180° 방향을 통일하는 옵션을 만듭니다. none·classic·copypaste·sd_lora의 K 곡선을 그 조건으로 다시 그립니다. 결과는 새 `res` 또는 `regime` 값으로 따로 기록하고, results.csv는 추가만 합니다.
+3. 생성 증강은 지름길을 없앤 조건에서 비교합니다. sd_lora v3(`--diverse --overgen 2`, 재학습 p_normal 0.1·1000 step·rank 16)는 `gen_check` 합격 후 `--augs sd_lora_v3`로 넣습니다. 실제:생성 1:1 혼합은 copypaste에도 효과가 있어(13.3 cp_1to1), `run.py` 옵션으로 넣을지 양 팀이 정합니다.
