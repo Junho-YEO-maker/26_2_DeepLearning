@@ -1,0 +1,32 @@
+pcb1 | K1_seed0 | cpu | 결함 4개, 생성 크롭 6개로 학습
+  step 1/750 D=0.720 G=36.676 L1(영역)=0.439
+  step 100/750 D=0.656 G=9.879 L1(영역)=0.155
+  step 200/750 D=0.707 G=6.107 L1(영역)=0.082
+  step 300/750 D=0.667 G=3.671 L1(영역)=0.047
+  step 400/750 D=0.695 G=4.210 L1(영역)=0.052
+  step 500/750 D=0.683 G=2.913 L1(영역)=0.030
+  step 600/750 D=0.678 G=2.727 L1(영역)=0.028
+  step 700/750 D=0.669 G=2.467 L1(영역)=0.027
+  step 750/750 D=0.664 G=2.617 L1(영역)=0.029
+pcb1 완료: 학습 476s, 생성 404s (160장)
+pcb2 | K1_seed0 | cpu | 결함 4개, 생성 크롭 5개로 학습
+  step 1/625 D=0.821 G=40.426 L1(영역)=0.524
+  step 100/625 D=0.615 G=12.987 L1(영역)=0.186
+  step 200/625 D=0.676 G=9.423 L1(영역)=0.134
+  step 300/625 D=0.647 G=5.697 L1(영역)=0.063
+  step 400/625 D=0.692 G=3.198 L1(영역)=0.031
+  step 500/625 D=0.690 G=3.216 L1(영역)=0.031
+  step 600/625 D=0.693 G=2.732 L1(영역)=0.026
+  step 625/625 D=0.693 G=3.359 L1(영역)=0.032
+pcb2 완료: 학습 381s, 생성 337s (160장)
+pcb3 | K1_seed0 | cpu | 결함 4개, 생성 크롭 4개로 학습
+  step 1/500 D=0.806 G=39.791 L1(영역)=0.506
+  step 100/500 D=0.628 G=11.201 L1(영역)=0.147
+  step 200/500 D=0.704 G=5.203 L1(영역)=0.058
+  step 300/500 D=0.698 G=4.667 L1(영역)=0.049
+  step 400/500 D=0.683 G=3.401 L1(영역)=0.033
+  step 500/500 D=0.685 G=3.240 L1(영역)=0.032
+pcb3 완료: 학습 309s, 생성 444s (160장)
+{'status': 'PASS', 'manifest': '/home/claude/work/repo/Dataset/generated/ctransgan/K1_seed0/manifest.csv', 'rows': 480}
+{'status': 'PASS', 'manifest': '/home/claude/work/repo/Dataset/generated/ctransgan/K1_seed0/manifest.csv', 'rows': 480}
+/home/claude/work/repo/Augmentation/ctransgan/review/K1_seed0.png 저장. 마스크 안 평균 RGB 변화(바탕 대비) min/median/max: [ 30.7  69.3 103.9]
