@@ -33,11 +33,13 @@ Augmentation/
 |---|---|---|---|
 | `copypaste` | 학습 없음, 기준선 | 모든 K × seed 0–4 | 코드 완료 |
 | `ctransgan` | GAN | K {1,2,4} × seed 0 | K1_seed0 결과만 있음. 코드(옛 `visa_pcb/`)는 삭제됨(d66851e) |
-| `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | 코드 완료, 노트북 `colab/sd_lora_kshot.ipynb`, `kaggle/sd_lora_kshot.ipynb` |
+| `sd_lora` | 범용 diffusion + LoRA | K {1,2,4} × seed 0 | v2 K1_seed0 결과 있음(AD에서 none보다 나쁨, 진단은 `sd_lora/README.md`). **v3(`sd_lora_v3`)를 GPU 서버에서 진행** |
 | `anomalydiffusion` | 불량 생성 전용 diffusion | K {1,2,4} × seed 0 | 어댑터 완료, **보류**: copy-paste·sd_lora 결과에서 생성 쪽 이득이 보일 때만 실행 |
 
 - 생성 모델은 조건마다 **해당 K장으로만** 새로 학습한다(33장·풀 전체로 학습한 체크포인트 재사용 금지).
 - 결함 위치·모양은 모든 방법이 같은 규칙을 따른다: K장 결함 마스크를 기판 정렬(평행이동 + PCB1의 180° 회전) 후 같은 부품 자리 ± 종류별 jitter(bent·missing 5px, melt·scratch 30px). 규칙은 `common/kshot.py`의 `board_transform`, `JITTER_BY_TYPE` 한 곳에 있고 모든 방법이 그것을 쓴다. 방법끼리는 "마스크 안을 무엇으로 채우나"만 다르다.
+  - 예외: `sd_lora_v3`의 `--diverse`는 melt·scratch 마스크 모양·위치를 바꾼다(`augment_mask`, `board_place`). 이건 별도 aug 이름으로 기록해 v2·copypaste와 섞이지 않게 한다.
+- **주의 (11/16)**: VisA 불량 사진은 정상 사진과 밝기·기판 위치가 다르다(전역 통계만으로 불량 vs 정상 AUROC 0.76–0.93). 생성 불량은 정상 사진 위에 만들므로 이 차이가 없어서, 생성 품질과 상관없이 AD 점수가 나빠 보일 수 있다. 자세한 것은 `sd_lora/README.md`, `AnomalyDetection/README.md` 13.5절.
 - 장수는 방법끼리 같게, 조건당 종류별 40장(PCB당 160장)으로 맞춘다(9절 ⑦). 장수 변화 실험(10/40/160)은 선택.
 
 ## 실행 (copy-paste)
@@ -87,8 +89,9 @@ Dataset/generated/{방법}/K{k}_seed{s}/
 - 같은 (방법, K, seed) 결과를 덮어쓸 때는 manifest 도 같이 갱신한다
 
 ## 실행 환경
-- Colab T4 기준 SD 1.5, 512px, fp16. SDXL 은 메모리 부족
-- 추가 패키지는 여기에 기록:
+- copy-paste: 로컬 CPU.
+- sd_lora: **GPU 서버** (11/16부터, Colab·Kaggle 노트북 삭제). SD 1.5 인페인팅, 512px, bf16/fp16 자동. 패키지는 `sd_lora/requirements.txt`.
+- 생성 결과 점검: 저장소 루트에서 `python -m AnomalyDetection.ad.gen_check --aug {방법} --k {k} --seed {s}` (AD 팀 코드, 몇 분).
 
 ## 예전 `visa_pcb/` (삭제됨, d66851e)
 33장 비교 실험, cTransGAN, 예전 copy-paste 코드가 있던 폴더. 11/12 팀 결정으로 삭제했다. 필요하면 `git show d66851e^:Augmentation/visa_pcb/<경로>`로 꺼낼 수 있다.
