@@ -639,3 +639,56 @@ K=1, seed 0, 해상도 512, PCB1–3. 로그 `results/logs/sd_lora_K1_seed0.log`
 1. `shortcut_check --photonorm --aug sd_lora`: 이미지마다 채널 평균을 train 정상 평균으로 맞춘 뒤(밝기·색 제거) none과 sd_lora를 다시 비교합니다. CPU에서는 PCB당 20분 이상 걸려 중단했고, 서버에서 돌립니다.
 2. 1에서 지름길이 확인되면, `features.py` 입력 단계에 밝기 정규화를 넣고 PCB1은 180° 방향을 통일하는 옵션을 만듭니다. none·classic·copypaste·sd_lora의 K 곡선을 그 조건으로 다시 그립니다. 결과는 새 `res` 또는 `regime` 값으로 따로 기록하고, results.csv는 추가만 합니다.
 3. 생성 증강은 지름길을 없앤 조건에서 비교합니다. sd_lora v3(`--diverse --overgen 2`, 재학습 p_normal 0.1·1000 step·rank 16)는 `gen_check` 합격 후 `--augs sd_lora_v3`로 넣습니다. 실제:생성 1:1 혼합은 copypaste에도 효과가 있어(13.3 cp_1to1), `run.py` 옵션으로 넣을지 양 팀이 정합니다.
+
+### 13.6 지름길 진단, 전처리, 생성 증강 다시 보기 (11/16–11/17)
+
+K=1, seed 0, 해상도 512, PCB1–3, 헤드 시드 5개 평균. FNR@FPR1%(낮을수록 좋음). 새 스크립트는 각 파일 docstring에 설명과 실행 명령이 있다.
+
+| 스크립트 (`ad/`) | 하는 일 |
+| --- | --- |
+| `prep.py` | 임베딩 전 전처리. `none` / `photonorm` / `canon`(기판 정렬 + 이미지별 채널 평균·표준편차 맞춤) / `std`(canon + 조명 평탄화 + 색 히스토그램 + 선명도 맞춤) |
+| `defect_removal_check.py` | 결함 제거 진단. D(실제 불량) / DR(결함만 정상 픽셀로 지운 불량 사진) / ND(정상 사진 + 실제 결함) / NR(붙이기 대조군)을 불량으로 판정하는 비율 |
+| `capture_probe.py` | 전처리 뒤에도 남는 촬영 조건 차이(조명 기울기, 선명도, 잔결, 채도) |
+| `counterfactual_check.py` | 결함을 지운 실제 불량 사진을 정상 반례로 학습 |
+| `patch_ad.py` | 패치 단위 AD(DevNet / MLP / kNN), 픽셀 AUROC, 위치 적중률 |
+| `threshold_check.py` | 과검 허용치 1–20%별 미검률 |
+| `gen_select.py`, `gen_count_sweep.py` | 생성 샘플 선별, 생성 장수 sweep(0–160장) |
+| `per_type_report.py` | 종류별 D/DR/ND와 FNR |
+| `gen_realism.py` | 생성 결함이 실제 결함을 닮은 정도(패치 특징 정밀도·재현율, 종류별) |
+| `label_weight_check.py` | 불량 배치 안 생성 비율 r과 생성 라벨 무게(weak: DevNet margin 2, MLP 목표 0.7) |
+
+**1. 지름길 확인** (`defect_removal_check`, canon, DevNet 실제만): 결함을 지운 불량 사진도 44%를 불량으로 판정한다(DR, pcb1 0.56, pcb2 0.61, pcb3 0.14).
+정상 사진에 실제 결함만 붙이면 16%만 잡는다(ND). 실제 K장으로 학습한 DevNet은 결함보다 불량 사진의 촬영 조건을 더 본다.
+생성(v3)을 넣으면 DR 0.09, ND 0.45로 결함 자체를 보게 되지만, 시험 불량도 같은 촬영 조건이라 FNR은 오른다(0.281 → 0.430).
+
+**2. 시도한 방법** (DevNet / MLP)
+
+| 조건 | DevNet | MLP |
+| --- | --- | --- |
+| canon, 실제만 | 0.281 | 0.659 |
+| canon, + v3 전부 (자연 비율) | 0.430 | 0.529 |
+| canon, 결함 지운 반례(CF)를 정상에 추가 | 0.427 | 0.756 |
+| 패치 단위, 실제만 (kNN 0.335) | 0.299 | 0.439 |
+| 패치 단위, + v3 | 0.418 | 0.418 |
+| std 전처리, 실제만 | 0.516 | 0.608 |
+| canon, + v3, r=0.05 weak (`label_weight_check`) | **0.269** | 0.403 |
+
+- 임계값만 바꿔서는 순서가 안 바뀐다(`threshold_check`): DevNet 실제만이 FPR 20%까지 + v3보다 낮다(0.086 vs 0.171).
+- std 전처리는 촬영 차이를 더 지우지만(DR 0.32) 블러·히스토그램 맞춤이 작은 결함 정보도 지운다(scratch 0.29 → 0.55, melt 0.25 → 0.55). canon을 유지한다.
+- 생성을 약한 보조 라벨로 조금(r=0.05) 넣는 것이 유일하게 실제만보다 나은 조건이다. 차이(−0.012)는 시드 하나 기준이라 시드를 늘려 확인해야 한다.
+
+**3. 생성 결함이 실제 결함을 닮았나** (`gen_realism`, 정밀도 / 재현율, PCB 평균, real = 실제끼리 상한)
+
+| | bent | melt | scratch | missing |
+| --- | --- | --- | --- | --- |
+| real | 0.68 / 0.68 | 0.32 / 0.32 | 0.30 / 0.30 | 0.34 / 0.34 |
+| sd_lora v2 | 0.22 / 0.11 | 0.06 / 0.13 | 0.45 / 0.14 | 0.01 / 0.10 |
+| sd_lora v3 | 0.37 / 0.22 | 0.13 / 0.15 | 0.36 / 0.30 | 0.01 / 0.11 |
+| anomalydiffusion | 0.03 / 0.22 | 0.03 / 0.13 | 0.03 / 0.17 | 0.00 / 0.02 |
+| sd_lora v4 (시도, 삭제) | 0.30 / 0.24 | 0.12 / 0.14 | 0.36 / 0.30 | 0.12 / 0.13 |
+
+- v4(`Augmentation/sd_lora/run_v4.sh`): missing을 실제로 지우고(donor 이식 + strength 0.5), bent·melt·missing을 비슷한 구조 자리로 옮겼다.
+  missing 정밀도는 0.01 → 0.12로 올랐지만 AD는 나빠졌다. DevNet weak r=0.05/0.1은 0.260/0.285(v3 0.269/0.302)로 비슷하고, r을 키우거나 MLP에서는 v3보다 0.02–0.07 나쁘다.
+  자리 옮기기가 pcb2 bent를 망가뜨렸다(FNR 0.03 → 0.26).
+- v4b(`run_v4b.sh`, v3 + v4 missing만): v3와 같거나 나쁘다. 지운 missing은 pcb1 실제 missing을 더 못 잡게 했다(0.41 → 0.48).
+- 결론: 생성기는 **v3로 확정**. 닮음 지표가 올라도 AD가 좋아지지 않았다. 결과 CSV는 `results/label_weight_sd_lora_{v3,v4,v4b}_K1_seed0_canon.csv`, `results/gen_realism_K1_seed0*.csv`.

@@ -1,0 +1,24 @@
+pcb1: 전역 통계 AUROC  정상 train vs test 정상 0.503 | vs test 불량 0.927
+   효과크기 d (불량 − 정상): gray=+0.79  R=+0.76  G=+0.76  B=+0.83  std=-0.28  board_frac=+0.10  board_y=+1.92  board_x=+0.43
+pcb2: 전역 통계 AUROC  정상 train vs test 정상 0.399 | vs test 불량 0.853
+   효과크기 d (불량 − 정상): gray=+1.89  R=+1.82  G=+1.90  B=+1.93  std=+0.13  board_frac=+0.37  board_y=+0.09  board_x=+0.29
+pcb3: 전역 통계 AUROC  정상 train vs test 정상 0.527 | vs test 불량 0.755
+   효과크기 d (불량 − 정상): gray=+0.75  R=+0.84  G=+0.65  B=+0.62  std=+0.05  board_frac=-0.15  board_y=-0.14  board_x=-0.87
+pcb1 photonorm devnet none                   FNR@1%=0.317 AUROC=0.9796
+pcb1 photonorm devnet sd_lora concat         FNR@1%=0.500 AUROC=0.9075
+pcb1 photonorm devnet sd_lora balanced       FNR@1%=0.600 AUROC=0.8719
+pcb1 photonorm mlp    none                   FNR@1%=0.467 AUROC=0.9593
+pcb1 photonorm mlp    sd_lora concat         FNR@1%=0.550 AUROC=0.9173
+pcb1 photonorm mlp    sd_lora balanced       FNR@1%=0.467 AUROC=0.9391
+pcb2 photonorm devnet none                   FNR@1%=0.113 AUROC=0.9637
+pcb2 photonorm devnet sd_lora concat         FNR@1%=0.194 AUROC=0.9526
+pcb2 photonorm devnet sd_lora balanced       FNR@1%=0.194 AUROC=0.9649
+pcb2 photonorm mlp    none                   FNR@1%=0.677 AUROC=0.8868
+pcb2 photonorm mlp    sd_lora concat         FNR@1%=0.258 AUROC=0.9566
+pcb2 photonorm mlp    sd_lora balanced       FNR@1%=0.226 AUROC=0.9549
+pcb3 photonorm devnet none                   FNR@1%=0.367 AUROC=0.9286
+pcb3 photonorm devnet sd_lora concat         FNR@1%=0.633 AUROC=0.7821
+pcb3 photonorm devnet sd_lora balanced       FNR@1%=0.633 AUROC=0.7826
+pcb3 photonorm mlp    none                   FNR@1%=0.817 AUROC=0.6070
+pcb3 photonorm mlp    sd_lora concat         FNR@1%=0.750 AUROC=0.7315
+pcb3 photonorm mlp    sd_lora balanced       FNR@1%=0.717 AUROC=0.7477

@@ -1,0 +1,50 @@
+  [devnet none              ] 불량 판정 비율  D 0.83 | DR 0.61 | ND 0.13
+  [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.60 | DR 0.11 | ND 0.51
+  [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.47 | DR 0.03 | ND 0.39
+  [mlp    none              ] 불량 판정 비율  D 0.66 | DR 0.52 | ND 0.01
+  [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.56 | DR 0.07 | ND 0.51
+  [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.66 | DR 0.22 | ND 0.45
+pcb1 (n=36, 결함 영역 평균 2.06%)
+  novelty   D 1.51 | DR(결함 제거) 1.19 | ND(정상+결함) 1.32 | 생성 1.10   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.83 | DR 0.61 | N(바탕 정상) 0.00 | ND 0.13 | 생성 0.02
+  [devnet none              ] 불량 판정 비율  D 0.75 | DR 0.59 | ND 0.18
+  [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.57 | DR 0.19 | ND 0.35
+  [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.58 | DR 0.22 | ND 0.35
+  [mlp    none              ] 불량 판정 비율  D 0.28 | DR 0.21 | ND 0.00
+  [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.41 | DR 0.06 | ND 0.22
+  [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.42 | DR 0.03 | ND 0.14
+pcb2 (n=34, 결함 영역 평균 1.22%)
+  novelty   D 1.32 | DR(결함 제거) 1.17 | ND(정상+결함) 1.18 | 생성 1.16   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.75 | DR 0.59 | N(바탕 정상) 0.00 | ND 0.18 | 생성 0.32
+  [devnet none              ] 불량 판정 비율  D 0.43 | DR 0.24 | ND 0.06
+  [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.47 | DR 0.13 | ND 0.46
+  [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.51 | DR 0.23 | ND 0.43
+  [mlp    none              ] 불량 판정 비율  D 0.37 | DR 0.33 | ND 0.02
+  [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.51 | DR 0.16 | ND 0.39
+  [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.54 | DR 0.23 | ND 0.31
+pcb3 (n=36, 결함 영역 평균 1.20%)
+  novelty   D 1.23 | DR(결함 제거) 1.10 | ND(정상+결함) 1.14 | 생성 1.24   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.43 | DR 0.24 | N(바탕 정상) 0.00 | ND 0.06 | 생성 0.27
+
+평균 (PCB 3개)
+  n            35.333
+  nov_D        1.354
+  nov_DR       1.154
+  nov_ND       1.215
+  nov_GEN      1.163
+  devnet_D     0.669
+  devnet_DR    0.481
+  devnet_N     0.000
+  devnet_ND    0.122
+  devnet_GEN   0.204
+  region_frac  0.015
+
+학습 조건별 불량 판정 비율 (val_normal FPR 1% 임계값, PCB 평균)  D=실제 불량 | DR=결함 제거 | ND=정상+실제 결함
+  devnet none               D 0.67 | DR 0.48 | ND 0.12
+  devnet +sd_lora_v3 160    D 0.55 | DR 0.14 | ND 0.44
+  devnet +sd_lora_v3 40     D 0.52 | DR 0.16 | ND 0.39
+  mlp    none               D 0.43 | DR 0.35 | ND 0.01
+  mlp    +sd_lora_v3 160    D 0.49 | DR 0.10 | ND 0.37
+  mlp    +sd_lora_v3 40     D 0.54 | DR 0.16 | ND 0.30
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/defect_removal_K1_seed0_canon.csv
+예시: /home/junho/26_2_DeepLearning/AnomalyDetection/results/defect_removal_examples

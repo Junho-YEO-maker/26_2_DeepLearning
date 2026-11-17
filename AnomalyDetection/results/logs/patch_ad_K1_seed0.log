@@ -1,0 +1,50 @@
+pcb1: 정상 패치 64000, 실제 K장 불량 패치 28
+  pcb1 devnet none               불량 패치    28 | FNR 0.397 AUROC 0.974 픽셀AUROC 0.839 위치적중 0.63
+  pcb1 mlp    none               불량 패치    28 | FNR 0.543 AUROC 0.949 픽셀AUROC 0.449 위치적중 0.56
+  pcb1 devnet +sd_lora           불량 패치  1167 | FNR 0.500 AUROC 0.908 픽셀AUROC 0.891 위치적중 0.79
+  pcb1 mlp    +sd_lora           불량 패치  1167 | FNR 0.617 AUROC 0.855 픽셀AUROC 0.856 위치적중 0.86
+  pcb1 devnet +sd_lora_v3        불량 패치  1283 | FNR 0.657 AUROC 0.806 픽셀AUROC 0.778 위치적중 0.76
+  pcb1 mlp    +sd_lora_v3        불량 패치  1283 | FNR 0.547 AUROC 0.881 픽셀AUROC 0.793 위치적중 0.76
+  pcb1 devnet +sd_lora_v3c1024   불량 패치  1263 | FNR 0.600 AUROC 0.899 픽셀AUROC 0.650 위치적중 0.71
+  pcb1 mlp    +sd_lora_v3c1024   불량 패치  1263 | FNR 0.407 AUROC 0.945 픽셀AUROC 0.591 위치적중 0.77
+  pcb1 devnet +anomalydiffusion  불량 패치  1199 | FNR 0.837 AUROC 0.768 픽셀AUROC 0.678 위치적중 0.48
+  pcb1 mlp    +anomalydiffusion  불량 패치  1199 | FNR 0.670 AUROC 0.851 픽셀AUROC 0.621 위치적중 0.58
+  pcb1 knn    (불량 학습 없음)      | FNR 0.200 AUROC 0.988 픽셀AUROC 0.997 위치적중 0.88
+pcb2: 정상 패치 64000, 실제 K장 불량 패치 51
+  pcb2 devnet none               불량 패치    51 | FNR 0.129 AUROC 0.985 픽셀AUROC 0.948 위치적중 0.41
+  pcb2 mlp    none               불량 패치    51 | FNR 0.290 AUROC 0.958 픽셀AUROC 0.885 위치적중 0.38
+  pcb2 devnet +sd_lora           불량 패치  2151 | FNR 0.487 AUROC 0.917 픽셀AUROC 0.915 위치적중 0.67
+  pcb2 mlp    +sd_lora           불량 패치  2151 | FNR 0.394 AUROC 0.952 픽셀AUROC 0.871 위치적중 0.67
+  pcb2 devnet +sd_lora_v3        불량 패치  2135 | FNR 0.271 AUROC 0.960 픽셀AUROC 0.945 위치적중 0.85
+  pcb2 mlp    +sd_lora_v3        불량 패치  2135 | FNR 0.377 AUROC 0.956 픽셀AUROC 0.926 위치적중 0.74
+  pcb2 devnet +sd_lora_v3c1024   불량 패치  2124 | FNR 0.606 AUROC 0.918 픽셀AUROC 0.932 위치적중 0.74
+  pcb2 mlp    +sd_lora_v3c1024   불량 패치  2124 | FNR 0.477 AUROC 0.935 픽셀AUROC 0.914 위치적중 0.73
+  pcb2 devnet +anomalydiffusion  불량 패치  2151 | FNR 0.829 AUROC 0.693 픽셀AUROC 0.854 위치적중 0.56
+  pcb2 mlp    +anomalydiffusion  불량 패치  2151 | FNR 0.690 AUROC 0.782 픽셀AUROC 0.883 위치적중 0.53
+  pcb2 knn    (불량 학습 없음)      | FNR 0.371 AUROC 0.935 픽셀AUROC 0.993 위치적중 0.84
+pcb3: 정상 패치 64000, 실제 K장 불량 패치 42
+  pcb3 devnet none               불량 패치    42 | FNR 0.370 AUROC 0.951 픽셀AUROC 0.935 위치적중 0.85
+  pcb3 mlp    none               불량 패치    42 | FNR 0.483 AUROC 0.916 픽셀AUROC 0.869 위치적중 0.72
+  pcb3 devnet +sd_lora           불량 패치  1747 | FNR 0.643 AUROC 0.770 픽셀AUROC 0.839 위치적중 0.55
+  pcb3 mlp    +sd_lora           불량 패치  1747 | FNR 0.663 AUROC 0.787 픽셀AUROC 0.808 위치적중 0.55
+  pcb3 devnet +sd_lora_v3        불량 패치  1711 | FNR 0.327 AUROC 0.936 픽셀AUROC 0.941 위치적중 0.89
+  pcb3 mlp    +sd_lora_v3        불량 패치  1711 | FNR 0.330 AUROC 0.936 픽셀AUROC 0.951 위치적중 0.86
+  pcb3 devnet +sd_lora_v3c1024   불량 패치  1747 | FNR 0.487 AUROC 0.914 픽셀AUROC 0.922 위치적중 0.78
+  pcb3 mlp    +sd_lora_v3c1024   불량 패치  1747 | FNR 0.473 AUROC 0.906 픽셀AUROC 0.905 위치적중 0.77
+  pcb3 devnet +anomalydiffusion  불량 패치  1737 | FNR 0.653 AUROC 0.792 픽셀AUROC 0.810 위치적중 0.59
+  pcb3 mlp    +anomalydiffusion  불량 패치  1737 | FNR 0.663 AUROC 0.794 픽셀AUROC 0.866 위치적중 0.61
+  pcb3 knn    (불량 학습 없음)      | FNR 0.433 AUROC 0.946 픽셀AUROC 0.994 위치적중 0.85
+
+패치 AD 요약 (PCB 평균, 헤드 시드 5개 평균). FNR 낮을수록, 나머지는 높을수록 좋음. 종류별 FNR은 PCB 합침
+  knn    none               FNR 0.335 AUROC 0.957 픽셀AUROC 0.995 위치적중 0.86 | bent 0.14 melt 0.36 scratch 0.31 missing 0.38
+  devnet none               FNR 0.299 AUROC 0.970 픽셀AUROC 0.907 위치적중 0.63 | bent 0.15 melt 0.28 scratch 0.30 missing 0.52
+  devnet +sd_lora           FNR 0.543 AUROC 0.865 픽셀AUROC 0.882 위치적중 0.67 | bent 0.27 melt 0.55 scratch 0.50 missing 0.67
+  devnet +sd_lora_v3        FNR 0.418 AUROC 0.901 픽셀AUROC 0.888 위치적중 0.83 | bent 0.28 melt 0.44 scratch 0.42 missing 0.51
+  devnet +sd_lora_v3c1024   FNR 0.564 AUROC 0.910 픽셀AUROC 0.835 위치적중 0.75 | bent 0.25 melt 0.62 scratch 0.34 missing 0.71
+  devnet +anomalydiffusion  FNR 0.773 AUROC 0.751 픽셀AUROC 0.781 위치적중 0.55 | bent 0.45 melt 0.85 scratch 0.72 missing 0.79
+  mlp    none               FNR 0.439 AUROC 0.941 픽셀AUROC 0.734 위치적중 0.56 | bent 0.31 melt 0.43 scratch 0.42 missing 0.62
+  mlp    +sd_lora           FNR 0.558 AUROC 0.865 픽셀AUROC 0.845 위치적중 0.69 | bent 0.26 melt 0.58 scratch 0.56 missing 0.70
+  mlp    +sd_lora_v3        FNR 0.418 AUROC 0.924 픽셀AUROC 0.890 위치적중 0.79 | bent 0.25 melt 0.46 scratch 0.36 missing 0.49
+  mlp    +sd_lora_v3c1024   FNR 0.452 AUROC 0.929 픽셀AUROC 0.803 위치적중 0.76 | bent 0.22 melt 0.50 scratch 0.27 missing 0.56
+  mlp    +anomalydiffusion  FNR 0.675 AUROC 0.809 픽셀AUROC 0.790 위치적중 0.57 | bent 0.44 melt 0.74 scratch 0.57 missing 0.64
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/patch_ad_K1_seed0.csv

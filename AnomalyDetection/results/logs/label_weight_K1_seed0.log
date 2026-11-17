@@ -1,0 +1,29 @@
+pcb1: 끝 (실제 4장, 생성 160장)
+pcb2: 끝 (실제 4장, 생성 160장)
+pcb3: 끝 (실제 4장, 생성 160장)
+
+생성 비율 r(불량 배치 중 생성 몫) × 약하게(weak: DevNet margin 2, MLP 목표 0.7). prep=canon, 시드 5개 평균
+FNR@1%·5%는 PCB 평균(낮을수록 좋음), 종류별은 PCB 합침, DR 낮을수록·ND 높을수록 좋음
+  devnet r=0.0     same | FNR@1 0.281 @5 0.160 | bent 0.12 melt 0.25 scratch 0.29 missing 0.38 | D 0.67 DR 0.44 ND 0.16
+  devnet r=0.05    same | FNR@1 0.356 @5 0.211 | bent 0.09 melt 0.35 scratch 0.35 missing 0.41 | D 0.71 DR 0.27 ND 0.50
+  devnet r=0.05    weak | FNR@1 0.269 @5 0.162 | bent 0.06 melt 0.25 scratch 0.28 missing 0.40 | D 0.71 DR 0.32 ND 0.40
+  devnet r=0.1     same | FNR@1 0.367 @5 0.257 | bent 0.09 melt 0.36 scratch 0.34 missing 0.49 | D 0.66 DR 0.21 ND 0.50
+  devnet r=0.1     weak | FNR@1 0.302 @5 0.185 | bent 0.07 melt 0.29 scratch 0.28 missing 0.42 | D 0.69 DR 0.28 ND 0.42
+  devnet r=0.25    same | FNR@1 0.390 @5 0.286 | bent 0.10 melt 0.38 scratch 0.42 missing 0.47 | D 0.61 DR 0.16 ND 0.49
+  devnet r=0.25    weak | FNR@1 0.317 @5 0.226 | bent 0.09 melt 0.30 scratch 0.34 missing 0.42 | D 0.67 DR 0.24 ND 0.46
+  devnet r=0.5     same | FNR@1 0.418 @5 0.298 | bent 0.11 melt 0.42 scratch 0.47 missing 0.46 | D 0.56 DR 0.12 ND 0.45
+  devnet r=0.5     weak | FNR@1 0.350 @5 0.244 | bent 0.10 melt 0.33 scratch 0.42 missing 0.40 | D 0.61 DR 0.21 ND 0.43
+  devnet r=natural same | FNR@1 0.434 @5 0.322 | bent 0.13 melt 0.44 scratch 0.49 missing 0.46 | D 0.51 DR 0.07 ND 0.46
+  devnet r=natural weak | FNR@1 0.350 @5 0.254 | bent 0.12 melt 0.34 scratch 0.38 missing 0.41 | D 0.61 DR 0.18 ND 0.45
+  mlp    r=0.0     same | FNR@1 0.659 @5 0.454 | bent 0.68 melt 0.67 scratch 0.62 missing 0.52 | D 0.43 DR 0.35 ND 0.02
+  mlp    r=0.05    same | FNR@1 0.459 @5 0.304 | bent 0.17 melt 0.46 scratch 0.48 missing 0.50 | D 0.60 DR 0.13 ND 0.41
+  mlp    r=0.05    weak | FNR@1 0.403 @5 0.272 | bent 0.18 melt 0.41 scratch 0.42 missing 0.40 | D 0.63 DR 0.23 ND 0.32
+  mlp    r=0.1     same | FNR@1 0.463 @5 0.330 | bent 0.17 melt 0.47 scratch 0.44 missing 0.51 | D 0.58 DR 0.12 ND 0.41
+  mlp    r=0.1     weak | FNR@1 0.397 @5 0.265 | bent 0.17 melt 0.40 scratch 0.39 missing 0.42 | D 0.63 DR 0.21 ND 0.35
+  mlp    r=0.25    same | FNR@1 0.446 @5 0.308 | bent 0.16 melt 0.46 scratch 0.43 missing 0.49 | D 0.57 DR 0.13 ND 0.42
+  mlp    r=0.25    weak | FNR@1 0.394 @5 0.266 | bent 0.18 melt 0.40 scratch 0.38 missing 0.37 | D 0.65 DR 0.22 ND 0.35
+  mlp    r=0.5     same | FNR@1 0.471 @5 0.323 | bent 0.15 melt 0.48 scratch 0.46 missing 0.52 | D 0.55 DR 0.12 ND 0.42
+  mlp    r=0.5     weak | FNR@1 0.392 @5 0.285 | bent 0.17 melt 0.40 scratch 0.38 missing 0.37 | D 0.65 DR 0.22 ND 0.37
+  mlp    r=natural same | FNR@1 0.495 @5 0.355 | bent 0.16 melt 0.50 scratch 0.49 missing 0.54 | D 0.51 DR 0.10 ND 0.42
+  mlp    r=natural weak | FNR@1 0.475 @5 0.328 | bent 0.17 melt 0.50 scratch 0.46 missing 0.46 | D 0.61 DR 0.15 ND 0.39
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/label_weight_sd_lora_v3_K1_seed0_canon.csv

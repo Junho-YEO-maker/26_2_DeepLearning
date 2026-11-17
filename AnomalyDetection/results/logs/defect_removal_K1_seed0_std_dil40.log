@@ -1,0 +1,51 @@
+  pcb1 [devnet none              ] 불량 판정 비율  D 0.82 | DR 0.46 | ND 0.26 | NR 0.00
+  pcb1 [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.48 | DR 0.00 | ND 0.48 | NR 0.06
+  pcb1 [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.51 | DR 0.00 | ND 0.44 | NR 0.00
+  pcb1 [mlp    none              ] 불량 판정 비율  D 0.56 | DR 0.37 | ND 0.04 | NR 0.00
+  pcb1 [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.50 | DR 0.00 | ND 0.43 | NR 0.06
+  pcb1 [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.51 | DR 0.07 | ND 0.39 | NR 0.03
+pcb1 (n=36, 결함 영역 평균 4.25%)
+  novelty   D 1.49 | DR(결함 제거) 1.16 | ND(정상+결함) 1.35 | 생성 1.12   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.82 | DR 0.46 | N(바탕 정상) 0.00 | ND 0.26 | NR(정상+정상 붙이기) 0.00 | 생성 0.08
+  pcb2 [devnet none              ] 불량 판정 비율  D 0.45 | DR 0.32 | ND 0.01 | NR 0.00
+  pcb2 [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.50 | DR 0.12 | ND 0.41 | NR 0.02
+  pcb2 [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.48 | DR 0.17 | ND 0.35 | NR 0.00
+  pcb2 [mlp    none              ] 불량 판정 비율  D 0.34 | DR 0.22 | ND 0.02 | NR 0.00
+  pcb2 [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.48 | DR 0.14 | ND 0.44 | NR 0.06
+  pcb2 [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.42 | DR 0.16 | ND 0.31 | NR 0.01
+pcb2 (n=34, 결함 영역 평균 3.34%)
+  novelty   D 1.27 | DR(결함 제거) 1.11 | ND(정상+결함) 1.19 | 생성 1.14   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.45 | DR 0.32 | N(바탕 정상) 0.00 | ND 0.01 | NR(정상+정상 붙이기) 0.00 | 생성 0.07
+  pcb3 [devnet none              ] 불량 판정 비율  D 0.39 | DR 0.18 | ND 0.11 | NR 0.00
+  pcb3 [devnet +sd_lora_v3 160   ] 불량 판정 비율  D 0.53 | DR 0.17 | ND 0.41 | NR 0.00
+  pcb3 [devnet +sd_lora_v3 40    ] 불량 판정 비율  D 0.46 | DR 0.13 | ND 0.37 | NR 0.03
+  pcb3 [mlp    none              ] 불량 판정 비율  D 0.21 | DR 0.12 | ND 0.04 | NR 0.00
+  pcb3 [mlp    +sd_lora_v3 160   ] 불량 판정 비율  D 0.46 | DR 0.13 | ND 0.37 | NR 0.01
+  pcb3 [mlp    +sd_lora_v3 40    ] 불량 판정 비율  D 0.41 | DR 0.14 | ND 0.27 | NR 0.00
+pcb3 (n=36, 결함 영역 평균 3.11%)
+  novelty   D 1.19 | DR(결함 제거) 1.08 | ND(정상+결함) 1.15 | 생성 1.16   (정상끼리 = 1)
+  DevNet 불량 판정 비율  D 0.39 | DR 0.18 | N(바탕 정상) 0.00 | ND 0.11 | NR(정상+정상 붙이기) 0.00 | 생성 0.26
+
+평균 (PCB 3개)
+  n            35.333
+  nov_D        1.320
+  nov_DR       1.117
+  nov_ND       1.230
+  nov_GEN      1.141
+  devnet_D     0.555
+  devnet_DR    0.321
+  devnet_N     0.000
+  devnet_ND    0.126
+  devnet_NR    0.000
+  devnet_GEN   0.134
+  region_frac  0.036
+
+학습 조건별 불량 판정 비율 (val_normal FPR 1% 임계값, PCB 평균)  D=실제 불량 | DR=결함 제거 | ND=정상+실제 결함
+  devnet none               D 0.55 | DR 0.32 | ND 0.13 | NR 0.00
+  devnet +sd_lora_v3 160    D 0.50 | DR 0.10 | ND 0.43 | NR 0.02
+  devnet +sd_lora_v3 40     D 0.48 | DR 0.10 | ND 0.39 | NR 0.01
+  mlp    none               D 0.37 | DR 0.24 | ND 0.03 | NR 0.00
+  mlp    +sd_lora_v3 160    D 0.48 | DR 0.09 | ND 0.41 | NR 0.04
+  mlp    +sd_lora_v3 40     D 0.45 | DR 0.12 | ND 0.32 | NR 0.01
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/defect_removal_K1_seed0_std_dil40.csv
+예시: /home/junho/26_2_DeepLearning/AnomalyDetection/results/defect_removal_examples

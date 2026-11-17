@@ -1,0 +1,19 @@
+pcb1: 반례 20장 (25% 조건은 8배 복제)
+pcb2: 반례 20장 (25% 조건은 8배 복제)
+pcb3: 반례 20장 (25% 조건은 8배 복제)
+
+시험셋 FNR@FPR1% (PCB 평균) | 종류별 FNR (PCB 합침) | 진단 판정 비율 D / DR(지름길) / ND(결함 자체) / NR(붙이기 대조)
+prep=canon, 헤드 시드 5개 평균. FNR은 낮을수록, ND는 높을수록, DR은 낮을수록 좋다
+  devnet 정상=normal  불량=real               FNR 0.281 | bent 0.12 melt 0.25 scratch 0.29 missing 0.38 | D 0.67 DR 0.44 ND 0.16 NR 0.00
+  devnet 정상=normal  불량=real+sd_lora_v3    FNR 0.430 | bent 0.11 melt 0.43 scratch 0.48 missing 0.46 | D 0.55 DR 0.09 ND 0.45 NR 0.02
+  devnet 정상=+CF     불량=real               FNR 0.427 | bent 0.06 melt 0.48 scratch 0.43 missing 0.35 | D 0.67 DR 0.21 ND 0.39 NR 0.01
+  devnet 정상=+CF     불량=real+sd_lora_v3    FNR 0.522 | bent 0.13 melt 0.55 scratch 0.52 missing 0.51 | D 0.45 DR 0.05 ND 0.44 NR 0.02
+  devnet 정상=+CF25%  불량=real               FNR 0.507 | bent 0.07 melt 0.57 scratch 0.48 missing 0.39 | D 0.59 DR 0.12 ND 0.37 NR 0.00
+  devnet 정상=+CF25%  불량=real+sd_lora_v3    FNR 0.513 | bent 0.14 melt 0.54 scratch 0.52 missing 0.51 | D 0.46 DR 0.06 ND 0.42 NR 0.03
+  mlp    정상=normal  불량=real               FNR 0.659 | bent 0.68 melt 0.67 scratch 0.62 missing 0.52 | D 0.43 DR 0.35 ND 0.02 NR 0.00
+  mlp    정상=normal  불량=real+sd_lora_v3    FNR 0.529 | bent 0.15 melt 0.56 scratch 0.51 missing 0.54 | D 0.49 DR 0.10 ND 0.40 NR 0.02
+  mlp    정상=+CF     불량=real               FNR 0.756 | bent 0.52 melt 0.81 scratch 0.69 missing 0.61 | D 0.40 DR 0.13 ND 0.17 NR 0.00
+  mlp    정상=+CF     불량=real+sd_lora_v3    FNR 0.575 | bent 0.18 melt 0.61 scratch 0.52 missing 0.56 | D 0.47 DR 0.07 ND 0.40 NR 0.02
+  mlp    정상=+CF25%  불량=real               FNR 0.583 | bent 0.35 melt 0.66 scratch 0.53 missing 0.35 | D 0.53 DR 0.23 ND 0.23 NR 0.00
+  mlp    정상=+CF25%  불량=real+sd_lora_v3    FNR 0.574 | bent 0.19 melt 0.62 scratch 0.50 missing 0.55 | D 0.48 DR 0.07 ND 0.41 NR 0.02
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/counterfactual_sd_lora_v3_K1_seed0_canon.csv

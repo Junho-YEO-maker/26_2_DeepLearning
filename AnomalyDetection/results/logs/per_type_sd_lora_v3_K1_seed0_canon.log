@@ -1,0 +1,14 @@
+(1) 결함 제거 진단, 종류별 불량 판정 비율 (pool 불량, canon_dil40, PCB 합침, 헤드 시드 5개)
+    D = 실제 불량 사진, DR = 결함 지운 불량 사진(지름길), ND = 정상 사진 + 진짜 결함
+  devnet none           bent: D 0.89 DR 0.53 ND 0.33  melt: D 0.74 DR 0.59 ND 0.04  scratch: D 0.53 DR 0.27 ND 0.06  missing: D 0.53 DR 0.36 ND 0.23
+  devnet +sd_lora_v3    bent: D 0.92 DR 0.11 ND 0.80  melt: D 0.41 DR 0.14 ND 0.27  scratch: D 0.45 DR 0.03 ND 0.38  missing: D 0.43 DR 0.10 ND 0.40
+  mlp    none           bent: D 0.57 DR 0.50 ND 0.04  melt: D 0.23 DR 0.18 ND 0.00  scratch: D 0.47 DR 0.47 ND 0.00  missing: D 0.49 DR 0.27 ND 0.05
+  mlp    +sd_lora_v3    bent: D 0.82 DR 0.15 ND 0.78  melt: D 0.30 DR 0.12 ND 0.17  scratch: D 0.44 DR 0.05 ND 0.36  missing: D 0.45 DR 0.07 ND 0.33
+
+(2) 원래 시험셋 FNR@FPR1%, 종류별 (prep=canon, PCB 합침 = 불량 수 가중, 헤드 시드 5개). 낮을수록 좋음
+    시험 불량 수: bent 22, melt 122, scratch 36, missing 29
+  devnet none           bent 0.12  melt 0.25  scratch 0.29  missing 0.38
+  devnet +sd_lora_v3    bent 0.11  melt 0.43  scratch 0.48  missing 0.46
+  mlp    none           bent 0.68  melt 0.67  scratch 0.62  missing 0.52
+  mlp    +sd_lora_v3    bent 0.15  melt 0.56  scratch 0.51  missing 0.54
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/per_type_sd_lora_v3_K1_seed0_canon.csv

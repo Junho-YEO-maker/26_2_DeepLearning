@@ -1,0 +1,55 @@
+pcb1 sd_lora        all    n=160 edit=0.0007  devnet=0.650  mlp=0.653
+pcb1 sd_lora        rand40 n= 40 edit=0.0006  devnet=0.527  mlp=0.640
+pcb1 sd_lora        top40  n= 40 edit=0.0010  devnet=0.393  mlp=0.433
+pcb1 sd_lora_v3     all    n=160 edit=0.0008  devnet=0.520  mlp=0.573
+pcb1 sd_lora_v3     rand40 n= 40 edit=0.0009  devnet=0.327  mlp=0.550
+pcb1 sd_lora_v3     top40  n= 40 edit=0.0012  devnet=0.380  mlp=0.430
+pcb1 sd_lora_v3c1024 all    n=160 edit=0.0007  devnet=0.467  mlp=0.470
+pcb1 sd_lora_v3c1024 rand40 n= 40 edit=0.0007  devnet=0.323  mlp=0.433
+pcb1 sd_lora_v3c1024 top40  n= 40 edit=0.0012  devnet=0.330  mlp=0.460
+pcb1 anomalydiffusion all    n=160 edit=0.0002  devnet=0.540  mlp=0.610
+pcb1 anomalydiffusion rand40 n= 40 edit=0.0002  devnet=0.520  mlp=0.580
+pcb1 anomalydiffusion top40  n= 40 edit=0.0004  devnet=0.483  mlp=0.623
+pcb1 none           none   n=  0              devnet=0.417  mlp=0.390
+pcb2 sd_lora        all    n=160 edit=0.0011  devnet=0.226  mlp=0.335
+pcb2 sd_lora        rand40 n= 40 edit=0.0012  devnet=0.342  mlp=0.352
+pcb2 sd_lora        top40  n= 40 edit=0.0017  devnet=0.187  mlp=0.581
+pcb2 sd_lora_v3     all    n=160 edit=0.0013  devnet=0.229  mlp=0.306
+pcb2 sd_lora_v3     rand40 n= 40 edit=0.0013  devnet=0.223  mlp=0.329
+pcb2 sd_lora_v3     top40  n= 40 edit=0.0020  devnet=0.352  mlp=0.319
+pcb2 sd_lora_v3c1024 all    n=160 edit=0.0012  devnet=0.481  mlp=0.523
+pcb2 sd_lora_v3c1024 rand40 n= 40 edit=0.0011  devnet=0.400  mlp=0.526
+pcb2 sd_lora_v3c1024 top40  n= 40 edit=0.0018  devnet=0.216  mlp=0.632
+pcb2 anomalydiffusion all    n=160 edit=0.0002  devnet=0.674  mlp=0.584
+pcb2 anomalydiffusion rand40 n= 40 edit=0.0002  devnet=0.790  mlp=0.732
+pcb2 anomalydiffusion top40  n= 40 edit=0.0004  devnet=0.658  mlp=0.681
+pcb2 none           none   n=  0              devnet=0.139  mlp=0.642
+pcb3 sd_lora        all    n=160 edit=0.0020  devnet=0.637  mlp=0.730
+pcb3 sd_lora        rand40 n= 40 edit=0.0021  devnet=0.663  mlp=0.743
+pcb3 sd_lora        top40  n= 40 edit=0.0025  devnet=0.647  mlp=0.653
+pcb3 sd_lora_v3     all    n=160 edit=0.0020  devnet=0.657  mlp=0.727
+pcb3 sd_lora_v3     rand40 n= 40 edit=0.0020  devnet=0.703  mlp=0.763
+pcb3 sd_lora_v3     top40  n= 40 edit=0.0025  devnet=0.643  mlp=0.710
+pcb3 sd_lora_v3c1024 all    n=160 edit=0.0017  devnet=0.767  mlp=0.793
+pcb3 sd_lora_v3c1024 rand40 n= 40 edit=0.0017  devnet=0.690  mlp=0.733
+pcb3 sd_lora_v3c1024 top40  n= 40 edit=0.0022  devnet=0.657  mlp=0.667
+pcb3 anomalydiffusion all    n=160 edit=0.0008  devnet=0.780  mlp=0.747
+pcb3 anomalydiffusion rand40 n= 40 edit=0.0009  devnet=0.833  mlp=0.803
+pcb3 anomalydiffusion top40  n= 40 edit=0.0012  devnet=0.630  mlp=0.673
+pcb3 none           none   n=  0              devnet=0.397  mlp=0.833
+
+FNR@FPR1% (PCB 3개 평균, 헤드 시드 5개 평균. 괄호는 PCB별)
+  none           none    devnet=0.317 (0.42/0.14/0.40)  mlp=0.622 (0.39/0.64/0.83)
+  sd_lora        all     devnet=0.504 (0.65/0.23/0.64)  mlp=0.573 (0.65/0.34/0.73)
+  sd_lora        rand40  devnet=0.511 (0.53/0.34/0.66)  mlp=0.578 (0.64/0.35/0.74)
+  sd_lora        top40   devnet=0.409 (0.39/0.19/0.65)  mlp=0.556 (0.43/0.58/0.65)
+  sd_lora_v3     all     devnet=0.469 (0.52/0.23/0.66)  mlp=0.535 (0.57/0.31/0.73)
+  sd_lora_v3     rand40  devnet=0.418 (0.33/0.22/0.70)  mlp=0.547 (0.55/0.33/0.76)
+  sd_lora_v3     top40   devnet=0.458 (0.38/0.35/0.64)  mlp=0.486 (0.43/0.32/0.71)
+  sd_lora_v3c1024 all     devnet=0.571 (0.47/0.48/0.77)  mlp=0.595 (0.47/0.52/0.79)
+  sd_lora_v3c1024 rand40  devnet=0.471 (0.32/0.40/0.69)  mlp=0.564 (0.43/0.53/0.73)
+  sd_lora_v3c1024 top40   devnet=0.401 (0.33/0.22/0.66)  mlp=0.586 (0.46/0.63/0.67)
+  anomalydiffusion all     devnet=0.665 (0.54/0.67/0.78)  mlp=0.647 (0.61/0.58/0.75)
+  anomalydiffusion rand40  devnet=0.715 (0.52/0.79/0.83)  mlp=0.705 (0.58/0.73/0.80)
+  anomalydiffusion top40   devnet=0.590 (0.48/0.66/0.63)  mlp=0.659 (0.62/0.68/0.67)
+저장: /home/junho/26_2_DeepLearning/AnomalyDetection/results/gen_select_K1_seed0.csv
