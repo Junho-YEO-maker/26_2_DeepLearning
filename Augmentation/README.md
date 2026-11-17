@@ -73,7 +73,7 @@ Dataset/generated/{방법}/K{k}_seed{s}/
 | `gen_seed` | 생성 난수 시드 (아래) |
 | `condition` | 붙인 위치·면적 등 JSON |
 
-- images/, masks/ 는 git 제외 (Drive), manifest.csv 만 git
+- images/, masks/, manifest.csv 모두 git에 포함
 - 이미지를 JPEG로 저장하는 이유: 실제 이미지가 JPEG라서, PNG로 두면 "압축 흔적이 없으면 생성"이라는 지름길을 탐지 모델이 배울 수 있다.
 
 ## 시드 규칙

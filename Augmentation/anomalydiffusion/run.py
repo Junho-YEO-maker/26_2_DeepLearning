@@ -19,6 +19,7 @@
 """
 import argparse
 import json
+import math
 import os
 import re
 import shlex
@@ -92,7 +93,7 @@ def prepare(a):
                 meta[sample] = dict(pcb=pcb, defect_type=t, donor=donor, box=list(box),
                                     normals=[r['image'] for r in chosen], transforms=transforms)
                 lines.append(f'{sample}+{t}')
-    (w / 'name-anomaly.txt').write_text('\n'.join(lines) + '\n')
+    (w / 'name-anomaly.txt').write_text('\n'.join(lines))   # 끝 줄바꿈 금지: 공식 로더가 split('\n') 후 빈 줄도 '+'로 나누다 멈춘다
     (w / 'meta.json').write_text(json.dumps(meta, indent=2, ensure_ascii=False))
 
     # 공식 코드가 현재 폴더 기준으로 찾는 경로들
@@ -103,15 +104,30 @@ def prepare(a):
             if os.name != 'nt':
                 raise
             print(f'[경고] Windows에서 {name} 링크를 못 만듦. 실제 학습은 Linux(A100)에서 하세요.')
-    cfg = yaml.safe_load((UPSTREAM / CONFIG).read_text())
-    cfg['lightning']['trainer']['max_steps'] = a.steps
-    (w / 'train.yaml').write_text(yaml.safe_dump(cfg, sort_keys=False))
+    write_train_yaml(w, a.steps)
     print(f'준비 완료: {w}  (샘플 {len(lines)}개, 학습 {a.steps} step)')
+
+
+def write_train_yaml(w, steps):
+    """공식 설정에 학습 step과 저장 간격만 바꿔 쓴다.
+    공식 체크포인트는 every_n_train_steps(2000)마다만 저장되고(그때 embeddings.pt·spatial_encoder.pt가 생김),
+    끝날 때 따로 저장하지 않는다. 그래서 간격을 steps의 약수로 맞춰 마지막 step에서 반드시 저장되게 한다."""
+    cfg = yaml.safe_load((UPSTREAM / CONFIG).read_text())
+    cfg['lightning']['trainer']['max_steps'] = steps
+    cfg['lightning']['modelcheckpoint']['params']['every_n_train_steps'] = steps if steps <= 2000 else math.gcd(steps, 2000)
+    (w / 'train.yaml').write_text(yaml.safe_dump(cfg, sort_keys=False))
 
 
 # ---------------------------------------------------------------- train / generate (공식 코드)
 def upstream(a, w, args):
     env = dict(os.environ, PYTHONPATH=str(UPSTREAM))
+    # 공식 코드는 import할 때 stylegan2 CUDA 연산(fused_act, upfirdn2d)을 직접 컴파일한다.
+    # env_setup.sh가 conda 환경 안에 넣은 nvcc 11.3·gcc 10을 쓰도록 CUDA_HOME과 PATH를 그 환경으로 맞춘다.
+    prefix = subprocess.run(shlex.split(a.ad_python) + ['-c', 'import sys; print(sys.prefix)'],
+                            capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1]
+    if (Path(prefix) / 'bin' / 'nvcc').exists():
+        env.setdefault('CUDA_HOME', prefix)
+        env['PATH'] = f'{prefix}/bin{os.pathsep}{env.get("PATH", "")}'
     cmd = shlex.split(a.ad_python) + args
     print('$', ' '.join(cmd), flush=True)
     subprocess.run(cmd, cwd=w, env=env, check=True)
@@ -120,9 +136,12 @@ def upstream(a, w, args):
 def train(a):
     w = work_dir(a.k, a.seed)
     assert (w / 'name-anomaly.txt').exists(), 'prepare 먼저'
+    write_train_yaml(w, a.steps)                         # train --steps가 prepare 때 값에 묶이지 않게
+    shutil.rmtree(w / 'logs', ignore_errors=True)        # 공식 코드는 늘 logs/anomaly-checkpoints에 쓰므로, 예전 결과가 남아 있으면 아래 확인이 거짓으로 통과한다
     upstream(a, w, [str(UPSTREAM / 'main.py'), '--spatial_encoder_embedding', '--data_enhance',
                     '--base', 'train.yaml', '-t', '--actual_resume', 'models/ldm/text2img-large/model.ckpt',
-                    '-n', 'kshot', '--gpus', '0,', '--init_word', 'anomaly', '--mvtec_path=data'])
+                    '-n', 'kshot', '--gpus', '0,', '--init_word', 'anomaly', '--mvtec_path=data',
+                    '--no-test'])   # 학습 뒤 trainer.test()는 test_dataloader가 없어 에러로 끝난다(결과 파일은 이미 저장된 뒤)
     ck = w / 'logs/anomaly-checkpoints/checkpoints'
     missing = [f for f in ('embeddings.pt', 'spatial_encoder.pt') if not (ck / f).exists()]
     assert not missing, f'학습 결과에 {missing} 없음: {ck} 를 확인하세요 (README "처음 실행 점검" 참고)'
@@ -163,7 +182,7 @@ def export(a):
     ks = KShot(a.k, a.seed, a.data_root)
     w = work_dir(a.k, a.seed)
     meta = json.loads((w / 'meta.json').read_text())
-    writer = ManifestWriter('anomalydiffusion', a.k, a.seed, force=a.force)
+    writer = ManifestWriter('anomalydiffusion', a.k, a.seed, out_root=a.out_root, force=a.force)
     normal_rows = {r['image']: r for r in ks.normal_rows}
     for pcb in PCBS:
         for t in TYPES:
@@ -222,7 +241,9 @@ def parser():
     p.add_argument('--seed', type=int, default=0)
     p.add_argument('--steps', type=int, default=6000, help='공식 기본값은 1,000,000. K=1로 먼저 시간을 재고 정한다')
     p.add_argument('--res', type=int, default=512, help='결함 주변 크롭 크기(원본 픽셀)')
-    p.add_argument('--gen-res', type=int, default=512, help='생성 해상도. 공식 기본 256')
+    p.add_argument('--gen-res', type=int, default=256,
+                   help='생성 해상도. 공식 생성(ddpm.py log_images)이 마스크를 32×32 latent로 고정해 256px만 된다. '
+                        '학습은 공식과 같이 512(--data_enhance). 생성한 256 크롭은 export에서 원래 크롭 크기로 키워 붙인다')
     p.add_argument('--per-type', type=int, default=40)
     p.add_argument('--n-normal', type=int, default=30, help='샘플마다 넣을 정상 바탕 크롭 수')
     p.add_argument('--n-masks', type=int, default=60, help='샘플마다 만들 생성용 마스크 수')
@@ -230,6 +251,7 @@ def parser():
     p.add_argument('--data-root')
     p.add_argument('--ad-python', default='conda run --no-capture-output -n Anomalydiffusion python',
                    help='공식 코드를 돌릴 파이썬 (setup.sh가 만드는 conda 환경)')
+    p.add_argument('--out-root', help='export 결과 위치 (기본: <저장소>/Dataset/generated/anomalydiffusion). 시험할 때 따로 두려면 지정')
     p.add_argument('--force', action='store_true')
     return p
 

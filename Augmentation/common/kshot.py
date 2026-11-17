@@ -270,6 +270,137 @@ def board_place(m, base_img, rng, tries=50, min_on_board=0.8):
     return None, None
 
 
+# ---------- 비슷한 구조 자리로 옮기기·지우기 (sd_lora v4, 11/17) ----------
+# K=1이면 bent·melt·missing 40장이 불량 원본 1장의 자리(± 5–30px)에만 찍힌다(pcb2·pcb3: 40장이 3–6군데,
+# 퍼짐 0.02 vs 실제 0.15–0.20, gen_realism). 바탕 정상 사진에서 원래 결함 자리와 모양이 비슷한 곳
+# (같은 헤더의 다른 핀, 같은 모양의 다른 SMD 자리)을 정규화 상관으로 찾아 그중 한 곳으로 옮긴다.
+
+def _window_sum(x, h, w):
+    c = np.pad(x.cumsum(0).cumsum(1), ((1, 0), (1, 0)))
+    return c[h:, w:] - c[:-h, w:] - c[h:, :-w] + c[:-h, :-w]
+
+
+def ncc_map(img, tmpl):
+    """정규화 상관(valid). img, tmpl: 2D float. 평평한 곳(국소 표준편차가 템플릿의 ~20% 미만)은 낮게 나온다."""
+    from scipy.signal import fftconvolve
+    h, w = tmpl.shape
+    t = tmpl - tmpl.mean()
+    tn = float(np.sqrt((t ** 2).sum())) + 1e-6
+    num = fftconvolve(img, t[::-1, ::-1], mode='valid')
+    s, s2 = _window_sum(img, h, w), _window_sum(img ** 2, h, w)
+    var = np.maximum(s2 - s ** 2 / t.size, 0.04 * tn ** 2)
+    return num / (np.sqrt(var) * tn)
+
+
+def subset_blobs(m, rng, p=0.5):
+    """여러 덩어리 마스크(예: pcb2 missing은 SMD 12개)에서 덩어리마다 p로 남긴다(최소 1개). 빠진 부품 수·자리가 바뀐다."""
+    from scipy import ndimage
+    lab, n = ndimage.label(m)
+    if n <= 1:
+        return m, {}
+    keep = [i for i in range(1, n + 1) if rng.random() < p] or [int(rng.integers(1, n + 1))]
+    return np.isin(lab, keep), {'blobs_kept': len(keep), 'blobs': int(n)}
+
+
+def similar_sites(mask, base_img, scale=2, margin=24, thr=0.7, color_tol=20, max_sites=16, max_frac=0.45):
+    """base 사진에서 mask 자리(bbox + margin)와 모양이 비슷한 자리들의 이동량 [(dx, dy, ncc)] (원래 자리 (0, 0) 포함).
+    회색조 정규화 상관이 thr 이상이고, 창의 평균 색(RGB)이 원래 자리와 채널마다 color_tol 안인 곳만 받는다
+    (회색조만 보면 회색 바닥 위 핀이 파란 기판의 흰 글자 가장자리와도 맞는다). 템플릿이 사진의 max_frac보다 크면
+    원래 자리만 돌려준다."""
+    W, H = base_img.size
+    ys, xs = np.where(mask)
+    x0, x1 = max(xs.min() - margin, 0), min(xs.max() + margin + 1, W)
+    y0, y1 = max(ys.min() - margin, 0), min(ys.max() + margin + 1, H)
+    if (x1 - x0) > max_frac * W or (y1 - y0) > max_frac * H:
+        return [(0, 0, 1.0)]
+    rgb = np.asarray(base_img.convert('RGB').resize((W // scale, H // scale), BILINEAR), np.float32)
+    g = rgb.mean(2)
+    sx0, sy0, sx1, sy1 = x0 // scale, y0 // scale, x1 // scale, y1 // scale
+    r = ncc_map(g, g[sy0:sy1, sx0:sx1])
+    th, tw = sy1 - sy0, sx1 - sx0
+    for c in range(3):                                     # 평균 색이 다른 자리는 뺀다
+        mean_c = _window_sum(rgb[..., c], th, tw) / (th * tw)
+        r[np.abs(mean_c - mean_c[sy0, sx0]) > color_tol] = -1
+    sites = [(0, 0, 1.0)]
+    r[max(sy0 - th // 2, 0):sy0 + th // 2 + 1, max(sx0 - tw // 2, 0):sx0 + tw // 2 + 1] = -1   # 원래 자리
+    while len(sites) < max_sites:
+        y, x = np.unravel_index(int(r.argmax()), r.shape)
+        if r[y, x] < thr:
+            break
+        dx, dy = (x - sx0) * scale, (y - sy0) * scale
+        if xs.min() + dx >= 0 and xs.max() + dx < W and ys.min() + dy >= 0 and ys.max() + dy < H:
+            sites.append((int(dx), int(dy), round(float(r[y, x]), 3)))
+        r[max(y - th // 2, 0):y + th // 2 + 1, max(x - tw // 2, 0):x + tw // 2 + 1] = -1
+    return sites
+
+
+def relocate(mask, place, base_img, rng, whole=False, **kw):
+    """mask를 similar_sites 중 한 곳으로 옮긴다.
+    덩어리 하나: 통째로 옮기고 place['applied_shift_xy']에도 더해서 change_region(aligned_donor)이
+                 불량 원본을 같은 자리로 옮겨 비교하게 한다. whole=True면 여러 덩어리도 통째로
+                 (bent: 덩어리들이 휜 핀 하나의 조각이다).
+    여러 덩어리: 덩어리마다 따로 옮긴다(전체 bbox는 너무 커서 비슷한 자리가 없다). 이때 불량 원본과의 비교는
+                 자리가 맞지 않으므로 place['relocate']['per_blob'] = True로 표시해 change_region을 건너뛰게 한다."""
+    from scipy import ndimage
+    lab, n = ndimage.label(mask)
+    if n <= 1 or whole:
+        sites = similar_sites(mask, base_img, **kw)
+        dx, dy, score = sites[int(rng.integers(len(sites)))]
+        if dx or dy:
+            mask = shift_mask(mask, dx, dy)[0]
+            sx, sy = place['applied_shift_xy']
+            place['applied_shift_xy'] = [sx + dx, sy + dy]
+        place['relocate'] = {'sites': len(sites), 'shift_xy': [dx, dy], 'ncc': score}
+        return mask
+    out, info = np.zeros_like(mask), []
+    for i in range(1, n + 1):
+        blob = lab == i
+        sites = similar_sites(blob, base_img, **kw)
+        dx, dy, score = sites[int(rng.integers(len(sites)))]
+        out |= shift_mask(blob, dx, dy)[0] if (dx or dy) else blob
+        info.append([len(sites), dx, dy])
+    place['relocate'] = {'per_blob': True, 'blobs': info}
+    return out
+
+
+def donor_fill(base_img, donor_img, place, mask0, region, px=8):
+    """missing 바탕 채우기: 불량 원본의 실제 "빠진 모습"(빈 패드, 핀 없는 바닥)을 옮긴 자리에 맞춰 region 안에 붙인다.
+    mask0 = relocate 전 마스크. 덩어리별로 옮겼으면 덩어리마다 그 이동량으로 불량 원본을 옮겨 붙인다."""
+    from scipy import ndimage
+    out = np.asarray(base_img).copy()
+    rl = place.get('relocate', {})
+    if rl.get('per_blob'):
+        lab, _ = ndimage.label(mask0)
+        sx, sy = place['applied_shift_xy']
+        for i, (_, dx, dy) in enumerate(rl['blobs'], 1):
+            d = np.asarray(aligned_donor(donor_img, base_img, dict(place, applied_shift_xy=[sx + dx, sy + dy])))
+            r = dilate(shift_mask(lab == i, dx, dy)[0], px) & region
+            out[r] = d[r]
+    else:
+        d = np.asarray(aligned_donor(donor_img, base_img, place))
+        out[region] = d[region]
+    return Image.fromarray(out)
+
+
+def fill_region(img, region, sigmas=(3, 6, 12, 24, 48), min_w=0.3):
+    """region(bool) 안을 바깥 픽셀로 채운다(정규화 가우시안: 작은 σ부터, 바깥 가중이 min_w 넘는 곳부터).
+    부품·핀을 지운 매끈한 바탕이 된다. 질감은 그 뒤 인페인팅(strength < 1)이 입힌다. PIL 이미지를 돌려준다."""
+    from scipy.ndimage import gaussian_filter
+    a = np.asarray(img, np.float32)
+    known = (~region).astype(np.float32)
+    out, todo = a.copy(), region.copy()
+    for s in sigmas:
+        wgt = gaussian_filter(known, s)
+        sel = todo & (wgt > (min_w if s != sigmas[-1] else 1e-6))
+        if sel.any():
+            for c in range(3):
+                out[..., c][sel] = (gaussian_filter(a[..., c] * known, s)[sel] / np.maximum(wgt[sel], 1e-6))
+            todo &= ~sel
+        if not todo.any():
+            break
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+
+
 def map_box(box, tf, image_wh):
     """donor 좌표의 창 (x0,y0,x1,y1)이 base 좌표에서 차지하는 창."""
     x0, y0, x1, y1 = box

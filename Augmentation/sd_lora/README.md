@@ -70,6 +70,16 @@ AD 쪽 처리는 `AnomalyDetection/README.md` 13.5절.
 - 바탕 정상을 AD 정상 학습셋에서 빼기: 해 봤는데 효과 없음(DevNet 0.596 → 0.627).
 - pcb1 missing: 시험 불량 면적 중앙값 4.4%인데 K1 donor는 0.11%. K=1에서는 어떻게 해도 못 맞춘다. 결과 해석 때 언급만.
 
+## v3 결과와 이후 시도 (11/16–11/17)
+
+생성기는 **v3로 확정** (`Dataset/generated/sd_lora_v3/K1_seed0/`, LoRA `sd_lora/runs_v3/`). AD 결과와 해석은 `AnomalyDetection/README.md` 13.6절.
+
+| 시도 | 바꾼 것 | 결과 | 남긴 것 |
+|---|---|---|---|
+| v3c1024 | `CONTEXT=1024`: 원본을 1024로 넓게 잘라 512로 줄여 학습·생성 (`run_v3c1024.sh`) | 닮음 지표가 v3보다 낮음(scratch 정밀도 0.36 → 0.21), 패치 AD도 나쁨 | 코드 옵션, 그림. 생성 결과·LoRA는 삭제 |
+| v4 | `--erase-missing`(missing 자리를 donor의 빠진 모습으로 채우고 strength 0.5로 다듬기), `--relocate bent melt missing`(바탕에서 비슷한 구조 자리로 옮기기, `common/kshot.py` `similar_sites`·`relocate`) | missing 정밀도 0.01 → 0.12. 그러나 AD는 v3와 같거나 나쁨(pcb2 bent 망가짐) | 코드 옵션(기본 꺼짐), `run_v4.sh`, `figures/v4_base_vs_generated.jpg`. 생성 결과는 삭제 |
+| v4b | v3 + v4 missing만 (`run_v4b.sh`, manifest만 합침. `sd_lora_v4`가 먼저 있어야 함) | v3와 같거나 나쁨 | 스크립트 |
+
 ## 하는 일 (v2 기준, v3는 위 옵션만 추가)
 | 단계 | 내용 |
 |---|---|

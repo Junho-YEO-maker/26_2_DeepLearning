@@ -15,7 +15,7 @@
 │  │     ├─ train_normal.csv  # 정상 학습셋, 생성 바탕 (PCB당 500)
 │  │     ├─ pool.csv        # K장 후보 (종류별 10, pcb2 bent 8)
 │  │     └─ train_K{1,2,4,8}_seed{0..4}.csv  # PCB별·종류별 K장
-│  └─ generated/            # 생성 결과. 이미지는 Drive, manifest.csv만 git
+│  └─ generated/            # 생성 결과. 이미지·마스크·manifest.csv 모두 git 포함
 │     └─ {방법}/K{k}_seed{s}/{images,masks,manifest.csv}
 ├─ Augmentation/            # 생성 팀 코드
 ├─ AnomalyDetection/        # 탐지 팀 코드

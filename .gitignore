@@ -1,8 +1,6 @@
-# 원본·생성 이미지는 Google Drive에만 둔다 (git 제외)
+# VisA 원본 이미지는 Google Drive에만 둔다 (git 제외). 생성 이미지·마스크는 git에 포함
 Dataset/visa/raw/*
 !Dataset/visa/raw/.gitkeep
-Dataset/generated/**/images/
-Dataset/generated/**/masks/
 
 # 분할표·manifest·결과 csv는 git에 포함
 
@@ -20,6 +18,11 @@ runs/
 # 로컬에 받아 둔 VisA 원본 사본
 Dataset/visa/VisA_official/
 
+# AIHub SMT 원본 (AIHub 이용약관상 제3자 제공 금지: git·공유 Drive에 올리지 않음)
+Dataset/aihub_smt/raw/
+# 위 원본으로 만든 생성 불량도 파생물이라 같이 제외
+Dataset/aihub_smt/generated/
+
 # AD 팀 이미지·임베딩 캐시
 Dataset/cache/
 
@@ -27,6 +30,9 @@ Dataset/cache/
 Augmentation/sd_lora/runs/
 Augmentation/sd_lora/runs_*/
 Augmentation/sd_lora/*.log
+Augmentation/smt_sd_lora/runs/
+Augmentation/smt_sd_lora/runs_*/
+Augmentation/smt_sd_lora/*.log
 Augmentation/anomalydiffusion/upstream/
 Augmentation/anomalydiffusion/work/
 Augmentation/anomalydiffusion/*.log
