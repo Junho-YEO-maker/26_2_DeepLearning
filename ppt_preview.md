@@ -86,6 +86,9 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 
 #### 7. cTransGAN (1:00) [있음: 구조 / 필요: 새 버전 수치]
 - 메시지: K장만으로 처음부터 학습하는 Transformer GAN.
+- 원 논문: Wang, C., Huang, G., Huang, Z., & He, W. (2023). [Conditional TransGAN-Based Data Augmentation for PCB Electronic Component Inspection](https://doi.org/10.1155/2023/2024237). *Computational Intelligence and Neuroscience*, Article 2024237.
+- VisA PCB 생성 결과 (A100, seed 0): K1·K2·K4 각각 이미지·마스크 480쌍, 총 1,440쌍. 세 조건 모두 manifest 누수 검사 통과.
+- 스크래치의 길이·폭·각도 변형은 조건별 120장 중 K1 109장, K2 108장, K4 103장에 적용했다.
 - 구조
   - 생성기: 잡음(128) + 조건 → 8×8 → 16×16 → 32×32 토큰(pixel shuffle) → 토큰마다 픽셀 패치로 펼쳐 256×256
   - 판별기: 조건 임베딩을 추가 토큰으로 받음. 생성 결과를 정상 바탕에 끼워 넣은 것을 봄
