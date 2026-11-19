@@ -82,10 +82,13 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 | SD+LoRA v2 | 결함을 약하게 그림, 빈 기판 같은 샘플 | 정상 샘플 25% → 10%, 1000 step, rank 16, 2배 만들어 변화 큰 것만 고르기 |
 | SD+LoRA v4 (missing 지우기, 자리 옮기기) | 닮음 지표는 오름, AD는 그대로이거나 나빠짐 | v3로 확정 |
 
-- 그림: `Augmentation/figures/sd_lora_v2_*_sheet.jpg` vs `sd_lora_v3_*_sheet.jpg`, `Augmentation/figures/v4_base_vs_generated.jpg`
+- 그림: `ppt_figures/s06_sd_lora_v2_pcb{1,2,3}_sheet.jpg` vs `s08_sd_lora_v3_pcb{1,2,3}_sheet.jpg`, `ppt_figures/s06_sd_lora_v4_base_vs_generated.jpg`, bent 핀 잔상 제거 전후 `ppt_figures/s06_pinfix_before_after.jpg`
 
-#### 7. cTransGAN (1:00) [있음: 구조 / 필요: 새 버전 수치]
+#### 7. cTransGAN (1:00) [있음: 구조 / 수치는 채울 실험 0]
 - 메시지: K장만으로 처음부터 학습하는 Transformer GAN.
+- 원 논문: Chenglong Wang, Guanghan Huang, Zhiyuan Huang, Weiming He (2023), [Conditional TransGAN-Based Data Augmentation for PCB Electronic Component Inspection](https://doi.org/10.1155/2023/2024237), Computational Intelligence and Neuroscience, Article 2024237. 논문의 cTransGAN을 VisA PCB의 K-shot 결함 패치 생성에 맞게 적용했다.
+- 생성 완료: A100, seed 0, K1·K2·K4 각각 이미지·마스크 480쌍(총 1,440쌍), manifest 누수 검사 PASS.
+- 스크래치의 길이·폭·각도 변형은 조건별 120장 중 K1 109장, K2 108장, K4 103장에 적용했다.
 - 구조
   - 생성기: 잡음(128) + 조건 → 8×8 → 16×16 → 32×32 토큰(pixel shuffle) → 토큰마다 픽셀 패치로 펼쳐 256×256
   - 판별기: 조건 임베딩을 추가 토큰으로 받음. 생성 결과를 정상 바탕에 끼워 넣은 것을 봄
@@ -93,8 +96,7 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
   - 손실: 적대 ×0.25 + 다시 그릴 영역 L1 ×35 + 경계 + 고주파 + 크롭 전체 L1
 - 데이터 맞춤 조정: 잠재 벡터 고정과 재구성 손실(K장 대응), 원래 핀 자리까지 다시 그림, 기판 정렬 후 같은 부품 자리에 둠, 원본 해상도·JPEG q75로 붙임
 - 학습 시간: PCB당 1–4분(GPU, 새 버전)
-- 그림: `/home/junho/ctransgan_runs/diverse_full_u9lv51T7/review_K{1,2,4}_seed0.png`
-- 주의: README의 품질 수치(실제 결함과의 차이 0.07–0.15 등)는 11/15 CPU 버전 기준이다. 새 버전은 아래 실험 1-b로 다시 잰다.
+- 그림: `ppt_figures/s07_ctransgan_K{1,2,4,8}_review.png` (잔상 제거 후)
 
 #### 8. SD+LoRA (1:00) [있음]
 - 메시지: 사전학습 확산 모델에 LoRA만 학습해 K장으로 결함을 그린다.
@@ -102,20 +104,19 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 - 학습: K장 결함 주변 512 크롭, 인페인팅 영역 가림, 정상 샘플 10%(결함 단어 없는 프롬프트), 1000 step
 - 생성: 결함 모양·위치 변형(`--diverse`), 2배 만들어 마스크 안 변화가 큰 40장만 남김
 - 데이터 맞춤 조정: 정상 사진 위에 그리고 JPEG까지 맞춰 생성 흔적이 지름길이 되지 않게 함
-- 그림: `Augmentation/figures/sd_lora_v3_pcb{1,2,3}_sheet.jpg`, `Augmentation/figures/real_vs_v3_melt_missing.png`
+- 그림: `ppt_figures/s08_sd_lora_v3_pcb{1,2,3}_sheet.jpg` (잔상 제거 후), `ppt_figures/s08_real_vs_v3_melt_missing.png`
 
-#### 9. Aug 결과: 생성 품질 (0:40) [SD+LoRA 있음 / cTransGAN 필요]
+#### 9. Aug 결과: 생성 품질 (0:40) [진행 중: 채울 실험 0에서 잔상 제거 후 다시 잼]
 - 메시지: 두 생성기가 실제 결함을 얼마나 닮았나.
 - 실제 결함을 닮은 정도(정밀도 / 재현율, PCB 평균, `AnomalyDetection/results/gen_realism_K1_seed0.csv`)
 
 | | bent | melt | scratch | missing |
 |---|---|---|---|---|
 | 실제끼리 (상한) | .68 / .68 | .32 / .32 | .30 / .30 | .34 / .34 |
-| SD+LoRA v3 | .37 / .22 | .13 / .15 | .36 / .30 | .01 / .11 |
-| cTransGAN (새 버전) | ? | ? | ? | ? |
+| SD+LoRA v3 (잔상 제거 전) | .37 / .22 | .13 / .15 | .36 / .30 | .01 / .11 |
+| cTransGAN (잔상 제거 전) | .33 / .22 | .13 / .15 | .36 / .19 | .02 / .11 |
 
 - 비교 축: 학습량(처음부터 vs LoRA만), 학습 시간, 다양성, 닮음
-- 채울 실험: 1-b
 
 ### Part 2. AD: 레이블을 학습에 쓰는 방식
 
@@ -139,8 +140,8 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 - 생성 추가 (canon 전처리, 헤드 seed 5개, README 13.6절)
   - DevNet 0.281 → +SD+LoRA 0.430 (나빠짐)
   - MLP 0.659 → +SD+LoRA 0.529 (좋아지지만 여전히 DevNet 실제만보다 나쁨. 약한 모델의 과적합을 줄인 효과로 설명)
-  - cTransGAN: ? (채울 실험 1-c)
-- 그림: `AnomalyDetection/results/kcurve_none_512.png`
+  - cTransGAN: 채울 실험 0의 N=40 DevNet
+- 그림: `ppt_figures/s11_kcurve_standard_test.png`
 
 #### 12. 시행착오: 지름길 추정 (1:10) [있음]
 - 메시지: 모델이 결함이 아니라 불량 사진의 촬영 환경을 배웠다.
@@ -154,9 +155,9 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 | 5 | 입력 정규화(밝기 맞춤, 기판 정렬, 강한 정규화), 결함 지운 사진을 정상 반례로, 생성 라벨 약하게 | 일부만 개선. 강한 정규화는 작은 결함까지 지움(scratch 0.29 → 0.55). 반례 0.427, 약한 라벨 0.269 | 입력만 손봐서는 안 된다 → 학습 단위를 바꿔야 한다 |
 | 6 | 패치 단위 DevNet(`patch_ad`) | 실제만 0.299, +생성 0.418 | 위치 쪽으로 가되 결함 지도를 직접 학습하기로 |
 
-- 그림: `AnomalyDetection/results/defect_removal_examples/*_D-DR-N-ND.jpg`, `Augmentation/figures/shortcut_diagnosis_K1_seed0.png`
-- Grad-CAM (실험 2, K=1 seed 0): 이미지 DevNet이 DR을 불량이라 할 때, 히트맵 질량 중 지운 자리 안은 0.025로 우연(0.027)과 같다. 질량 절반은 사진의 18%에 퍼진다.
-  그림: `AnomalyDetection/results/gradcam/K1_seed0_all.jpg`
+- 그림: `ppt_figures/s12_defect_removal_{pcb1_bent,pcb2_melt,pcb3_scratch}.jpg` (D / DR / N / ND), `ppt_figures/s12_shortcut_diagnosis.png`
+- Grad-CAM (채울 실험 1, K=1 seed 0): 이미지 DevNet이 DR을 불량이라 할 때, 히트맵 질량 중 지운 자리 안은 0.025로 우연(0.027)과 같다. 질량 절반은 사진의 18%에 퍼진다.
+  그림: `ppt_figures/s12_s14_gradcam_vs_seg_map.jpg`
 
 #### 13. 데이터 특성에 맞춘 조정 (0:50) [있음]
 - 메시지: 특성 두 개에 조정 두 개.
@@ -182,7 +183,7 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 | DR (결함 지운 불량을 불량이라 함, 낮을수록 좋음) | 0.44 | 0.09 | 0.14 |
 | ND (정상 + 결함을 잡음, 높을수록 좋음) | 0.16 | 0.45 | 0.74 |
 
-- 공정 시험셋 (K=1 seed 0, 헤드 seed 3, 결과 파일은 실행이 끝나면 `AnomalyDetection/results/fair_ad_K1_seed0.csv`) [진행 중]
+- 공정 시험셋 (K=1 seed 0, 잔상 제거 전 숫자. 채울 실험 0의 결과로 바꾼다)
 
 | 학습 | PatchCore | seg | seg + 촬영 조건 무작위화 |
 |---|---|---|---|
@@ -195,13 +196,14 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
   - K=1에서는 아직 PatchCore(0.188)가 가장 낫다. 정상만을 넘는 K는 공정 K 곡선으로 확인한다.
 - SMT (현장형, 정상이 다양함, 5 seed, `AnomalyDetection/results/smt/summary.txt`)
   - 사전공정: PatchCore 0.910, kNN 0.767 → DevNet K=1 0.213, MLP K=1 0.301
-  - 위치 seg(K=1, seed 0–2, `results/smt/seg_ad_*.csv`, 표준 시험셋 과검률 1%): 실제만 사전 0.199, 납땜 0.802
+  - 위치 seg(K=1, seed 0–2, `results/smt/seg_ad_*.csv`, 표준 시험셋 과검률 1%, 자리 고치기 전. 채울 실험 0-2로 바꾼다): 실제만 사전 0.199, 납땜 0.802
     - + SD+LoRA 종류당 40장: 사전 0.136, 납땜 0.736 (seed 3/3 개선). 같은 SD+LoRA가 이미지 DevNet에서는 어떤 설정으로도 실제만을 못 넘었다.
     - + sd_real_s30(실제 결함을 붙인 뒤 SD+LoRA로 30% 다시 그림) 10장: 사전 0.167, 납땜 0.636
     - 부록: 실제 결함 옮겨 붙이기 40장 사전 0.100–0.124, 납땜 0.624. 종류당 1장은 효과 없고 5장부터 이득. 표는 `AnomalyDetection/smt/README.md`
-- 그림: seg 결함 지도 + 이미지 DevNet Grad-CAM 나란히 [있음] `AnomalyDetection/results/gradcam/K1_seed0_all.jpg`
-  - 시험 불량에서 지도 질량 중 결함 영역 안: DevNet 0.04(우연 0.03) vs seg 0.75. 최고점이 결함 위: 0.11 vs 0.87 (표는 실험 2)
-- 채울 실험: 1-c, 1-d, 3
+- 그림: seg 결함 지도 + 이미지 DevNet Grad-CAM 나란히 [있음] `ppt_figures/s12_s14_gradcam_vs_seg_map.jpg`
+  - 시험 불량에서 지도 질량 중 결함 영역 안: DevNet 0.04(우연 0.03) vs seg 0.75. 최고점이 결함 위: 0.11 vs 0.87 (표는 채울 실험 1)
+- 채울 실험: 0, 0-2, 0-3 C (그림: 생성기·공정마다 x = 합성 장수 N, 선 = K)
+- 그림 [있음]: `ppt_figures/s14_grid_visa.png`, `ppt_figures/s14_grid_smt.png` (숫자는 `AnomalyDetection/results/ppt/grid_summary.md`), 공정 K 곡선 `ppt_figures/s14_fair_kcurve.png`. SMT 생성 예시는 `ppt_figures/local_only/` (AIHub 파생이라 git 제외)
 
 ### 마무리
 
@@ -257,85 +259,64 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 
 ## 채울 실험
 
-공통 준비 (프로젝트 루트에서):
-```bash
-cd /home/junho/26_2_DeepLearning
-PY=/home/junho/miniforge3/envs/26_2_dl/bin/python
-DR=/home/junho/26_2_DeepLearning/Dataset/visa/VisA_official/VisA_PCB   # Dataset/visa/raw는 비어 있음
-export OMP_NUM_THREADS=4
-```
-서버가 바쁘다(11/18 기준 GPU 100%, CPU 부하 약 90). 한 번에 하나씩 넣는다.
+공통: 프로젝트 루트에서 `PY=/home/junho/miniforge3/envs/26_2_dl/bin/python`, `DR=Dataset/visa/VisA_official/VisA_PCB`(절대경로로), `export OMP_NUM_THREADS=4`.
 
-### 1. cTransGAN을 AD에 넣기 (슬라이드 9, 11, 14) [필요]
+### 0. VisA: 잔상 제거 후 생성기 × K × 합성 장수 N (슬라이드 9, 11, 14) [진행 중, 11/18 15:20~]
+- 왜: bent 생성 이미지에 원래 곧은 핀이 남았다(pcb3 심함, 세 생성기 모두). seg에 생성을 넣으면 bent 미검률만 0.09 → 0.15–0.21로 나빠졌다.
+- 잔상 제거 `Augmentation/pin_cleanup/clean.py` (bent만, 규칙은 0-1). 원래 세트·이전 결과는 `Dataset/generated/_before_pinfix/`, `AnomalyDetection/results/_before_pinfix/`에 보관하고, 고친 세트를 같은 이름(`sd_lora_v3`, `ctransgan_diverse`)에 둔다.
+- 반복: {SD+LoRA v3, cTransGAN} × K {1, 2, 4, 8} × N(종류당) {0, 1, 5, 10, 20, 40}, seed 0 (SD+LoRA K1은 seed 1–4도).
+  위치 seg(촬영 조건 무작위화), 공정 시험셋. 배치 안 실제:합성 = 반반 고정. N장은 `Augmentation/gen_subset.py`(고정 순서의 앞 N장). N=40에서는 seg·DevNet도. N=0은 공정 K 곡선 결과.
+- 실행 `AnomalyDetection/results/logs/run_pinfix_rerun.sh` → 결과 `fair_ad_K{k}_seed{s}_grid_{v3|ctg}.csv`, 생성 품질 `gen_realism_K1_seed0.csv`, 끝에 Grad-CAM 다시.
+- copy-paste·anomalydiffusion·SD+LoRA v2는 다시 안 돌린다(부록, copy-paste에도 잔상 → 한계).
 
-**1-a. 프로젝트로 옮기기.** 새 버전 결과(K1·2·4, 각 480장, 누수 검사 PASS)는 프로젝트 밖에 있고 manifest 경로가 절대경로다. 이름은 기존 `ctransgan`(manifest만 있음)과 겹치지 않게 `ctransgan_diverse`로 한다.
-```bash
-SRC=/home/junho/ctransgan_runs/diverse_full_u9lv51T7
-for k in 1 2 4; do
-  OUT=Dataset/generated/ctransgan_diverse/K${k}_seed0
-  mkdir -p $OUT && cp -r $SRC/K${k}_seed0/images $SRC/K${k}_seed0/masks $OUT/
-  sed "s#$SRC/#Dataset/generated/ctransgan_diverse/#g" $SRC/K${k}_seed0/manifest.csv > $OUT/manifest.csv
-done
-(cd Augmentation && $PY -c "from common.kshot import check_manifest as c; print(c('../Dataset/generated/ctransgan_diverse/K1_seed0/manifest.csv'))")
-```
+### 0-1. 생성 흔적을 막는 규칙 (cTransGAN 담당자: 다시 만들 때 생성기 안에 넣기)
+**VisA bent 핀 잔상**
+- 원인: `generate_diverse.structure_region` → `common/kshot.change_region`이 지울 핀을 (1) **흑백** 밝기 차이로 찾아 은색 핀/초록 기판을 놓치고, (2) 마스크 **20px** 안만 봐서 헤더 너머 핀을 빠뜨린다.
+- 규칙 (`pin_cleanup/clean.py` `residue_region`을 import해도 됨)
+  1. 핀 = 색으로: 채도 (max−min)/max < 0.30, 가장 밝은 채널 > 110 (2px 흐림 뒤).
+  2. 바탕에는 핀이 있고 실제 결함 사진의 같은 자리 ±6px에는 없는 곳만 (정상 핀은 안 건드림).
+  3. 마스크(또는 실제 결함 자리)에서 45px 안에 닿는 덩어리, closing 4 → 5px 넓힘.
+  4. 실제 결함 사진의 같은 자리(배경)로 채움. 밝기는 주변 3–14px 고리 중앙값으로 맞추고 경계 3px 섞음.
+  5. bent만 (missing에 켜면 핀 가장자리를 파먹는다).
+- 확인: 생성 뒤 `pin_cleanup.clean` 로그의 "고친 장수"가 거의 0, review 그림 pcb3 bent에 곧은 핀이 없음.
+- 남은 한계: K=1이면 종류당 마스크 모양이 하나라 40장의 휜 핀 길이·각도가 같다.
 
-**1-b. 생성 품질.** `gen_realism`은 결과 파일 `gen_realism_K1_seed0.csv`를 덮어쓴다. 기존 파일을 먼저 보관한다.
-```bash
-cp AnomalyDetection/results/gen_realism_K1_seed0.csv AnomalyDetection/results/gen_realism_K1_seed0_before_ctg.csv
-$PY -m AnomalyDetection.ad.gen_realism --augs sd_lora_v3 ctransgan_diverse --k 1 --seed 0 --data-root $DR
-mv AnomalyDetection/results/gen_realism_K1_seed0.csv AnomalyDetection/results/gen_realism_K1_seed0_ctg.csv
-mv AnomalyDetection/results/gen_realism_K1_seed0_before_ctg.csv AnomalyDetection/results/gen_realism_K1_seed0.csv
-$PY -m AnomalyDetection.ad.gen_check --aug ctransgan_diverse --k 1 --seed 0 --data-root $DR --no-fnr
-```
+**SMT 결함 자리** (SMT cTransGAN을 만들 때. `smt_sd_lora/generate_fix.py`의 `choose_site`, `place_fixed`)
+- 원인: 결함 박스를 실제 결함 크기 그대로, 무작위 '정상_{종류}' 자리의 한가운데에 둔다 → 납땜 nm·ms는 부품이 반쯤 남고, rs·sh·ws는 큰 IC 위에 무늬.
+- 규칙
+  1. 자리: 실제 결함 박스와 크기·가로세로비가 가까운 상위 25%(최소 8개)에서 무작위 (nm은 크기 무시). 박스 방향을 자리 방향에 맞춤.
+  2. ms = 자리 전체 + 6%. nm = 자리 긴 축 한쪽 끝에 수직인 띠(두께 = 실제 결함 짧은 변 × 0.9–1.1, 폭 = 부품 폭 × 1.06). 나머지 = 자리 중심 ± 5%.
+  3. 바탕과 같은 JPEG 양자화 테이블로 저장, 누수 검사, 정답 = `condition.box`.
+- 결과 폴더 `Dataset/aihub_smt/generated/ctransgan/K{k}_seed{s}/`(K 1·4·16 × seed 0–2, 종류당 40장),
+  AD: `python -m AnomalyDetection.smt.seg_ad --category {pre|solder} --k K --seeds 0 1 2 --conds none ctransgan:{1,5,10,20,40}:0.5`
 
-**1-c, 1-d. 이미지 단위(DevNet·MLP)와 공정 시험셋 seg.** 실제만(none)은 지금 돌고 있는 K1 seed 0 실행 결과를 그대로 쓴다.
-```bash
-$PY -m AnomalyDetection.ad.fair_ad --k 1 --seed 0 --data-root $DR --augs ctransgan_diverse \
-  --sets img:ctransgan_diverse seg:ctransgan_diverse seg_aug:ctransgan_diverse --tag _ctg
-```
-- 결과: `AnomalyDetection/results/fair_ad_K1_seed0_ctg.csv` (공정 지표 + 기존 시험셋 미검률)
-- 시간이 되면 `--k 2`, `--k 4`도 (SD+LoRA K 곡선도 seed 0만이라 같은 조건으로 비교 가능)
+### 0-2. SMT: 고친 SD+LoRA로 K × N (슬라이드 14 SMT 줄) [진행 중, 11/18 16:12~]
+- `sd_lora_fix` = `sd_lora`에서 납땜 nm·ms·rs·sh·ws만 0-1 규칙으로 다시 만든 것. ms는 SD가 부품을 다시 그리는 장이 많아 한계로 두고 0-3 A에서 따로 본다.
+- 공정(사전 6종, 납땜 12종) × K {1, 4, 16} × N {0, 1, 5, 10, 20, 40} × seed 0–2, 위치 seg(`smt/seg_ad.py`), 합성 비율 0.5 고정. 지표: 미검률 @ 과검 1%, 유형별 미검률.
+- 실행 `AnomalyDetection/results/logs/run_smt_fix_grid.sh` → `results/smt/seg_ad_{pre,solder}.csv` (cond `sd_lora_fix:{N}:0.5`). 11/19 새벽 예상.
 
-### 2. Grad-CAM과 결함 지도 (슬라이드 12, 14) [있음, 11/18 10:46]
-- 스크립트: `AnomalyDetection/ad/gradcam.py` (실행: `AnomalyDetection/results/logs/run_gradcam.sh`, 약 25분)
-- 조건: K=1 seed 0, PCB1–3, 실제만 / +SD+LoRA v3 (cTransGAN은 뺐다). 헤드를 다시 학습: DevNet·MLP 헤드 시드 3, seg 1
-- 사진: 공정 시험셋의 D / DR / ND(PCB당 60쌍)를 모든 모델에 같게. 예시는 PCB마다 rng(0, PCB 번호)로 3쌍
-- 히트맵
-  - DevNet·MLP: Grad-CAM(layer3 출력 기준, 점수의 기울기). 확인용으로 LayerCAM도 냄
-  - seg: 출력 결함 지도. canon 좌표 히트맵은 원래 사진 좌표로 되돌려 같은 결함 영역으로 잰다
-- 결과 (PCB 평균, `AnomalyDetection/results/gradcam_K1_seed0.csv`). 결함 영역(40px 넓힘)은 사진의 2.8%라, 히트맵이 고르게 퍼지면 "결함 영역 안 질량"도 0.028이다.
+### 0-3. 예약 [11/18 16:29, `run_followups.sh`, 앞 작업이 끝나면 저절로 시작]
+- **A. SMT ms 따로 실험** (0-2 뒤): `smt_sd_lora/generate_ms_real.py`로 ms만 실제 빈 패드(자리 전체, 기판 색 맞춤, LoRA strength 0.3)로 바꾼 `sd_lora_fix_msreal`, 납땜 seg N 5·40. ms 유형 미검률을 `sd_lora_fix`·실제만과 비교.
+- **B. VisA cTransGAN K1 seed 1–4** (0번 AD 격자 뒤): 생성 → 잔상 제거 → 부분 세트 → AD 칸. 보관함에 manifest가 이미 있으면 생성은 건너뛴다.
+- **C. 집계** (모두 끝난 뒤): `ad/grid_summary.py` → `results/ppt/grid_{visa,smt}.png`, `grid_summary.md` (x = N, 선 = K / bent / SMT 유형 × N / ms 비교), 이어서 `ppt_summary` + `ppt_figures/collect.sh`, 그림은 `ppt_figures/s14_grid_{visa,smt}.png`.
 
-| D(시험 불량) 기준 | 결함 영역 안 질량 | 최고점이 결함 위 | 질량 절반이 퍼진 면적 | DR 불량 판정 | ND 검출 |
+### 1. Grad-CAM과 결함 지도 (슬라이드 12, 14) [있음, 11/18 10:46. 0번 끝에 잔상 제거 SD+LoRA로 다시]
+- `AnomalyDetection/ad/gradcam.py`(`run_gradcam.sh`). K=1 seed 0, 공정 시험셋 D·DR·ND 같은 사진. DevNet·MLP는 Grad-CAM(layer3), seg는 출력 지도.
+- 결과 (`gradcam_K1_seed0.csv`, 결함 영역은 사진의 2.8% = 우연 수준)
+
+| D(시험 불량) 기준 | 결함 영역 안 질량 | 최고점이 결함 위 | 질량 절반 면적 | DR 불량 판정 | ND 검출 |
 |---|---|---|---|---|---|
-| 이미지 DevNet 실제만 | 0.04 | 0.11 | 사진의 16% | 0.58 | 0.17 |
+| 이미지 DevNet 실제만 | 0.04 | 0.11 | 16% | 0.58 | 0.17 |
 | 이미지 DevNet + SD+LoRA | 0.05 | 0.21 | 12% | 0.25 | 0.43 |
 | 이미지 MLP 실제만 | 0.06 | 0.16 | 16% | 0.29 | 0.06 |
 | 위치 seg 실제만 | **0.75** | **0.87** | **2.3%** | 0.21 | 0.74 |
 | 위치 seg + SD+LoRA | **0.85** | **0.88** | **0.2%** | 0.11 | 0.78 |
 
-  - 판정 임계값은 시험 정상 과검률 1%다(공정 지표의 임계값과 다르다).
-  - DevNet 실제만이 DR(결함을 지운 사진)을 불량이라 한 경우, 지운 자리 안 질량은 0.025로 우연(0.027)과 같다. 질량 절반은 사진의 18%에 퍼진다.
-    즉 결함 자리가 아닌 기판·배경 전체를 근거로 판정한다. 슬라이드 12의 지름길 주장을 뒷받침한다.
-  - ND(정상 사진 + 결함)에서도 같다. DevNet 실제만은 질량 0.04, 최고점 적중 0.13이고, seg는 0.74 / 0.92다.
-  - LayerCAM으로 봐도 DevNet은 결함 영역 안 질량이 0.05–0.06으로 우연의 약 2배에 그친다. Grad-CAM 방식 탓이 아니다.
-- 그림: `AnomalyDetection/results/gradcam/K1_seed0_all.jpg` (PCB마다 첫 예시), `K1_seed0_pcb{1,2,3}.jpg` (3쌍씩)
-  - 흰 선 = 결함 영역, 자홍 원 = 지도 최고점. 색 범위는 열마다 같아서, 한 열 안에서 D·DR·ND를 비교할 수 있다.
-  - 이미지만 다시 그리기: `python -m AnomalyDetection.ad.gradcam --summarize`
-- 한계: K=1 seed 0 하나다. Grad-CAM은 설명 방법이라 증명이 아니라 DR/ND 숫자를 보강하는 근거로 쓴다.
-
-### 3. 결과 일괄 집계 (슬라이드 11, 14) [진행 중인 실험이 끝난 뒤]
-- 집계 스크립트 하나로 슬라이드용 표와 그림을 생성한다. 숫자를 손으로 옮기지 않는다.
-- 공정 K 곡선: PatchCore 수평선, 이미지 DevNet, seg 실제만, seg + 생성(SD+LoRA, cTransGAN)
-- 입력: `fair_ad_K{k}_seed{s}*.csv`, `local_ad_*.csv`, `results.csv`, `results/smt/`
-
-### 지금 돌고 있는 것 (기다리기만 하면 됨)
-- 공정 시험셋 K=1 seed 0 (PatchCore + 생성 4종): `AnomalyDetection/results/logs/fair_ad_K1_seed0_pcb*.log`
-- 공정 K 곡선 K=1–10, seed 0–4: `AnomalyDetection/results/logs/run_fair_kcurve.sh`
-- SD+LoRA v3 K=1 seed 1–4 생성, K 곡선: `Augmentation/sd_lora/run_v3_seeds.sh`, `run_v3_kcurve.sh`
-- (11/18 끝남) SMT 위치 seg seed 0–2, count_sweep → 슬라이드 14 SMT 줄에 반영
+- DevNet이 DR을 불량이라 할 때 지운 자리 안 질량 0.025(우연 0.027), 질량 절반이 사진의 18%에 퍼짐 → 결함이 아닌 기판 전체를 본다. LayerCAM도 0.05–0.06.
+- 그림 `AnomalyDetection/results/gradcam/K1_seed0_all.jpg` (흰 선 = 결함 영역, 자홍 원 = 최고점). 한계: seed 0 하나, 설명 방법이라 DR/ND 숫자를 보강하는 근거로만.
 
 ### 하지 않을 것
-- 새 생성기나 생성기 개선, VLM, MVTec, 전처리 변형, SMT 추가 실험, anomalydiffusion·copy-paste 추가 분석
+- 새 생성기, VLM, MVTec, 전처리 변형, anomalydiffusion·copy-paste·transplant 추가 분석
 
 ---
 
