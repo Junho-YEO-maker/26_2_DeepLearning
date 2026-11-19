@@ -6,6 +6,19 @@ Computational Intelligence and Neuroscience, 2023 ([DOI 10.1155/2023/2024237](ht
 정상 바탕의 **결함 자리만 다시 그리도록** 맞춘 생성기.
 조건 (K, seed)마다 PCB별로 그 PCB의 K장(종류당 K장)으로만 새로 학습한다. GPU 없이 CPU로 돈다.
 
+## 서버 실험 반영 (11/19)
+
+- VisA A100 실행은 `generate_diverse.py`에 `--diverse-scratch`를 적용했다. K1·K2·K4, seed 0 각각 480쌍을 생성했고 공용 누수 검사를 통과했다.
+- 생성 패치와 마스크에 같은 길이·폭·각도 변환을 적용한다. 기판 안 배치와 변형 조건을 만족한 scratch는 조건별 120장 중 K1 109장, K2 108장, K4 103장이다. 나머지는 기존 모양을 사용한다.
+- bent·missing·melt의 형태 변형은 이번 서버 실행에 추가하지 않았다. 아래 11/15 CPU 검수 수치는 당시 결과이며 새 GPU 결과의 검수 수치로 사용하지 않는다.
+- 서버 생성물은 `/home/junho/ctransgan_runs/diverse_full_u9lv51T7/`에 있다. 기존 `review/K*_seed0.png`는 11/15 결과다.
+- SMT 비교는 [smt_ctransgan](../smt_ctransgan/README.md)에서 실행한다. [최종 결과표](../../AnomalyDetection/results/smt/ctransgan_summary.md)는 pre와 solder K1·K4의 개선, solder K16의 악화를 모두 포함한다.
+
+```bash
+cd Augmentation
+python -m ctransgan.generate_diverse --k 2 --seed 0 --diverse-scratch --device cuda --data-root /path/to/VisA_PCB --out /home/junho/ctransgan_runs/new_run
+```
+
 ## 실행
 ```bash
 cd Augmentation
@@ -78,7 +91,7 @@ manifest `condition`: 기판 정렬값(`align`), 실제 이동량(`applied_shift
 - **pcb3의 LED(bent·missing):** 투명한 LED 몸통은 바탕과 차이가 작아 다 잡히지 않아서, 원래 LED 윤곽이 희미하게 남는 장이 있다.
 - **pcb2 missing 소스 054·059:** 이 불량 사진은 기판이 살짝 기울어 있어 기판 정렬 점수가 낮다(0.23–0.43, K2·K4의 38장). ±6px 정밀 정렬로 핀 자리는 맞췄지만 주변이 몇 px 어긋날 수 있다.
 - **큰 결함:** 한 덩어리가 320px보다 큰 결함(pcb1의 큰 부품 missing, 긴 scratch 등)은 256으로 줄여 그리므로 그만큼 덜 선명하다.
-- K장이 적어서 생성 결과는 K장 결함을 바탕에 맞게 다시 그린 것이다. 다양성은 바탕(장마다 다른 정상)·위치(melt·scratch jitter)·잡음에서만 나온다.
+- K장이 적어서 생성 결과는 K장 결함을 바탕에 맞게 다시 그린 것이다. 11/15 버전의 다양성은 바탕(장마다 다른 정상)·위치(melt·scratch jitter)·잡음에서 나온다. 11/19 서버 실행에서는 위 스크래치 형태 변형을 추가했다.
 - 마스크는 VisA 주석 모양을 옮긴 것이다. bent·missing은 마스크보다 넓은 영역(원래 핀 자리)이 바뀌어 있다.
 
 ## 이전 버전 (11/15에 차례로 교체)
