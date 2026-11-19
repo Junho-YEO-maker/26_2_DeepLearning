@@ -202,19 +202,23 @@ def main():
     sb = summarize(vb, ['gen', 'K'])
     md += table(sb.assign(gen=sb.gen.map(lambda g: GENS[g][1])) if len(sb) else sb, ['gen', 'K'])
     # SMT
-    c = smt_cells()
-    sc = summarize(c, ['cat', 'K'])
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4), facecolor=SURF)
-    for ax, cat in zip(axes, ('pre', 'solder')):
-        panel(ax, sc[sc.cat == cat] if len(sc) else sc, f'SMT {cat} (SD+LoRA, fixed sites)', [1, 4, 16],
-              'miss rate @ 1% false alarm')
+    # 행 = 생성기 (SD+LoRA sd_lora_fix, cTransGAN = 팀원 smt_ctransgan, cond ctransgan:N:0.5), 열 = 공정. 열마다 같은 y축
+    smt_gens = [('sd_lora_fix', 'SD+LoRA'), ('ctransgan', 'cTransGAN')]
+    cs = {p: smt_cells(p) for p, _ in smt_gens}
+    fig, axes = plt.subplots(2, 2, figsize=(10, 7.6), sharey='col', facecolor=SURF)
+    for row, (p, name) in zip(axes, smt_gens):
+        s = summarize(cs[p], ['cat', 'K'])
+        for ax, cat in zip(row, ('pre', 'solder')):
+            panel(ax, s[s.cat == cat] if len(s) else s, f'SMT {cat}, {name}', [1, 4, 16], 'miss rate @ 1% false alarm')
     fig.tight_layout()
     fig.savefig(OUT / 'grid_smt.png', dpi=200, facecolor=SURF)
     plt.close(fig)
-    md += ['## SMT: 위치 seg, SD+LoRA(문제 유형 자리 고침), 미검률 @ 과검 1%', '']
-    md += table(sc, ['cat', 'K'])
-    for cat in ('pre', 'solder'):
-        md += [f'### SMT {cat} 유형별 미검률, K=1 (seed 평균)', ''] + per_type_table(c, cat)
+    c = cs['sd_lora_fix']
+    for p, name in smt_gens:
+        md += [f'## SMT: 위치 seg, {name} (같은 자리 규칙), 미검률 @ 과검 1%', '']
+        md += table(summarize(cs[p], ['cat', 'K']), ['cat', 'K'])
+        for cat in ('pre', 'solder'):
+            md += [f'### SMT {cat} 유형별 미검률, {name}, K=1 (seed 평균)', ''] + per_type_table(cs[p], cat)
     # ms 따로 실험
     m = smt_cells('sd_lora_fix_msreal')
     m = m[(m.cat == 'solder') & (m.N > 0)] if len(m) else m

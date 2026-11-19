@@ -52,3 +52,6 @@ Dataset/generated/_before_pinfix/
 # 발표 그림 중 AIHub SMT 파생 (약관상 제3자 제공 금지)
 ppt_figures/local_only/
 Augmentation/copypaste/*.log
+
+# 발표 pptx 미리보기 PNG (ppt_build/build_deck.py가 다시 만든다)
+ppt_build/preview/

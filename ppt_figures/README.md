@@ -22,7 +22,7 @@
 | `s14_fair_kcurve.png` | 14 결과 | K 곡선. 왼쪽 공정 시험셋, 오른쪽 원래 시험셋 (둘 다 과검률 5%) | `AnomalyDetection/results/ppt/` (`ad/ppt_summary.py`) |
 | `s14_fair_kcurve_pcb.png` | 14 결과 | PCB별 공정 K 곡선 | `AnomalyDetection/results/ppt/` (`ad/ppt_summary.py`) |
 | `s14_grid_visa.png` | 14 결과 | VisA 위치 seg, 생성기별 x = 합성 장수 N, 선 = K (공정 시험셋 미검률 @ 과검 5%) | `AnomalyDetection/results/ppt/grid_visa.png` (`ad/grid_summary.py`) |
-| `s14_grid_smt.png` | 14 결과 | SMT 위치 seg, 공정별 x = N, 선 = K (미검률 @ 과검 1%) | `AnomalyDetection/results/ppt/grid_smt.png` (`ad/grid_summary.py`) |
+| `s14_grid_smt.png` | 14 결과 | SMT 위치 seg, 위 줄 SD+LoRA·아래 줄 cTransGAN, 공정별 x = N, 선 = K (미검률 @ 과검 1%) | `AnomalyDetection/results/ppt/grid_smt.png` (`ad/grid_summary.py`) |
 | `local_only/s14_smt_sd_lora_fix_sheet.jpg` | 14 (SMT) | SMT 납땜 ms·nm 자리 고치기 전후 | `Dataset/aihub_smt/generated/sd_lora_fix/K1_seed0/sheet_fix.jpg` |
 | `local_only/s14_smt_ms_real_pads_sheet.jpg` | 14 (SMT) | ms를 실제 빈 패드로 만든 것 | `Dataset/aihub_smt/generated/sd_lora_fix_msreal/K1_seed0/sheet_ms.jpg` |
 
