@@ -336,3 +336,19 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 - cTransGAN 원논문 (Wang et al., 2023): https://onlinelibrary.wiley.com/doi/10.1155/2023/2024237
 - 리뷰 스테이션 구조 (US 5369431): https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/5369431
 - 생산 AOI 데이터의 드리프트: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10847760/
+
+
+### SMT cTransGAN 비교 완료 (11/19)
+
+- 공정 pre·solder, K={1,4,16}, seed={0,1,2}, 종류당 생성 40장으로 총 6,480쌍을 생성했다.
+- diffusion과 같은 분할·정상 부품 자리 규칙, 합성 비율 0.5, N={0,1,5,10,20,40}으로 위치 탐지 모델을 비교했다.
+- 과검률 1%의 평균 미검률(실제만 → 생성 종류당 40장), 3 seed 평균이다.
+
+| 공정 | K1 | K4 | K16 |
+|---|---|---|---|
+| pre | 0.199 → 0.163 | 0.106 → 0.063 | 0.034 → 0.019 |
+| solder | 0.802 → 0.725 | 0.564 → 0.509 | 0.409 → 0.728 |
+
+- 납땜 K16은 모든 N에서 악화됐다. 일부 K16 GAN 학습의 판별기 손실이 거의 0으로 떨어졌으며 생성 분포의 불안정성을 추가 검토해야 한다.
+- 생성 패치가 학습 원본과 유사하게 재구성될 수 있다. 위 수치는 원본과 다른 결함 모양을 생성했다는 증거를 대신하지 않는다.
+- 원본 수치 108행과 전체 N 표는 [ctransgan_comparison.csv](AnomalyDetection/results/smt/ctransgan_comparison.csv), [ctransgan_summary.md](AnomalyDetection/results/smt/ctransgan_summary.md)에 있다.
