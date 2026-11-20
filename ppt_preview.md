@@ -269,7 +269,8 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 #### 17. 한계와 결론 (0:30) [있음]
 - 한계
   - seed 수가 적다(특히 공정 시험셋과 SMT 위치 모델).
-  - 합성 이득이 생성기·유형·K마다 다르다(bent, 납땜 K=16은 손해). 어떤 합성이 도움이 될지 미리 판정하는 방법은 아직 없다(닮음 지표로는 안 됨).
+  - 합성 이득이 생성기·유형·K마다 다르다(bent, 납땜 K=16은 손해). 어떤 합성이 도움이 될지 장 단위로 미리 가리는 방법은 아직 없다(닮음 지표, 마스크 안 이상도 모두 안 됨, 0-5). 이상도 점수는 망가진 생성 실행을 잡는 경고로만 쓸 수 있다.
+  - 생성량: SMT 사전공정에서 SD+LoRA는 160장까지 늘릴수록 좋아졌고 cTransGAN은 20장이면 충분했다(0-6). 정상 바탕 사진 수가 다음 병목.
   - 처음 보는 불량 유형은 시험하지 않았다(시험셋이 학습과 같은 4종류).
   - 데이터가 PCB 두 종류다.
 - 결론: 한 줄 메시지 반복.
@@ -325,6 +326,26 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 - 납땜 K16은 모든 N에서 악화됐다. 일부 K16 GAN 학습의 판별기 손실이 거의 0으로 떨어졌으며 생성 분포의 불안정성을 추가 검토해야 한다.
 - 생성 패치가 학습 원본과 유사하게 재구성될 수 있다. 위 수치는 원본과 다른 결함 모양을 생성했다는 증거를 대신하지 않는다.
 - 원본 수치 108행과 전체 N 표는 [ctransgan_comparison.csv](AnomalyDetection/results/smt/ctransgan_comparison.csv), [ctransgan_summary.md](AnomalyDetection/results/smt/ctransgan_summary.md)에 있다.
+
+### 0-5. 어떤 합성이 좋은가: 점수로 미리 가리기 (덱 15쪽) [완료 11/19]
+- 왜: 합성 이득이 생성기·유형·K마다 달라서, 넣기 전에 좋은 합성을 가리는 점수가 필요했다.
+- VisA (`ad/gen_quality.py`, 16세트): 닮음·다양성·마스크 안 이상도 모두 유형별 이득을 못 맞혔다. 시험 결함이 PCB·종류당 4–10장이라 이득 자체가 흔들린다(분할 사이 표준편차 0.11 > 칸끼리 0.09).
+- SMT (`smt/gen_quality_smt.py`): 정상 패치 은행에 비춰 마스크 안 이상도를 재면, 실제 결함보다 훨씬 튀는 합성일수록 이득이 작다(in_frac ρ −0.26, p<0.001). 실제 결함 패치를 더 덮을수록 이득이 크다(recall ρ +0.22).
+- 검증 (`smt/quality_subset.py`, `run_smt_quality_check.sh`): 같은 40장에서 덜 튀는 20장 · 더 튀는 20장 · 앞 20장으로 seg를 다시 돌렸더니 차이 없음(덜 튀는 쪽 승 17/36칸, 평균 차 0.006).
+- 결론: 장 단위 선별은 안 된다. 점수는 세트 단위 경고로만 쓴다(납땜 cTransGAN K=16 마스크 안 이상도가 실제의 8.7배, 다른 세트 2.3–3.6배 → 그 세트만 손해).
+- 결과 `results/ppt/{gen_quality_summary,gen_quality_smt_summary,quality_subset_summary}.md`.
+
+### 0-6. 생성량: 종류당 20 / 40 / 80 / 160장 (덱 20쪽) [완료 11/20 03:03]
+- 왜: 팀 의견. 종류당 40장보다 훨씬 많이 만들면 나아지는지, 장수가 늘 때 합성이 실제로 다양해지는지.
+- SMT 사전공정, K 1·4 × seed 0–2, 위치 seg. 같은 160장 세트의 manifest 앞 N장(20 ⊂ 40 ⊂ 80 ⊂ 160).
+  - SD+LoRA: `smt_sd_lora/generate.py --per-type 160 --tag n160` (320장 중 변화 큰 160장, 기존 규칙과 같은 비율, 학습한 LoRA 그대로) → `run_smt_amount.sh`
+  - cTransGAN: `smt_ctransgan/generate_n.py` (팀원이 학습한 체크포인트로 160장, 선별 없음, 학습 안 함) → `run_smt_amount_ctg.sh`
+- 미검률 (과검 1%, seed 3개): SD+LoRA K=1 0.199 → 0.170 / 0.140 / 0.161 / **0.120**, K=4 0.106 → 0.068 / 0.061 / 0.053 / **0.048**.
+  cTransGAN K=1 0.158 / 0.186 / 0.152 / 0.173, K=4 **0.047** / 0.051 / 0.056 / 0.053.
+- 다양성 (`smt/gen_amount.py`): recall은 둘 다 오른다(K=1 SD 0.085 → 0.248, cTG 0.106 → 0.220). 거의 같은 장 비율은 SD 0%, cTG K=1 10% → 20%.
+  정상 바탕 사진이 종류당 75–104장이라 160장이면 서로 다른 바탕 비율 0.30–0.42.
+- 결론: 많이 만들기는 매번 다른 결함을 그리는 생성기에서만 효과. VisA에서는 반대로 cTransGAN만 N에 따라 좋아졌으므로 생성기별 가치는 데이터마다 다르다.
+- 결과 `results/ppt/gen_amount_summary.md`, `results/smt/gen_amount{,_diversity}.csv`.
 
 ### 1. Grad-CAM과 결함 지도 (슬라이드 12, 14) [있음, 11/18 23:50 잔상 제거 SD+LoRA로 다시 잼]
 - `AnomalyDetection/ad/gradcam.py`(`run_gradcam.sh`). K=1 seed 0, 공정 시험셋 D·DR·ND 같은 사진. DevNet·MLP는 Grad-CAM(layer3), seg는 출력 지도.
