@@ -364,6 +364,17 @@ VisA 숫자는 따로 적지 않으면 K=1, seed 0, PCB1–3 평균이다.
 - 결론: 많이 만들기는 매번 다른 결함을 그리는 생성기에서만 효과. VisA에서는 반대로 cTransGAN만 N에 따라 좋아졌으므로 생성기별 가치는 데이터마다 다르다.
 - 결과 `results/ppt/gen_amount_summary.md`, `results/smt/gen_amount{,_diversity}.csv`.
 
+### 0-7. 공개 수치 비교 (덱 23·24쪽, 부록 G) [완료 11/20]
+- 왜: 우리 분할·우리 지표라 공개 논문과 비교가 안 됐다. VisA 공식 분할과 공개 논문 규칙으로 다시 잼. 정리 `results/ppt/public_comparison_summary.md`.
+- 1단계 재현 (`ad/official_eval.py --protocol 1cls`): 우리 PatchCore(512)는 공개 재실행(FAIR, EfficientAD JSON)과 같거나 높다 (사진 0.987/0.975/0.976).
+- 3단계 SegAD 규칙 (`ad/segad_protocol.py`, `ad/segad_eval.py`, `ad/external_eval.py`): 공식 1cls + 시험 불량 10장 학습, seed 0–4, 모든 방법 같은 10장.
+  - DRA·DevNet 공개 코드(`/home/junho/external`, 코드 수정 없음, PyTorch 2 호환 한 줄만 불러오는 쪽에서): 원래 0.913 / 0.883 (논문 0.871 / 0.858)
+    → 공정한 시험 놓친 불량 86% / 91%, 결함 지운 사진 불량 판정 48% / 42%.
+  - 우리 위치 + 촬영 환경 섞기 17% (PCB별 15–19%), PatchCore 31% (PCB1 6%, PCB2·3 39–47%), 우리 사진 전체 86%. 원래 점수는 위치 0.971 vs EfficientAD + SegAD 0.992(논문).
+- 2단계 공식 2cls_fewshot (`ad/official_splits.py`, `official_eval.py --protocol 2cls_fewshot`): 가짜 불량은 공식 학습 불량 20장만으로 새로 생성
+  (`Augmentation/official_run.py`, `run_official_gen.sh`, 누수 검사 통과). 공정한 시험 놓친 불량: 위치 + 섞기 11%, + SD+LoRA 10%(9칸 중 3칸 개선),
+  + cTransGAN 8%(6칸 개선), PatchCore 30%, 사진 전체 81%. VisA 논문 10-shot 수치는 학습 장수가 달라 참고만.
+
 ### 1. Grad-CAM과 결함 지도 (슬라이드 12, 14) [있음, 11/18 23:50 잔상 제거 SD+LoRA로 다시 잼]
 - `AnomalyDetection/ad/gradcam.py`(`run_gradcam.sh`). K=1 seed 0, 공정 시험셋 D·DR·ND 같은 사진. DevNet·MLP는 Grad-CAM(layer3), seg는 출력 지도.
 - 결과 (`gradcam_K1_seed0.csv`, 결함 영역은 사진의 2.8% = 우연 수준)
