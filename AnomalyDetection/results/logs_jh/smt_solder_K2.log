@@ -1,0 +1,6 @@
+solder K=2: 데이터 준비 36s (정상 500, 시험 1540, 진단 pool 384)
+solder K=2 seed=0 none                     FNR=0.685 AUROC=0.821 loc=0.77 D=0.36 DR=0.14 ND=0.24 (264s)
+solder K=2 seed=1 none                     FNR=0.709 AUROC=0.853 loc=0.73 D=0.40 DR=0.04 ND=0.21 (268s)
+solder K=2 seed=2 none                     FNR=0.643 AUROC=0.847 loc=0.68 D=0.44 DR=0.10 ND=0.26 (279s)
+solder K=2 seed=3 none                     FNR=0.583 AUROC=0.864 loc=0.79 D=0.34 DR=0.07 ND=0.17 (272s)
+solder K=2 seed=4 none                     FNR=0.583 AUROC=0.863 loc=0.76 D=0.40 DR=0.10 ND=0.33 (227s)

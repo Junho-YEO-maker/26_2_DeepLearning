@@ -1,0 +1,3 @@
+solder K=1: 데이터 준비 33s (정상 500, 시험 1540, 진단 pool 384)
+solder K=1 seed=3 none                     FNR=0.739 AUROC=0.791 loc=0.70 D=0.27 DR=0.07 ND=0.14 (242s)
+solder K=1 seed=4 none                     FNR=0.756 AUROC=0.778 loc=0.69 D=0.24 DR=0.09 ND=0.19 (252s)

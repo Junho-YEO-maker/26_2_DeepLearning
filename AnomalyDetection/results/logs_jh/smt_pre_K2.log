@@ -1,0 +1,6 @@
+pre K=2: 데이터 준비 28s (정상 500, 시험 1300, 진단 pool 192)
+pre K=2 seed=0 none                     FNR=0.147 AUROC=0.991 loc=0.95 D=0.86 DR=0.15 ND=0.52 (250s)
+pre K=2 seed=1 none                     FNR=0.310 AUROC=0.976 loc=0.95 D=0.86 DR=0.13 ND=0.39 (259s)
+pre K=2 seed=2 none                     FNR=0.143 AUROC=0.986 loc=0.96 D=0.93 DR=0.18 ND=0.61 (272s)
+pre K=2 seed=3 none                     FNR=0.100 AUROC=0.985 loc=0.97 D=0.91 DR=0.23 ND=0.69 (270s)
+pre K=2 seed=4 none                     FNR=0.137 AUROC=0.976 loc=0.93 D=0.83 DR=0.19 ND=0.49 (246s)

@@ -1,0 +1,4 @@
+pre K=1: 데이터 준비 26s (정상 500, 시험 1300, 진단 pool 192)
+pre K=1 seed=3 none                     FNR=0.647 AUROC=0.863 loc=0.93 D=0.32 DR=0.13 ND=0.41 (40s)
+pre K=1 seed=3 sd_lora:5:0.5            FNR=0.643 AUROC=0.880 loc=0.83 D=0.37 DR=0.12 ND=0.32 (39s)
+exit=0

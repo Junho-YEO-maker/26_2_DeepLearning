@@ -1,0 +1,6 @@
+solder K=8: 데이터 준비 35s (정상 500, 시험 1540, 진단 pool 384)
+solder K=8 seed=0 none                     FNR=0.383 AUROC=0.927 loc=0.94 D=0.58 DR=0.05 ND=0.30 (265s)
+solder K=8 seed=1 none                     FNR=0.459 AUROC=0.932 loc=0.92 D=0.59 DR=0.09 ND=0.47 (271s)
+solder K=8 seed=2 none                     FNR=0.472 AUROC=0.936 loc=0.92 D=0.62 DR=0.09 ND=0.44 (279s)
+solder K=8 seed=3 none                     FNR=0.535 AUROC=0.918 loc=0.94 D=0.55 DR=0.04 ND=0.12 (272s)
+solder K=8 seed=4 none                     FNR=0.463 AUROC=0.926 loc=0.92 D=0.61 DR=0.09 ND=0.32 (223s)

@@ -1,0 +1,9 @@
+생성 없음, 건너뜀: sd_lora_v3 K5_seed1
+계획: {'seg_aug': ['none']}
+pcb1: 시험 364, 공정 60쌍, 정상 500, 실제 20,  (2s)
+  pcb1 seg_aug none 시드 0: 공정@5 0.092 표준 0.167 (306s)
+  pcb1 seg_aug none 시드 1: 공정@5 0.150 표준 0.217 (427s)
+
+PCB 평균, 헤드 시드 평균. 공정@5 = 촬영 조건 반반 라인, 과검 5%에서 놓친 비율 (낮을수록 좋음), 표준 = 기존 시험셋 FNR@1%
+  seg_aug   none                 공정@5 0.121 AUROC 0.962 @1 0.242 | val 임계값: D 0.84 ND 0.81 DR 0.03 NR 0.04 | 표준 0.192
+저장: /home/jaehyun/26_2_DeepLearning/AnomalyDetection/results/fair_ad_K5_seed1_pcb1.csv

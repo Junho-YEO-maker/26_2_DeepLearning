@@ -1,0 +1,23 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s]Loading weights: 100%|██████████| 196/196 [00:00<00:00, 2342.38it/s]
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in AutoencoderKL that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in UNet2DConditionModel that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+  pcb1: NVIDIA A100 80GB PCIe dtype=torch.bfloat16 불량 8장, 정상 샘플 24개, p_normal=0.1
+  pcb1 step 1/1000 loss 0.0340
+  pcb1 step 100/1000 loss 0.0217
+  pcb1 step 200/1000 loss 0.0261
+  pcb1 step 300/1000 loss 0.0221
+  pcb1 step 400/1000 loss 0.0248
+  pcb1 step 500/1000 loss 0.0265
+  pcb1 step 600/1000 loss 0.0198
+  pcb1 step 700/1000 loss 0.0213
+  pcb1 step 800/1000 loss 0.0283
+  pcb1 step 900/1000 loss 0.0169
+  pcb1 step 1000/1000 loss 0.0229
+  저장: sd_lora/runs_v3/K2_seed1/pcb1  (19.4분)

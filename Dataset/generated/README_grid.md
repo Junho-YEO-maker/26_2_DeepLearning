@@ -1,4 +1,4 @@
-# 생성기 × K × 합성 장수 N 실험용 생성 세트 (VisA PCB, 11/19)
+# 생성기 × K × 합성 장수 N 실험용 생성 세트 (VisA PCB, 11/19, 11/25 추가)
 
 다른 곳에서 같은 조건으로 AD 모델을 돌릴 수 있게 올린 세트다. 결과 표와 그림은 `AnomalyDetection/results/ppt/grid_summary.md`, `grid_visa.png`.
 
@@ -39,6 +39,20 @@ PCB·종류마다 고정 무작위 순서의 앞 N장이다(`Augmentation/gen_su
 
 전체 반복은 `AnomalyDetection/results/logs/run_pinfix_rerun.sh`(SD+LoRA 전 칸, cTransGAN K1·2·4·8 seed 0)와 `run_followups.sh` B(cTransGAN K1 seed 1–4). 결과 csv: `AnomalyDetection/results/fair_ad_K{k}_seed{s}_grid_{v3|ctg}.csv`, 표·그림: `python -m AnomalyDetection.ad.grid_summary`.
 
+## 11/25 추가: K2·K4 나누기 1–4 ("합성 40장 = 실제 몇 장" 실험)
+
+나누기 0번만 있던 K2·K4에 나누기 1–4를 더해, 두 생성기 × K {2, 4} × 나누기 5번으로 맞췄다.
+설정은 위 세트와 같다. cTransGAN은 `generate_diverse --diverse-scratch`, SD+LoRA v3는 1000 step · rank 16 · p_normal 0.1 · context 512로 학습한 뒤
+`--diverse --overgen 2`로 생성했다. 둘 다 휜 핀 잔상을 지우고 N 1·5·10·20 부분 세트를 만들었다.
+
+- 저장소에는 `manifest.csv`와 `review.jpg`만 있다. 이미지·마스크는 세트당 약 100MB(16세트 합계 1.7GB)라 올리지 않았다(`.gitignore`).
+- 다시 만들기: 칸마다 저장소 루트 `README.md`의 "실행" 1)번 명령(K, 나누기만 바꿔서)을 돌린다.
+  `run_visa_equiv.sh`는 manifest가 이미 있는 세트를 건너뛰므로, 그 스크립트로 다시 만들려면 해당 칸의 manifest를 먼저 지운다.
+- GPU 난수 때문에 다시 만든 이미지가 비트 단위로 똑같지는 않다. 어떤 실제 불량과 정상 사진을 바탕으로 만들었는지는 manifest의 `source_image`, `base_normal_image`, `gen_seed`에 그대로 남아 있다.
+- 결과 csv: `AnomalyDetection/results/fair_ad_K{2,4}_seed{1-4}_grid_{ctg,v3}.csv`. 요약은 `AnomalyDetection/results/logs_jh/README.md`.
+
 ## 올리지 않은 것
 
-- AIHub SMT 생성 불량(`Dataset/aihub_smt/generated/`)과 원본·분할표: AIHub 이용약관상 제3자 제공 금지. SMT 실험은 서버에서만 돌린다(코드는 `AnomalyDetection/smt/`, `Augmentation/smt_sd_lora/`).
+- 위 11/25 추가 세트의 이미지·마스크, SD+LoRA 잔상 제거 전 원본(`sd_lora_v3raw/`, `_before_pinfix/`): 용량 때문에 서버에만 둔다.
+
+- AIHub SMT 생성 불량(`Dataset/aihub_smt/generated/`)과 원본·목록·분할표: AIHub 이용약관상 제3자 제공 금지(`Dataset/aihub_smt/raw/README.md`). SMT 실험은 서버에서만 돌린다(코드는 `AnomalyDetection/smt/`, `Augmentation/smt_sd_lora/`).

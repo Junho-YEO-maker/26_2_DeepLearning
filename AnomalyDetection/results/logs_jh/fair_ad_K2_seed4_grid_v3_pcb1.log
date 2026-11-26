@@ -1,0 +1,20 @@
+계획: {'seg_aug': ['sd_lora_v3_n1', 'sd_lora_v3_n5', 'sd_lora_v3_n10', 'sd_lora_v3_n20', 'sd_lora_v3']}
+pcb1: 시험 364, 공정 60쌍, 정상 500, 실제 8, sd_lora_v3_n1 4, sd_lora_v3_n5 20, sd_lora_v3_n10 40, sd_lora_v3_n20 80, sd_lora_v3 160 (2s)
+  pcb1 seg_aug +sd_lora_v3_n1 시드 0: 공정@5 0.258 표준 0.317 (351s)
+  pcb1 seg_aug +sd_lora_v3_n1 시드 1: 공정@5 0.200 표준 0.267 (353s)
+  pcb1 seg_aug +sd_lora_v3_n5 시드 0: 공정@5 0.200 표준 0.250 (333s)
+  pcb1 seg_aug +sd_lora_v3_n5 시드 1: 공정@5 0.208 표준 0.283 (356s)
+  pcb1 seg_aug +sd_lora_v3_n10 시드 0: 공정@5 0.175 표준 0.283 (304s)
+  pcb1 seg_aug +sd_lora_v3_n10 시드 1: 공정@5 0.192 표준 0.217 (235s)
+  pcb1 seg_aug +sd_lora_v3_n20 시드 0: 공정@5 0.158 표준 0.200 (192s)
+  pcb1 seg_aug +sd_lora_v3_n20 시드 1: 공정@5 0.150 표준 0.183 (167s)
+  pcb1 seg_aug +sd_lora_v3 시드 0: 공정@5 0.150 표준 0.183 (146s)
+  pcb1 seg_aug +sd_lora_v3 시드 1: 공정@5 0.150 표준 0.200 (142s)
+
+PCB 평균, 헤드 시드 평균. 공정@5 = 촬영 조건 반반 라인, 과검 5%에서 놓친 비율 (낮을수록 좋음), 표준 = 기존 시험셋 FNR@1%
+  seg_aug   +sd_lora_v3_n1       공정@5 0.229 AUROC 0.922 @1 0.258 | val 임계값: D 0.68 ND 0.66 DR 0.00 NR 0.00 | 표준 0.292
+  seg_aug   +sd_lora_v3_n5       공정@5 0.204 AUROC 0.933 @1 0.238 | val 임계값: D 0.68 ND 0.78 DR 0.00 NR 0.01 | 표준 0.267
+  seg_aug   +sd_lora_v3_n10      공정@5 0.183 AUROC 0.938 @1 0.258 | val 임계값: D 0.74 ND 0.79 DR 0.03 NR 0.00 | 표준 0.250
+  seg_aug   +sd_lora_v3_n20      공정@5 0.154 AUROC 0.951 @1 0.238 | val 임계값: D 0.74 ND 0.74 DR 0.02 NR 0.02 | 표준 0.192
+  seg_aug   +sd_lora_v3          공정@5 0.150 AUROC 0.952 @1 0.213 | val 임계값: D 0.72 ND 0.74 DR 0.00 NR 0.01 | 표준 0.192
+저장: /home/jaehyun/26_2_DeepLearning/AnomalyDetection/results/fair_ad_K2_seed4_grid_v3_pcb1.csv

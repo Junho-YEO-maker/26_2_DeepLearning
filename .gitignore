@@ -1,6 +1,7 @@
-# VisA 원본 이미지는 Google Drive에만 둔다 (git 제외). 생성 이미지·마스크는 git에 포함
+# VisA 원본 이미지는 git에 넣지 않는다 (받는 법: Dataset/visa/raw/README.md). 생성 이미지·마스크는 일부만 git에 포함 (아래)
 Dataset/visa/raw/*
 !Dataset/visa/raw/.gitkeep
+!Dataset/visa/raw/README.md
 
 # 분할표·manifest·결과 csv는 git에 포함
 
@@ -18,10 +19,13 @@ runs/
 # 로컬에 받아 둔 VisA 원본 사본
 Dataset/visa/VisA_official/
 
-# AIHub SMT 원본 (AIHub 이용약관상 제3자 제공 금지: git·공유 Drive에 올리지 않음)
-Dataset/aihub_smt/raw/
-# 위 원본으로 만든 생성 불량도 파생물이라 같이 제외
-Dataset/aihub_smt/generated/
+# AIHub SMT (AIHub 이용약관상 제3자 제공 금지: git·공유 Drive에 올리지 않음)
+# 원본(raw), 원본으로 만든 생성 불량(generated), 원본 파일 이름·라벨을 그대로 담은 목록·분할표(index.csv, splits/ 등)를
+# 모두 뺀다. 받는 방법을 적은 raw/README.md만 올린다.
+Dataset/aihub_smt/*
+!Dataset/aihub_smt/raw/
+Dataset/aihub_smt/raw/*
+!Dataset/aihub_smt/raw/README.md
 
 # AD 팀 이미지·임베딩 캐시
 Dataset/cache/
@@ -47,11 +51,22 @@ Dataset/generated/copypaste/*/images/
 Dataset/generated/copypaste/*/masks/
 Dataset/generated/sd_lora_v3/K10_seed0/images/
 Dataset/generated/sd_lora_v3/K10_seed0/masks/
+# 11/25 추가 세트(K2·K4 나누기 1–4, '합성 = 실제 몇 장' 실험)도 세트당 약 100MB라 manifest·review.jpg만 올린다.
+# 다시 만드는 법: Dataset/generated/README_grid.md
+Dataset/generated/ctransgan_diverse/K[24]_seed[1-4]/images/
+Dataset/generated/ctransgan_diverse/K[24]_seed[1-4]/masks/
+Dataset/generated/sd_lora_v3/K[24]_seed[1-4]/images/
+Dataset/generated/sd_lora_v3/K[24]_seed[1-4]/masks/
 # 잔상 제거 전 원본 보관함 (서버에만)
 Dataset/generated/_before_pinfix/
+Dataset/generated/sd_lora_v3raw/
 # 발표 그림 중 AIHub SMT 파생 (약관상 제3자 제공 금지)
 ppt_figures/local_only/
 Augmentation/copypaste/*.log
 
-# 발표 pptx 미리보기 PNG (ppt_build/build_deck.py가 다시 만든다)
+# 발표 pptx 미리보기 PNG (ppt_build/build_deck.py, build_deck_v2.py가 다시 만든다)
 ppt_build/preview/
+ppt_build/preview_v2/
+
+# 실험 전에 떠 둔 결과 csv 백업 (서버에만)
+AnomalyDetection/results/logs_jh/smt_bak/

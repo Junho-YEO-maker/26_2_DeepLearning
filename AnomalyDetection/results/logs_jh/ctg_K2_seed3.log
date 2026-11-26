@@ -1,0 +1,50 @@
+pcb1 | K2_seed3 | cuda | 결함 8개, 생성 크롭 8개로 학습
+  step 1/1000 D=0.680 G=42.724 L1(영역)=0.599
+  step 100/1000 D=0.700 G=11.446 L1(영역)=0.183
+  step 200/1000 D=0.706 G=5.996 L1(영역)=0.077
+  step 300/1000 D=0.704 G=5.636 L1(영역)=0.070
+  step 400/1000 D=0.689 G=3.379 L1(영역)=0.037
+  step 500/1000 D=0.695 G=3.105 L1(영역)=0.036
+  step 600/1000 D=0.692 G=2.952 L1(영역)=0.034
+  step 700/1000 D=0.689 G=2.817 L1(영역)=0.028
+  step 800/1000 D=0.684 G=2.654 L1(영역)=0.027
+  step 900/1000 D=0.708 G=2.372 L1(영역)=0.022
+  step 1000/1000 D=0.688 G=1.683 L1(영역)=0.015
+pcb1 완료: 학습 149s, 생성 652s (160장)
+pcb2 | K2_seed3 | cuda | 결함 8개, 생성 크롭 9개로 학습
+  step 1/1125 D=0.715 G=44.431 L1(영역)=0.633
+  step 100/1125 D=0.688 G=14.299 L1(영역)=0.239
+  step 200/1125 D=0.691 G=7.525 L1(영역)=0.094
+  step 300/1125 D=0.696 G=6.117 L1(영역)=0.081
+  step 400/1125 D=0.682 G=4.221 L1(영역)=0.052
+  step 500/1125 D=0.692 G=3.614 L1(영역)=0.038
+  step 600/1125 D=0.698 G=3.512 L1(영역)=0.044
+  step 700/1125 D=0.691 G=3.069 L1(영역)=0.032
+  step 800/1125 D=0.689 G=2.841 L1(영역)=0.028
+  step 900/1125 D=0.686 G=3.068 L1(영역)=0.028
+  step 1000/1125 D=0.697 G=2.634 L1(영역)=0.024
+  step 1100/1125 D=0.691 G=2.871 L1(영역)=0.028
+  step 1125/1125 D=0.686 G=3.104 L1(영역)=0.030
+pcb2 완료: 학습 157s, 생성 790s (160장)
+pcb3 | K2_seed3 | cuda | 결함 8개, 생성 크롭 9개로 학습
+  step 1/1125 D=0.687 G=41.608 L1(영역)=0.540
+  step 100/1125 D=0.418 G=10.072 L1(영역)=0.153
+  step 200/1125 D=0.653 G=7.114 L1(영역)=0.114
+  step 300/1125 D=0.680 G=4.587 L1(영역)=0.052
+  step 400/1125 D=0.687 G=3.881 L1(영역)=0.042
+  step 500/1125 D=0.706 G=4.783 L1(영역)=0.054
+  step 600/1125 D=0.691 G=3.020 L1(영역)=0.029
+  step 700/1125 D=0.694 G=1.967 L1(영역)=0.021
+  step 800/1125 D=0.691 G=2.473 L1(영역)=0.023
+  step 900/1125 D=0.694 G=2.186 L1(영역)=0.021
+  step 1000/1125 D=0.689 G=2.625 L1(영역)=0.024
+  step 1100/1125 D=0.689 G=2.659 L1(영역)=0.025
+  step 1125/1125 D=0.694 G=2.482 L1(영역)=0.023
+pcb3 완료: 학습 137s, 생성 806s (160장)
+{'status': 'PASS', 'manifest': '../Dataset/generated/_before_pinfix/ctransgan_diverse/K2_seed3/manifest.csv', 'rows': 480}
+K2_seed3: 480행, 고친 118/120장 (고친 면적 중앙값 7486px), 201s
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse/K2_seed3/manifest.csv', 'rows': 480}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n1/K2_seed3/manifest.csv', 'rows': 12}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n5/K2_seed3/manifest.csv', 'rows': 60}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n10/K2_seed3/manifest.csv', 'rows': 120}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n20/K2_seed3/manifest.csv', 'rows': 240}

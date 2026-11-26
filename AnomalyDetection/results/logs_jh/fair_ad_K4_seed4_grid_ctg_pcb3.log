@@ -1,0 +1,20 @@
+계획: {'seg_aug': ['ctransgan_diverse_n1', 'ctransgan_diverse_n5', 'ctransgan_diverse_n10', 'ctransgan_diverse_n20', 'ctransgan_diverse']}
+pcb3: 시험 366, 공정 60쌍, 정상 500, 실제 16, ctransgan_diverse_n1 4, ctransgan_diverse_n5 20, ctransgan_diverse_n10 40, ctransgan_diverse_n20 80, ctransgan_diverse 160 (3s)
+  pcb3 seg_aug +ctransgan_diverse_n1 시드 0: 공정@5 0.117 표준 0.167 (459s)
+  pcb3 seg_aug +ctransgan_diverse_n1 시드 1: 공정@5 0.075 표준 0.150 (472s)
+  pcb3 seg_aug +ctransgan_diverse_n5 시드 0: 공정@5 0.092 표준 0.150 (588s)
+  pcb3 seg_aug +ctransgan_diverse_n5 시드 1: 공정@5 0.058 표준 0.133 (588s)
+  pcb3 seg_aug +ctransgan_diverse_n10 시드 0: 공정@5 0.117 표준 0.167 (559s)
+  pcb3 seg_aug +ctransgan_diverse_n10 시드 1: 공정@5 0.075 표준 0.150 (506s)
+  pcb3 seg_aug +ctransgan_diverse_n20 시드 0: 공정@5 0.125 표준 0.167 (526s)
+  pcb3 seg_aug +ctransgan_diverse_n20 시드 1: 공정@5 0.075 표준 0.167 (527s)
+  pcb3 seg_aug +ctransgan_diverse 시드 0: 공정@5 0.092 표준 0.183 (526s)
+  pcb3 seg_aug +ctransgan_diverse 시드 1: 공정@5 0.050 표준 0.133 (489s)
+
+PCB 평균, 헤드 시드 평균. 공정@5 = 촬영 조건 반반 라인, 과검 5%에서 놓친 비율 (낮을수록 좋음), 표준 = 기존 시험셋 FNR@1%
+  seg_aug   +ctransgan_diverse_n1 공정@5 0.096 AUROC 0.976 @1 0.179 | val 임계값: D 0.88 ND 0.88 DR 0.02 NR 0.01 | 표준 0.158
+  seg_aug   +ctransgan_diverse_n5 공정@5 0.075 AUROC 0.982 @1 0.204 | val 임계값: D 0.84 ND 0.84 DR 0.02 NR 0.00 | 표준 0.142
+  seg_aug   +ctransgan_diverse_n10 공정@5 0.096 AUROC 0.973 @1 0.158 | val 임계값: D 0.85 ND 0.86 DR 0.03 NR 0.00 | 표준 0.158
+  seg_aug   +ctransgan_diverse_n20 공정@5 0.100 AUROC 0.974 @1 0.183 | val 임계값: D 0.85 ND 0.87 DR 0.03 NR 0.00 | 표준 0.167
+  seg_aug   +ctransgan_diverse   공정@5 0.071 AUROC 0.982 @1 0.158 | val 임계값: D 0.89 ND 0.89 DR 0.03 NR 0.01 | 표준 0.158
+저장: /home/jaehyun/26_2_DeepLearning/AnomalyDetection/results/fair_ad_K4_seed4_grid_ctg_pcb3.csv

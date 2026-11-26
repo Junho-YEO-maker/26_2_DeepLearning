@@ -1,0 +1,258 @@
+### start 2026-11-25 17:13:29
+### K3 seed 0 이미 있음 2026-11-25 17:13:29
+### K5 seed 0 이미 있음 2026-11-25 17:13:29
+### K6 seed 0 start 2026-11-25 17:13:29
+### SD+LoRA K2 seed 1 학습 · 생성 2026-11-25 17:13:29
+### cTransGAN K4 seed 1 생성 2026-11-25 17:13:29
+### SD+LoRA K4 seed 1 학습 · 생성 2026-11-25 17:13:29
+### 합침 fair_ad_K6_seed0.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.041  0.053
+### K6 seed 0 done 2026-11-25 17:24:15
+### K3 seed 1 start 2026-11-25 17:24:15
+### 합침 fair_ad_K3_seed1.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none        0.12  0.149
+### K3 seed 1 done 2026-11-25 17:35:34
+### K5 seed 1 start 2026-11-25 17:35:34
+### cTransGAN K2 seed 1 생성 2026-11-25 17:38:00
+### K2 seed 1_grid_ctg start 2026-11-25 17:41:01
+### 합침 fair_ad_K5_seed1.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.077  0.122
+### K5 seed 1 done 2026-11-25 17:48:06
+### K6 seed 1 start 2026-11-25 17:48:06
+### 합침 fair_ad_K6_seed1.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.076  0.097
+### K6 seed 1 done 2026-11-25 18:03:51
+### K3 seed 2 start 2026-11-25 18:03:51
+### K4 seed 1_grid_ctg start 2026-11-25 18:09:32
+### 합침 fair_ad_K3_seed2.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.086  0.088
+### K3 seed 2 done 2026-11-25 18:21:06
+### K5 seed 2 start 2026-11-25 18:21:06
+### 합침 fair_ad_K5_seed2.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.057  0.061
+### K5 seed 2 done 2026-11-25 18:40:23
+### K6 seed 2 start 2026-11-25 18:40:23
+### 합침 fair_ad_K6_seed2.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.058  0.086
+### K6 seed 2 done 2026-11-25 18:58:50
+### K3 seed 3 start 2026-11-25 18:58:50
+### 합침 fair_ad_K2_seed1_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.139  0.218
+        +ctransgan_diverse_n1       0.166  0.205
+        +ctransgan_diverse_n10      0.138  0.199
+        +ctransgan_diverse_n20      0.148  0.221
+        +ctransgan_diverse_n5       0.126  0.197
+### K2 seed 1_grid_ctg done 2026-11-25 19:06:54
+### cTransGAN K4 seed 2 생성 2026-11-25 19:06:54
+### 합침 fair_ad_K3_seed3.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.085  0.124
+### K3 seed 3 done 2026-11-25 19:15:35
+### K5 seed 3 start 2026-11-25 19:15:35
+### 합침 fair_ad_K5_seed3.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.084  0.113
+### K5 seed 3 done 2026-11-25 19:29:48
+### K6 seed 3 start 2026-11-25 19:29:48
+### 합침 fair_ad_K4_seed1_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.051  0.130
+        +ctransgan_diverse_n1       0.091  0.108
+        +ctransgan_diverse_n10      0.072  0.141
+        +ctransgan_diverse_n20      0.061  0.119
+        +ctransgan_diverse_n5       0.079  0.108
+### K4 seed 1_grid_ctg done 2026-11-25 19:33:59
+### cTransGAN K2 seed 2 생성 2026-11-25 19:33:59
+### 합침 fair_ad_K6_seed3.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.088  0.116
+### K6 seed 3 done 2026-11-25 19:41:23
+### K3 seed 4 start 2026-11-25 19:41:23
+### 합침 fair_ad_K3_seed4.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.101  0.136
+### K3 seed 4 done 2026-11-25 19:51:53
+### K5 seed 4 start 2026-11-25 19:51:53
+### K2 seed 1_grid_v3 start 2026-11-25 19:56:55
+### 합침 fair_ad_K5_seed4.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none       0.069  0.075
+### K5 seed 4 done 2026-11-25 20:02:15
+### K6 seed 4 start 2026-11-25 20:02:15
+### K4 seed 2_grid_ctg start 2026-11-25 20:07:00
+### 합침 fair_ad_K6_seed4.csv
+               fair_fnr5    fnr
+model   train                  
+seg_aug none        0.08  0.083
+### K6 seed 4 done 2026-11-25 20:17:48
+### K2 seed 2_grid_ctg start 2026-11-25 20:21:08
+### K4 seed 1_grid_v3 start 2026-11-25 20:35:18
+### 합침 fair_ad_K2_seed1_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.153  0.240
+        +sd_lora_v3_n1       0.123  0.163
+        +sd_lora_v3_n10      0.153  0.235
+        +sd_lora_v3_n20      0.146  0.215
+        +sd_lora_v3_n5       0.128  0.160
+### K2 seed 1_grid_v3 done 2026-11-25 21:21:47
+### SD+LoRA K4 seed 2 학습 · 생성 2026-11-25 21:21:47
+### 합침 fair_ad_K4_seed2_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.053  0.086
+        +ctransgan_diverse_n1       0.069  0.094
+        +ctransgan_diverse_n10      0.065  0.097
+        +ctransgan_diverse_n20      0.061  0.083
+        +ctransgan_diverse_n5       0.065  0.097
+### K4 seed 2_grid_ctg done 2026-11-25 21:36:12
+### cTransGAN K2 seed 3 생성 2026-11-25 21:36:12
+### 합침 fair_ad_K2_seed2_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.101  0.141
+        +ctransgan_diverse_n1       0.094  0.099
+        +ctransgan_diverse_n10      0.103  0.141
+        +ctransgan_diverse_n20      0.112  0.135
+        +ctransgan_diverse_n5       0.101  0.108
+### K2 seed 2_grid_ctg done 2026-11-25 21:47:59
+### cTransGAN K4 seed 3 생성 2026-11-25 21:47:59
+### 합침 fair_ad_K4_seed1_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.078  0.111
+        +sd_lora_v3_n1       0.073  0.119
+        +sd_lora_v3_n10      0.087  0.114
+        +sd_lora_v3_n20      0.061  0.100
+        +sd_lora_v3_n5       0.075  0.094
+### K4 seed 1_grid_v3 done 2026-11-25 21:55:55
+### SD+LoRA K2 seed 2 학습 · 생성 2026-11-25 21:55:55
+### K2 seed 3_grid_ctg start 2026-11-25 22:24:27
+### K4 seed 3_grid_ctg start 2026-11-25 22:45:57
+### 합침 fair_ad_K2_seed3_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.080  0.121
+        +ctransgan_diverse_n1       0.108  0.162
+        +ctransgan_diverse_n10      0.089  0.121
+        +ctransgan_diverse_n20      0.075  0.138
+        +ctransgan_diverse_n5       0.108  0.141
+### K2 seed 3_grid_ctg done 2026-11-25 23:27:22
+### cTransGAN K4 seed 4 생성 2026-11-25 23:27:22
+### 합침 fair_ad_K4_seed3_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.066  0.096
+        +ctransgan_diverse_n1       0.080  0.094
+        +ctransgan_diverse_n10      0.063  0.083
+        +ctransgan_diverse_n20      0.062  0.091
+        +ctransgan_diverse_n5       0.070  0.085
+### K4 seed 3_grid_ctg done 2026-11-25 23:48:09
+### cTransGAN K2 seed 4 생성 2026-11-25 23:48:09
+### K4 seed 2_grid_v3 start 2026-11-25 23:56:01
+### K2 seed 2_grid_v3 start 2026-11-26 00:16:46
+### K4 seed 4_grid_ctg start 2026-11-26 00:18:04
+### K2 seed 4_grid_ctg start 2026-11-26 00:32:36
+### 합침 fair_ad_K4_seed2_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.047  0.061
+        +sd_lora_v3_n1       0.072  0.089
+        +sd_lora_v3_n10      0.055  0.078
+        +sd_lora_v3_n20      0.053  0.072
+        +sd_lora_v3_n5       0.064  0.086
+### K4 seed 2_grid_v3 done 2026-11-26 01:00:04
+### SD+LoRA K2 seed 3 학습 · 생성 2026-11-26 01:00:04
+### 합침 fair_ad_K2_seed2_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.078  0.128
+        +sd_lora_v3_n1       0.109  0.110
+        +sd_lora_v3_n10      0.097  0.097
+        +sd_lora_v3_n20      0.077  0.136
+        +sd_lora_v3_n5       0.093  0.102
+### K2 seed 2_grid_v3 done 2026-11-26 01:44:15
+### SD+LoRA K4 seed 3 학습 · 생성 2026-11-26 01:44:15
+### 합침 fair_ad_K4_seed4_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.076  0.135
+        +ctransgan_diverse_n1       0.097  0.141
+        +ctransgan_diverse_n10      0.088  0.135
+        +ctransgan_diverse_n20      0.090  0.124
+        +ctransgan_diverse_n5       0.076  0.119
+### K4 seed 4_grid_ctg done 2026-11-26 01:45:51
+### 합침 fair_ad_K2_seed4_grid_ctg.csv
+                                fair_fnr5    fnr
+model   train                                   
+seg_aug +ctransgan_diverse          0.113  0.143
+        +ctransgan_diverse_n1       0.142  0.177
+        +ctransgan_diverse_n10      0.120  0.163
+        +ctransgan_diverse_n20      0.118  0.141
+        +ctransgan_diverse_n5       0.134  0.163
+### K2 seed 4_grid_ctg done 2026-11-26 01:55:42
+### K2 seed 3_grid_v3 start 2026-11-26 03:12:42
+### K4 seed 3_grid_v3 start 2026-11-26 03:35:27
+### 합침 fair_ad_K2_seed3_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.090  0.118
+        +sd_lora_v3_n1       0.115  0.145
+        +sd_lora_v3_n10      0.102  0.113
+        +sd_lora_v3_n20      0.080  0.083
+        +sd_lora_v3_n5       0.088  0.099
+### K2 seed 3_grid_v3 done 2026-11-26 04:00:36
+### SD+LoRA K4 seed 4 학습 · 생성 2026-11-26 04:00:36
+### 합침 fair_ad_K4_seed3_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.058  0.086
+        +sd_lora_v3_n1       0.085  0.094
+        +sd_lora_v3_n10      0.055  0.108
+        +sd_lora_v3_n20      0.057  0.078
+        +sd_lora_v3_n5       0.083  0.108
+### K4 seed 3_grid_v3 done 2026-11-26 04:24:36
+### SD+LoRA K2 seed 4 학습 · 생성 2026-11-26 04:24:36
+### K4 seed 4_grid_v3 start 2026-11-26 05:56:05
+### K2 seed 4_grid_v3 start 2026-11-26 06:16:49
+### 합침 fair_ad_K4_seed4_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.087  0.124
+        +sd_lora_v3_n1       0.097  0.127
+        +sd_lora_v3_n10      0.073  0.097
+        +sd_lora_v3_n20      0.065  0.111
+        +sd_lora_v3_n5       0.084  0.110
+### K4 seed 4_grid_v3 done 2026-11-26 06:43:56
+### 합침 fair_ad_K2_seed4_grid_v3.csv
+                         fair_fnr5    fnr
+model   train                            
+seg_aug +sd_lora_v3          0.103  0.130
+        +sd_lora_v3_n1       0.163  0.194
+        +sd_lora_v3_n10      0.138  0.177
+        +sd_lora_v3_n20      0.106  0.135
+        +sd_lora_v3_n5       0.137  0.177
+### K2 seed 4_grid_v3 done 2026-11-26 07:00:26
+### ALL DONE 2026-11-26 07:00:26

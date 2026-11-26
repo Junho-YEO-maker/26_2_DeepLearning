@@ -1,0 +1,26 @@
+solder K=32: 데이터 준비 33s (정상 500, 시험 1540, 진단 pool 384)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=0 none                     FNR=0.424 AUROC=0.961 loc=0.96 D=nan DR=nan ND=nan (246s)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=1 none                     FNR=0.426 AUROC=0.961 loc=0.95 D=nan DR=nan ND=nan (250s)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=2 none                     FNR=0.435 AUROC=0.961 loc=0.94 D=nan DR=nan ND=nan (238s)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=3 none                     FNR=0.389 AUROC=0.962 loc=0.95 D=nan DR=nan ND=nan (242s)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=4 none                     FNR=0.309 AUROC=0.968 loc=0.96 D=nan DR=nan ND=nan (232s)

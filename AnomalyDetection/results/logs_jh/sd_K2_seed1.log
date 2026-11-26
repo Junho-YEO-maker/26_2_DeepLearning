@@ -1,0 +1,78 @@
+[건너뜀] sd_lora/runs_v3/K2_seed1/pcb1
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s]Loading weights: 100%|██████████| 196/196 [00:00<00:00, 2075.11it/s]
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in AutoencoderKL that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in UNet2DConditionModel that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+  pcb2: NVIDIA A100 80GB PCIe dtype=torch.bfloat16 불량 8장, 정상 샘플 24개, p_normal=0.1
+  pcb2 step 1/1000 loss 0.0037
+  pcb2 step 100/1000 loss 0.0172
+  pcb2 step 200/1000 loss 0.0117
+  pcb2 step 300/1000 loss 0.0144
+  pcb2 step 400/1000 loss 0.0137
+  pcb2 step 500/1000 loss 0.0108
+  pcb2 step 600/1000 loss 0.0142
+  pcb2 step 700/1000 loss 0.0148
+  pcb2 step 800/1000 loss 0.0098
+  pcb2 step 900/1000 loss 0.0119
+  pcb2 step 1000/1000 loss 0.0125
+  저장: sd_lora/runs_v3/K2_seed1/pcb2  (24.5분)
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s]Loading weights: 100%|██████████| 196/196 [00:00<00:00, 2128.28it/s]
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in AutoencoderKL that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+An error occurred while trying to fetch stable-diffusion-v1-5/stable-diffusion-inpainting: stable-diffusion-v1-5/stable-diffusion-inpainting does not appear to have a file named diffusion_pytorch_model.safetensors.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+There are modules in UNet2DConditionModel that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+  pcb3: NVIDIA A100 80GB PCIe dtype=torch.bfloat16 불량 8장, 정상 샘플 24개, p_normal=0.1
+  pcb3 step 1/1000 loss 0.0221
+  pcb3 step 100/1000 loss 0.0172
+  pcb3 step 200/1000 loss 0.0197
+  pcb3 step 300/1000 loss 0.0156
+  pcb3 step 400/1000 loss 0.0126
+  pcb3 step 500/1000 loss 0.0106
+  pcb3 step 600/1000 loss 0.0160
+  pcb3 step 700/1000 loss 0.0120
+  pcb3 step 800/1000 loss 0.0159
+  pcb3 step 900/1000 loss 0.0137
+  pcb3 step 1000/1000 loss 0.0176
+  저장: sd_lora/runs_v3/K2_seed1/pcb3  (32.4분)
+/home/jaehyun/micromamba/envs/adlab/lib/python3.11/site-packages/diffusers/utils/deprecation_utils.py:23: FutureWarning: `torch_dtype` is deprecated and will be removed in version 1.0.0. Please use `dtype` instead.
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 14 files:   0%|          | 0/14 [00:00<?, ?it/s]Fetching 14 files:  93%|█████████▎| 13/14 [00:00<00:00, 62.11it/s]Fetching 14 files: 100%|██████████| 14/14 [00:00<00:00, 58.88it/s]
+Loading pipeline components...:   0%|          | 0/6 [00:00<?, ?it/s]An error occurred while trying to fetch /home/jaehyun/.cache/huggingface/hub/models--stable-diffusion-v1-5--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb/unet: Error no file named diffusion_pytorch_model.safetensors found in directory /home/jaehyun/.cache/huggingface/hub/models--stable-diffusion-v1-5--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb/unet.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+Loading pipeline components...:  17%|█▋        | 1/6 [00:00<00:03,  1.28it/s]An error occurred while trying to fetch /home/jaehyun/.cache/huggingface/hub/models--stable-diffusion-v1-5--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb/vae: Error no file named diffusion_pytorch_model.safetensors found in directory /home/jaehyun/.cache/huggingface/hub/models--stable-diffusion-v1-5--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb/vae.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+Loading pipeline components...:  33%|███▎      | 2/6 [00:00<00:01,  2.41it/s]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2319.86it/s]
+Loading pipeline components...: 100%|██████████| 6/6 [00:01<00:00,  6.96it/s]Loading pipeline components...: 100%|██████████| 6/6 [00:01<00:00,  5.03it/s]
+You have disabled the safety checker for <class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion_inpaint.StableDiffusionInpaintPipeline'> by passing `safety_checker=None`. Ensure that you abide to the conditions of the Stable Diffusion license and do not expose unfiltered results in services or applications open to the public. Both the diffusers team and Hugging Face strongly recommend to keep the safety filter enabled in all public facing circumstances, disabling it only for use-cases that involve analyzing network behavior or auditing its results. For more information, please have a look at https://github.com/huggingface/diffusers/pull/254 .
+No LoRA keys associated to CLIPTextModel found with the prefix='text_encoder'. This is safe to ignore if LoRA state dict didn't originally have any CLIPTextModel related params. You can also try specifying `prefix=None` to resolve the warning. Otherwise, open an issue if you think it's unexpected: https://github.com/huggingface/diffusers/issues/new
+  pcb1 bent: 40/80장, change 60.2 (min 41.2)
+  pcb1 melt: 40/80장, change 104.0 (min 81.5)
+  pcb1 scratch: 40/80장, change 72.5 (min 63.3)
+  pcb1 missing: 40/80장, change 73.0 (min 59.2)
+No LoRA keys associated to CLIPTextModel found with the prefix='text_encoder'. This is safe to ignore if LoRA state dict didn't originally have any CLIPTextModel related params. You can also try specifying `prefix=None` to resolve the warning. Otherwise, open an issue if you think it's unexpected: https://github.com/huggingface/diffusers/issues/new
+  pcb2 bent: 40/80장, change 83.9 (min 69.3)
+  pcb2 melt: 40/80장, change 115.2 (min 89.3)
+  pcb2 scratch: 40/80장, change 84.2 (min 73.4)
+  pcb2 missing: 40/80장, change 62.3 (min 49.6)
+No LoRA keys associated to CLIPTextModel found with the prefix='text_encoder'. This is safe to ignore if LoRA state dict didn't originally have any CLIPTextModel related params. You can also try specifying `prefix=None` to resolve the warning. Otherwise, open an issue if you think it's unexpected: https://github.com/huggingface/diffusers/issues/new
+  pcb3 bent: 40/80장, change 82.6 (min 76.6)
+  pcb3 melt: 40/80장, change 70.7 (min 63.0)
+  pcb3 scratch: 40/80장, change 68.4 (min 55.8)
+  pcb3 missing: 40/80장, change 61.1 (min 48.6)
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3raw/K2_seed1/manifest.csv', 'rows': 480}
+K2_seed1: 480행, 고친 120/120장 (고친 면적 중앙값 10450px), 193s
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3/K2_seed1/manifest.csv', 'rows': 480}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3_n1/K2_seed1/manifest.csv', 'rows': 12}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3_n5/K2_seed1/manifest.csv', 'rows': 60}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3_n10/K2_seed1/manifest.csv', 'rows': 120}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/sd_lora_v3_n20/K2_seed1/manifest.csv', 'rows': 240}

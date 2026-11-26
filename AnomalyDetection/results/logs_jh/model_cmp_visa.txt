@@ -1,0 +1,122 @@
+PatchCore (정상만, PCB별):
+      fair_fnr5  fair_auroc
+pcb                        
+pcb1      0.058       0.985
+pcb2      0.290       0.925
+pcb3      0.217       0.944
+평균 {'fair_fnr5': 0.188, 'fair_auroc': 0.951} 
+
+공개 코드 (불량 10장 규칙, 나누기 5):
+        fair_fnr5  fair_auroc  image_auroc
+method                                    
+devnet      0.909       0.562        0.883
+dra         0.858       0.609        0.913 
+
+== miss
+K                             1     2    3     4    5    6     8     10
+model   train                                                          
+devnet  +copypaste          69.3   NaN  NaN   NaN  NaN  NaN   NaN   NaN
+        +ctransgan_diverse  64.2  60.8  NaN  59.9  NaN  NaN  62.2   NaN
+        none                85.9  83.3  NaN  83.7  NaN  NaN  81.9  81.5
+mlp     +copypaste          70.7   NaN  NaN   NaN  NaN  NaN   NaN   NaN
+        none                92.9   NaN  NaN   NaN  NaN  NaN   NaN   NaN
+seg     +ctransgan_diverse  18.8  11.3  NaN   6.3  NaN  NaN   1.5   NaN
+        none                24.4  16.3  NaN   9.1  NaN  NaN   4.8   3.6
+seg_aug +copypaste          22.4  13.4  NaN   7.5  NaN  NaN   4.0   3.1
+        +ctransgan_diverse  18.0  10.7  NaN   6.3  NaN  NaN   2.3   NaN
+        none                21.7  13.3  9.8   7.9  6.9  6.9   5.1   3.9
+
+== auroc
+K                             1     2     3     4     5     6     8     10
+model   train                                                             
+devnet  +copypaste          76.3   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+        +ctransgan_diverse  77.7  80.9   NaN  82.4   NaN   NaN  82.1   NaN
+        none                63.0  64.5   NaN  65.0   NaN   NaN  65.4  65.8
+mlp     +copypaste          75.7   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+        none                57.1   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+seg     +ctransgan_diverse  94.5  96.2   NaN  98.1   NaN   NaN  99.5   NaN
+        none                92.2  95.1   NaN  97.2   NaN   NaN  98.6  99.0
+seg_aug +copypaste          93.2  96.0   NaN  97.8   NaN   NaN  98.8  99.0
+        +ctransgan_diverse  94.4  96.9   NaN  98.2   NaN   NaN  99.2   NaN
+        none                92.8  95.8  97.1  97.7  98.0  98.1  98.5  98.9
+
+== 나누기 수
+K                            1    2    3    4    5    6    8    10
+model   train                                                     
+devnet  +copypaste          1.0  NaN  NaN  NaN  NaN  NaN  NaN  NaN
+        +ctransgan_diverse  5.0  1.0  NaN  1.0  NaN  NaN  1.0  NaN
+        none                5.0  5.0  NaN  5.0  NaN  NaN  5.0  5.0
+mlp     +copypaste          1.0  NaN  NaN  NaN  NaN  NaN  NaN  NaN
+        none                1.0  NaN  NaN  NaN  NaN  NaN  NaN  NaN
+seg     +ctransgan_diverse  5.0  1.0  NaN  1.0  NaN  NaN  1.0  NaN
+        none                5.0  5.0  NaN  5.0  NaN  NaN  5.0  5.0
+seg_aug +copypaste          5.0  5.0  NaN  5.0  NaN  NaN  5.0  5.0
+        +ctransgan_diverse  5.0  5.0  NaN  5.0  NaN  NaN  1.0  NaN
+        none                5.0  5.0  5.0  5.0  5.0  5.0  5.0  5.0
+
+== PatchCore 대비 차이 (놓친 불량 %p, AUROC ×100), 95% 범위는 (나누기, PCB) 복원 추출
+  seg_aug none                 K1  fair_fnr5    +2.8  [-5.1, +11.7]  PatchCore보다 나은 단위 9/15
+  seg_aug none                 K1  fair_auroc   -2.3  [-5.2, +0.1]  PatchCore보다 나은 단위 7/15
+  seg_aug none                 K2  fair_fnr5    -5.5  [-13.3, +3.0]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K2  fair_auroc   +0.6  [-1.8, +2.8]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K3  fair_fnr5    -9.0  [-16.1, -1.3]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K3  fair_auroc   +2.0  [-0.1, +3.9]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K4  fair_fnr5   -11.0  [-17.2, -4.1]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K4  fair_auroc   +2.5  [+0.8, +4.1]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K5  fair_fnr5   -11.9  [-18.4, -4.8]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K5  fair_auroc   +2.9  [+1.1, +4.5]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K6  fair_fnr5   -12.0  [-18.3, -5.0]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K6  fair_auroc   +3.0  [+1.2, +4.6]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K8  fair_fnr5   -13.7  [-20.2, -7.2]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K8  fair_auroc   +3.4  [+1.7, +5.0]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K10 fair_fnr5   -15.0  [-20.9, -8.2]  PatchCore보다 나은 단위 10/15
+  seg_aug none                 K10 fair_auroc   +3.7  [+2.0, +5.2]  PatchCore보다 나은 단위 10/15
+  seg_aug +ctransgan_diverse   K1  fair_fnr5    -0.9  [-8.4, +8.0]  PatchCore보다 나은 단위 10/15
+  seg_aug +ctransgan_diverse   K1  fair_auroc   -0.7  [-3.2, +1.4]  PatchCore보다 나은 단위 9/15
+  seg_aug +ctransgan_diverse   K2  fair_fnr5    -8.1  [-15.1, -0.4]  PatchCore보다 나은 단위 10/15
+  seg_aug +ctransgan_diverse   K2  fair_auroc   +1.7  [-0.4, +3.6]  PatchCore보다 나은 단위 10/15
+  seg_aug +ctransgan_diverse   K4  fair_fnr5   -12.5  [-18.3, -5.8]  PatchCore보다 나은 단위 10/15
+  seg_aug +ctransgan_diverse   K4  fair_auroc   +3.0  [+1.5, +4.6]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K1  fair_fnr5    +3.6  [-4.4, +12.4]  PatchCore보다 나은 단위 7/15
+  seg_aug +copypaste           K1  fair_auroc   -1.9  [-4.9, +0.7]  PatchCore보다 나은 단위 8/15
+  seg_aug +copypaste           K2  fair_fnr5    -5.5  [-13.2, +2.4]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K2  fair_auroc   +0.9  [-1.5, +3.1]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K4  fair_fnr5   -11.3  [-18.2, -4.0]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K4  fair_auroc   +2.7  [+0.8, +4.5]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K8  fair_fnr5   -14.9  [-21.2, -8.4]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K8  fair_auroc   +3.6  [+1.7, +5.4]  PatchCore보다 나은 단위 10/15
+  seg_aug +copypaste           K10 fair_fnr5   -15.7  [-21.9, -9.3]  PatchCore보다 나은 단위 11/15
+  seg_aug +copypaste           K10 fair_auroc   +3.9  [+2.1, +5.6]  PatchCore보다 나은 단위 10/15
+
+== PCB별 놓친 불량 % (위치 모델 + 촬영 조건 섞기, 나누기 5 평균) vs PatchCore
+pcb                    pcb1  pcb2  pcb3
+train              K                   
++copypaste         1   28.8  17.8  20.7
+                   2   20.6   8.3  11.2
+                   4   13.2   3.5   5.9
+                   8    8.3   1.2   2.4
+                   10   7.4   0.8   1.1
++ctransgan_diverse 1   25.5  16.5  11.9
+                   2   16.3   9.5   6.3
+                   4    9.9   4.8   4.2
+                   8    5.8   1.2   0.0
+none               1   30.1  19.7  15.2
+                   2   21.2   9.8   9.0
+                   4   12.6   4.9   6.2
+                   8   10.2   2.3   2.9
+                   10   8.3   1.6   1.8
+PatchCore          0    5.8  29.0  21.7
+
+== cTransGAN 40 vs 단순 복사·붙여넣기 (같은 단위 짝 비교)
+  K1 fair_fnr5  cTG-복붙    -4.5 [-7.6, -1.6]  n=15
+  K1 fair_fnr5  복붙-실제만    +0.8 [-2.8, +4.3]  n=15
+  K1 fair_auroc cTG-복붙    +1.2 [+0.4, +2.1]  n=15
+  K1 fair_auroc 복붙-실제만    +0.4 [-0.5, +1.4]  n=15
+  K2 fair_fnr5  cTG-복붙    -2.7 [-4.5, -0.9]  n=15
+  K2 fair_fnr5  복붙-실제만    +0.0 [-2.0, +1.9]  n=15
+  K2 fair_auroc cTG-복붙    +0.8 [+0.4, +1.3]  n=15
+  K2 fair_auroc 복붙-실제만    +0.2 [-0.4, +0.8]  n=15
+  K4 fair_fnr5  cTG-복붙    -1.2 [-2.3, -0.0]  n=15
+  K4 fair_fnr5  복붙-실제만    -0.3 [-1.4, +0.8]  n=15
+  K4 fair_auroc cTG-복붙    +0.4 [-0.0, +0.8]  n=15
+  K4 fair_auroc 복붙-실제만    +0.2 [-0.2, +0.5]  n=15

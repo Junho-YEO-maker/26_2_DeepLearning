@@ -1,0 +1,6 @@
+K2_seed1: 480행, 고친 120/120장 (고친 면적 중앙값 5238px), 181s
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse/K2_seed1/manifest.csv', 'rows': 480}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n1/K2_seed1/manifest.csv', 'rows': 12}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n5/K2_seed1/manifest.csv', 'rows': 60}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n10/K2_seed1/manifest.csv', 'rows': 120}
+{'status': 'PASS', 'manifest': '/home/jaehyun/26_2_DeepLearning/Dataset/generated/ctransgan_diverse_n20/K2_seed1/manifest.csv', 'rows': 240}
