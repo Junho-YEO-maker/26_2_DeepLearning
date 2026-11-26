@@ -55,4 +55,4 @@ PCB·종류마다 고정 무작위 순서의 앞 N장이다(`Augmentation/gen_su
 
 - 위 11/25 추가 세트의 이미지·마스크, SD+LoRA 잔상 제거 전 원본(`sd_lora_v3raw/`, `_before_pinfix/`): 용량 때문에 서버에만 둔다.
 
-- AIHub SMT 생성 불량(`Dataset/aihub_smt/generated/`)과 원본·목록·분할표: AIHub 이용약관상 제3자 제공 금지(`Dataset/aihub_smt/raw/README.md`). SMT 실험은 서버에서만 돌린다(코드는 `AnomalyDetection/smt/`, `Augmentation/smt_sd_lora/`).
+- AIHub SMT 생성 불량(`Dataset/aihub_smt/generated/`)과 원본: AIHub 이용약관상 제3자 제공 금지(`Dataset/aihub_smt/raw/README.md`). 목록·분할표는 저장소에 있다. SMT 실험은 서버에서만 돌린다(코드는 `AnomalyDetection/smt/`, `Augmentation/smt_sd_lora/`).

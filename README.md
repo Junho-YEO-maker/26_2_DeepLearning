@@ -4,7 +4,7 @@
 불량 사진을 어떻게 써야 탐지가 나아지는지, 그리고 생성 모델로 만든 합성 불량이 **실제 불량 몇 장의 효과**를 내는지를 잰다.
 
 - 최종 발표자료: [`PCB_AD_presentation_v2.pptx`](PCB_AD_presentation_v2.pptx) (본편 24장 + 부록 14장, 발표 메모 포함)
-- 데이터: VisA PCB1–3(공개), AIHub 「SMT 공정 개선 멀티모달 데이터」(실제 생산 라인, 저장소에는 없음)
+- 데이터: VisA PCB1–3(공개), AIHub 「SMT 공정 개선 멀티모달 데이터」(실제 생산 라인, 원본 이미지는 저장소에 없음)
 - 생성 모델: cTransGAN(불량 K장만으로 처음부터 학습), SD1.5 인페인팅 + LoRA
 - 탐지 모델: PatchCore(정상만), KNN+MLP · DevNet(사진 단위), 위치 모델(seg, 결함 위치를 정답으로 학습)
 
@@ -39,7 +39,7 @@
 │  │  ├─ splits/             분할표 (test, val_normal, train_normal, pool, train_K{1,2,3,4,5,6,8,10}_seed{0..4})
 │  │  └─ splits_official/    VisA 공식 분할 (공개 수치 비교용)
 │  ├─ generated/             합성 불량. {방법}/K{k}_seed{s}/{images,masks,manifest.csv} → README_grid.md
-│  └─ aihub_smt/raw/         AIHub SMT 자리. 원본 · 분할표 모두 git 제외 → 받는 법: raw/README.md
+│  └─ aihub_smt/             AIHub SMT 목록(index.csv)과 분할표(splits/). 원본(raw/)은 git 제외 → 받는 법: raw/README.md
 ├─ Augmentation/             생성 모델 (Augmentation/README.md)
 │  ├─ ctransgan/             cTransGAN (VisA)          smt_ctransgan/  cTransGAN (SMT)
 │  ├─ sd_lora/               SD 인페인팅 + LoRA (VisA)  smt_sd_lora/    SD + LoRA (SMT)
@@ -62,7 +62,7 @@
 |---|---|---|---|
 | VisA PCB1–3 | 분할표, 합성 세트 manifest, 일부 합성 이미지 | 원본 이미지(약 700MB, 용량) | [`Dataset/visa/raw/README.md`](Dataset/visa/raw/README.md) |
 | 합성 불량 (VisA) | K1 나누기 0–4, K2·K4·K8 나누기 0의 이미지 · 마스크, 나머지는 manifest만 | 그 밖의 세트 이미지(세트당 약 100MB) | [`Dataset/generated/README_grid.md`](Dataset/generated/README_grid.md)의 명령으로 다시 생성 |
-| AIHub SMT | 결과 표(지표만) | 원본, 합성, 목록 · 분할표, SMT 사진이 든 그림 (AIHub 약관상 제3자 제공 금지) | [`Dataset/aihub_smt/raw/README.md`](Dataset/aihub_smt/raw/README.md) (AIHub 활용 신청 필요) |
+| AIHub SMT | 목록(`index.csv`), 분할표(`splits/`), 결과 표 | 원본, 합성, SMT 사진이 든 그림 (AIHub 약관상 제3자 제공 금지) | [`Dataset/aihub_smt/raw/README.md`](Dataset/aihub_smt/raw/README.md) (AIHub 활용 신청 필요) |
 
 ## 환경
 
@@ -104,7 +104,7 @@ python -m AnomalyDetection.ad.fair_ad --k 2 --seed 1 --pcbs pcb1 --tag _demo --d
 #    결과: AnomalyDetection/results/fair_ad_K2_seed1_demo_pcb1.csv
 #    (--tag를 빼고 PCB 3개를 다 돌리면 저장소의 결과 csv를 덮어쓴다)
 
-# 3) SMT 위치 모델 (AIHub 원본 · 분할표 · 합성 세트가 있을 때만). 결과는 results/smt/seg_ad_pre.csv에 행이 더해진다
+# 3) SMT 위치 모델 (AIHub 원본과 합성 세트가 있을 때만). 결과는 results/smt/seg_ad_pre.csv에 행이 더해진다
 python -m AnomalyDetection.smt.seg_ad --category pre --k 1 --seeds 0 1 2 --conds none sd_lora_fix:40:0.5
 
 # 4) 표 · 그림 · "실제 몇 장 효과" (저장소의 결과 csv만 읽음, 데이터 없이 바로 돌아감)

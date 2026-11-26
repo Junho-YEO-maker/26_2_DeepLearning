@@ -1,0 +1,148 @@
+{
+  "args": {
+    "index": "Dataset/aihub_smt/index.csv",
+    "out": "Dataset/aihub_smt/splits",
+    "ks": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "pool": 32,
+    "test_per_type": 40,
+    "test_mixed": 60,
+    "test_normal": 1000,
+    "train_normal": 500,
+    "val_normal": 200,
+    "dup_dist": 2,
+    "split_seed": 7017,
+    "force": false
+  },
+  "source": "AIHub 71900 SMT 공정 개선 멀티모달 데이터 (Training+Validation 재분할)",
+  "filters": {
+    "pre": "all (code A only exists)",
+    "solder": "code == A and jpeg_q == 128"
+  },
+  "label_rule": "label=1 if any 불량 box else 0; defect_type = box type codes joined by |",
+  "counts": {
+    "pre": {
+      "types": [
+        "ns",
+        "mf",
+        "om",
+        "pb",
+        "nm",
+        "nb"
+      ],
+      "images_after_filter": 18390,
+      "dropped_conflict_dup": 200,
+      "pool": {
+        "ns": 32,
+        "mf": 32,
+        "om": 32,
+        "pb": 32,
+        "nm": 32,
+        "nb": 32
+      },
+      "test_single_per_type": 40,
+      "test_mixed": 60,
+      "test_normal": 1000,
+      "val_normal": 200,
+      "train_normal": 500,
+      "extra_normal": 5225,
+      "unused_defect": 10581
+    },
+    "solder": {
+      "types": [
+        "ws",
+        "ic",
+        "ph",
+        "rs",
+        "pb",
+        "cc",
+        "fl",
+        "sh",
+        "nm",
+        "st",
+        "ml",
+        "ms"
+      ],
+      "images_after_filter": 6111,
+      "dropped_conflict_dup": 10,
+      "pool": {
+        "ws": 32,
+        "ic": 32,
+        "ph": 32,
+        "rs": 32,
+        "pb": 32,
+        "cc": 32,
+        "fl": 32,
+        "sh": 32,
+        "nm": 32,
+        "st": 32,
+        "ml": 32,
+        "ms": 32
+      },
+      "test_single_per_type": 40,
+      "test_mixed": 60,
+      "test_normal": 1000,
+      "val_normal": 200,
+      "train_normal": 500,
+      "extra_normal": 514,
+      "unused_defect": 2921
+    }
+  },
+  "checks": [
+    "no overlap between test/val/train_normal/extra/pool",
+    "K nested within seed",
+    "K subset of pool",
+    "near-duplicate groups (dHash) never cross splits",
+    "groups with mixed labels dropped"
+  ],
+  "file_sha256": {
+    "extra_normal.csv": "ee8aa24edb354f7b26713ded3db43bec7939b9015f2938aee41f7970a4412de4",
+    "pool.csv": "e1ddafb83245fb42a4b63840f8fd9b5463ca4134fdb0d2d0e6d1bc657f7bc885",
+    "test.csv": "9acaa39c00a60d09e1bb46628111c1b6e4b6db71a50ead3f7a8c1f2189358cac",
+    "train_K16_seed0.csv": "fd440c53a6261d985adad2da219347488749b3088ba5baf01898ce3c275d81dc",
+    "train_K16_seed1.csv": "351f32d2c56dfe073829e73e82f8c974f81210ace1aed71ca151bb5d853e3ffe",
+    "train_K16_seed2.csv": "9b46b71ede964183a5765c5a21fd1b7742f0679b09ae59018340c7f7ae8bca16",
+    "train_K16_seed3.csv": "f6f0f553d1d6db9a0b4fcca2e018d053260be93716eec3cf410bee69b3a8cc94",
+    "train_K16_seed4.csv": "50075cae1b5e96b72cd12e4d2990591ac6e870a71abb30e63e510aad36193990",
+    "train_K1_seed0.csv": "90c96226ffcbf6c7e84b655e68c53b04679f4e4c4bd3cfd89102ad8d50052f49",
+    "train_K1_seed1.csv": "9efd6bd1e703b679bd8a39146ffe1471dfc4179236fd64985f56833c8ec41825",
+    "train_K1_seed2.csv": "6f7361b40fa0b2a20283e7645544c8a6061a88264426e7673912eae04d1fb445",
+    "train_K1_seed3.csv": "4a7965d323ae42dd061ec793ecd7ba7b5db31d02eac7bc49866ed0ab8691b48e",
+    "train_K1_seed4.csv": "2bb6cbb25ec88ea421c80802b89fefb1e5b5248a544d17d90e8d381836f41861",
+    "train_K2_seed0.csv": "d8f98f342347605df5f09213153e6fcfb11dc4b238697b8567d96ce138bd1959",
+    "train_K2_seed1.csv": "075abf4fe49e3a1dea119efe14cd096e7abb12293a022be7d616e67dd81e7327",
+    "train_K2_seed2.csv": "e16286ed9d68b367e486f664f875c8fe87b561f97ca1e4a6cf2eb2cc389852b3",
+    "train_K2_seed3.csv": "65dc46190908b487e3dd8adfa0e461094f6328a3a673fe25315b007aa83a80fa",
+    "train_K2_seed4.csv": "048a08d4a0b89868c6c684356c9ee238542974ba7929c1c72575758e0a6bdfe8",
+    "train_K32_seed0.csv": "a9d6b3cc9ad5ca6819c70fe445c782264c0705b471c187581be910499b172582",
+    "train_K32_seed1.csv": "a9d6b3cc9ad5ca6819c70fe445c782264c0705b471c187581be910499b172582",
+    "train_K32_seed2.csv": "a9d6b3cc9ad5ca6819c70fe445c782264c0705b471c187581be910499b172582",
+    "train_K32_seed3.csv": "a9d6b3cc9ad5ca6819c70fe445c782264c0705b471c187581be910499b172582",
+    "train_K32_seed4.csv": "a9d6b3cc9ad5ca6819c70fe445c782264c0705b471c187581be910499b172582",
+    "train_K4_seed0.csv": "912fdc80b1d5d9b8cfd2b90a64efe55298084e8b180810899a7adb79006da709",
+    "train_K4_seed1.csv": "da9f52a0b8ca4c2c7e81f2c6c57bf61b8c54e58a3b785f08e4f65e0c98881966",
+    "train_K4_seed2.csv": "6053ec85b981340ecdb3874dfc31556b2782bf2e90f2f1d93ba5888a4766acf4",
+    "train_K4_seed3.csv": "0d922e0f86b36102dfe2bd1438b1054779563ea5687f055d30bd7f659bb66ffc",
+    "train_K4_seed4.csv": "b0c518a3a238191c3317f82afb60f0597d3a8cd680290ac9874fa0c7d9599369",
+    "train_K8_seed0.csv": "e3f85ce2f56440ea44490fc3eea9e6f8fdb21fedefa081bb4110e662b9de8409",
+    "train_K8_seed1.csv": "ed20028f84d9fe2add026b325fcd1cfe9960535587db6e271bf6f561c889751f",
+    "train_K8_seed2.csv": "57cff6bf16f751b2ccc347451eb91e02a465c903dd2d8a593fd8ec614f900f08",
+    "train_K8_seed3.csv": "f7d3a88247d86ff06f055d8721a695e14de79e5a02a6a78c5eca6cdf94018548",
+    "train_K8_seed4.csv": "29c493e8f6705b95825b8d6886c8ae34b5ccb717dcf3b2b4dfef863d47d3be76",
+    "train_normal.csv": "c86c9e689cc37f98b2576b4c81e2ff4342ad047202f5b0cfad5b97fc60c8174f",
+    "val_normal.csv": "5a878eae784616a9946bc6b5d2fefbbc8f1fd5590fefd6ca1a7237fa84abd939"
+  }
+}

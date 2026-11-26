@@ -69,7 +69,7 @@ SMT (놓친 불량 %, 괄호 = 실제 몇 장 효과)
 
 ```bash
 PY=python bash AnomalyDetection/results/logs_jh/run_visa_equiv.sh   # VisA 원본이 Dataset/visa/VisA_official/VisA_PCB에 있어야 함. 다시 돌릴 칸의 결과 csv · manifest를 먼저 지운다
-PY=python bash AnomalyDetection/results/logs_jh/run_smt_equiv.sh    # AIHub SMT 원본과 분할표, 생성 세트가 있어야 함 (서버에서만)
+PY=python bash AnomalyDetection/results/logs_jh/run_smt_equiv.sh    # AIHub SMT 원본과 생성 세트가 있어야 함 (원본은 AIHub에서 받고, 생성 세트는 다시 만든다)
 python AnomalyDetection/results/logs_jh/equiv_visa.py ctg
 python AnomalyDetection/results/logs_jh/equiv_smt.py
 ```

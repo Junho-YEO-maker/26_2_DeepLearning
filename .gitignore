@@ -20,9 +20,12 @@ runs/
 Dataset/visa/VisA_official/
 
 # AIHub SMT (AIHub 이용약관상 제3자 제공 금지: git·공유 Drive에 올리지 않음)
-# 원본(raw), 원본으로 만든 생성 불량(generated), 원본 파일 이름·라벨을 그대로 담은 목록·분할표(index.csv, splits/ 등)를
-# 모두 뺀다. 받는 방법을 적은 raw/README.md만 올린다.
+# 원본(raw)과 원본으로 만든 생성 불량(generated)은 뺀다. 이미지가 없는 목록·분할표(index.csv, splits/, check_shortcut.csv)와
+# 받는 방법을 적은 raw/README.md만 올린다.
 Dataset/aihub_smt/*
+!Dataset/aihub_smt/index.csv
+!Dataset/aihub_smt/check_shortcut.csv
+!Dataset/aihub_smt/splits/
 !Dataset/aihub_smt/raw/
 Dataset/aihub_smt/raw/*
 !Dataset/aihub_smt/raw/README.md
