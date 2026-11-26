@@ -1,6 +1,23 @@
-# 공통 (팀별 추가 패키지는 각 팀 폴더 README에 기록)
+# 이 저장소를 돌리는 데 필요한 패키지 (python 3.11에서 확인)
+# torch는 CUDA에 맞는 것을 먼저 설치한다. 우리가 쓴 버전:
+#   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+# anomalydiffusion은 따로 환경을 만든다 (Augmentation/anomalydiffusion/README.md).
+torch>=2.0
+torchvision
 numpy
 pandas
 pillow
+scipy
+scikit-learn
+matplotlib
 pyyaml
 tqdm
+# 생성 모델 SD+LoRA (Augmentation/sd_lora, Augmentation/smt_sd_lora)
+diffusers>=0.30
+transformers>=4.44
+peft>=0.12
+accelerate>=0.33
+safetensors
+# 발표자료 만들기 (ppt_build)
+python-pptx
+lxml

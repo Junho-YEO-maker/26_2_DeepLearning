@@ -1,8 +1,9 @@
 # AnomalyDetection 팀 연구 계획
 
-> 최종 수정: 2026-11-11 (Augmentation 팀 답변 반영, 보조 실험 제외, **baseline 우선으로 계획 변경**, AD 코드 `ad/` 추가)
+> 최종 수정: 2026-11-26 (**14절** 추가: 11/19 이후 결과가 어느 파일에 있는지와 "합성 40장 = 실제 몇 장" 실험)
+> 0–12절은 11/11 계획 문서이고, 13절은 11/17까지의 실행 기록입니다. 최종 결론은 발표자료 `PCB_AD_presentation_v2.pptx`와 14절을 보세요.
 > Augmentation 팀도 함께 읽는 문서입니다. **9절 "Augmentation 팀과의 합의 현황"** 과 **9.2절 "분할 CSV와 역할 분담"** 을 먼저 봐 주세요.
-> **결과 요약은 13절**에 있습니다(파일럿, baseline, 증강).
+> **결과 요약은 13절(11/17까지)과 14절(그 뒤)**에 있습니다.
 > 표시 규칙: `[결정]` 확정, `[제안]` AnomalyDetection 팀 안(Augmentation 팀 합의 필요), `[보류]` 결과를 보고 다시 정함.
 
 ---
@@ -692,3 +693,32 @@ K=1, seed 0, 해상도 512, PCB1–3, 헤드 시드 5개 평균. FNR@FPR1%(낮�
   자리 옮기기가 pcb2 bent를 망가뜨렸다(FNR 0.03 → 0.26).
 - v4b(`run_v4b.sh`, v3 + v4 missing만): v3와 같거나 나쁘다. 지운 missing은 pcb1 실제 missing을 더 못 잡게 했다(0.41 → 0.48).
 - 결론: 생성기는 **v3로 확정**. 닮음 지표가 올라도 AD가 좋아지지 않았다. 결과 CSV는 `results/label_weight_sd_lora_{v3,v4,v4b}_K1_seed0_canon.csv`, `results/gen_realism_K1_seed0*.csv`.
+
+---
+
+## 14. 11/19 이후 결과와 최종 정리 (11/26)
+
+11/17 이후에는 평가를 **배경 섞은 시험셋**(공정 시험셋, `ad/fair_ad.py`)으로 바꾸고, 주 모델을 **위치 모델 + 촬영 조건 섞기**(`seg_aug`)로 정했다.
+지표는 과검 5%에서 놓친 불량 비율(`fair_fnr5`)이다. SMT는 표준 시험셋에서 과검 1%로 잰다.
+각 실험의 표는 스크립트가 만든 요약 파일에 있고, 여기에는 위치만 적는다.
+
+| 날짜 | 실험 | 요약 파일 | 만드는 스크립트 |
+| --- | --- | --- | --- |
+| 11/19 | 배경 섞은 시험셋의 K 곡선, 모델 비교 | `results/ppt/summary.md` | `ad/ppt_summary.py` |
+| 11/19 | 생성기 × 실제 K × 합성 N (VisA, SMT) | `results/ppt/grid_summary.md`, `grid_visa.png`, `grid_smt.png` | `ad/grid_summary.py` |
+| 11/19 | SMT cTransGAN 비교 | `results/smt/ctransgan_summary.md` | `smt/seg_ad.py` |
+| 11/20 | 어떤 합성이 도움이 되나 (VisA, SMT) | `results/ppt/gen_quality_summary.md`, `gen_quality_smt_summary.md` | `ad/gen_quality.py`, `smt/gen_quality_smt.py` |
+| 11/20 | SMT 합성 20–160장 | `results/ppt/gen_amount_summary.md` | `smt/gen_amount.py` |
+| 11/20 | 점수로 고른 합성 20장 | `results/ppt/quality_subset_summary.md` | `smt/quality_subset.py` |
+| 11/22 | 공개 수치 비교 (PatchCore 재현, 공식 분할, DRA · DevNet) | `results/ppt/public_comparison_summary.md` | `ad/official_eval.py` 등 |
+| 11/25–26 | 합성 40장 = 실제 몇 장 (VisA, SMT) | `results/logs_jh/README.md` | `results/logs_jh/equiv_*.py` |
+
+### 14.1 최종 정리 (발표자료 v2 기준)
+
+- **RQ1. 불량 라벨을 어떻게 쓰나**: 같은 불량 1장이라도 사진 단위 DevNet은 배경 섞은 시험에서 불량의 87%를 놓치고, 위치 모델은 24%만 놓친다.
+  촬영 조건 섞기를 쓴 위치 모델에 cTransGAN 합성 40장을 더하면 21.7% → 18.0%(15번 중 12번 좋아짐)다. 정상만 쓰는 PatchCore(18.8%)와는 통계적으로 차이가 없다.
+- **RQ2. 합성은 얼마나**: 합성은 종류마다 20장 안팎이면 충분하다. 합성 40장은 실제 1장일 때 실제 1.4장, 2장일 때 2.7장, 4장일 때 6.6장 효과다(cTransGAN).
+  SD+LoRA는 실제 1장에서는 효과가 없고 2장부터 cTransGAN과 비슷하다.
+- **RQ3. 현장 데이터(AIHub SMT)**: 사전 공정에서 PatchCore는 불량의 91%를 놓치고, 불량 1장만 써도 21%로 준다.
+  합성 40장은 실제 1–4장일 때 실제 1.2–6.3장 효과로 VisA와 같은 흐름이다. 실제 16장에서는 효과가 없거나(사전) 오히려 나빠진다(납땜).
+- 실제 K = 1·2·4는 나누기 5번이다. VisA K = 8 + 합성과 SMT 납땜 · cTransGAN은 나누기 1–3번뿐이라 약한 근거다.
