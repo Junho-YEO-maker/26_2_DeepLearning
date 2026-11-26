@@ -44,9 +44,16 @@ def rgb(h):
     return RGBColor.from_string(h)
 
 
+# 미리보기 글꼴 파일 (보통, 굵게). 빌드 스크립트에서 FONT와 함께 바꿀 수 있다.
+PREVIEW_FONTS = None
+
+
 def _font(size_pt, bold=False):
-    f = 'NanumGothicBold.ttf' if bold else 'NanumGothic.ttf'
-    return ImageFont.truetype(FONT_DIR + f, max(1, int(round(size_pt / 72 * PX))))
+    if PREVIEW_FONTS:
+        path = PREVIEW_FONTS[1] if bold else PREVIEW_FONTS[0]
+    else:
+        path = FONT_DIR + ('NanumGothicBold.ttf' if bold else 'NanumGothic.ttf')
+    return ImageFont.truetype(path, max(1, int(round(size_pt / 72 * PX))))
 
 
 def _hex(h):
@@ -144,7 +151,7 @@ class Deck:
             f = root.find(f'.//a:fontScheme/a:{tag}', ns)
             f.find('a:latin', ns).set('typeface', FONT)
             f.find('a:ea', ns).set('typeface', FONT)
-        root.find('.//a:fontScheme', ns).set('name', 'Arial')
+        root.find('.//a:fontScheme', ns).set('name', FONT)
         theme_part._blob = etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)
 
     def section(self, name):
@@ -368,9 +375,11 @@ class Slide:
 
     # -------------------------------------------------------------- 표
     def table(self, x, y, col_w, rows, size=13, header_fill=GREEN, header_color=WHITE, fills=None, row_h=0.36,
-              bold_first_col=True, align=None, colors=None):
+              bold_first_col=True, align=None, colors=None, header_h=None):
+        """header_h: 머리 행 높이 (없으면 row_h)."""
         nr, nc = len(rows), len(col_w)
-        shp = self.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(sum(col_w)), Inches(row_h * nr))
+        rh = [header_h if (i == 0 and header_h) else row_h for i in range(nr)]
+        shp = self.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(sum(col_w)), Inches(sum(rh)))
         tbl = shp.table
         tblPr = tbl._tbl.tblPr
         tblPr.set('firstRow', '1')
@@ -383,7 +392,7 @@ class Slide:
             tbl.columns[j].width = Inches(cw)
         heights = []
         for i, row in enumerate(rows):
-            tbl.rows[i].height = Inches(row_h)
+            tbl.rows[i].height = Inches(rh[i])
             line_h = 0
             for j, val in enumerate(row):
                 cell = tbl.cell(i, j)
@@ -424,7 +433,7 @@ class Slide:
                 # 미리보기 높이
                 hh = sum(lh for para in paras for _, lh in wrap_lines(para, col_w[j] - 0.12)) / PX + 0.06
                 line_h = max(line_h, hh)
-            heights.append(max(row_h, line_h))
+            heights.append(max(rh[i], line_h))
         # 탭(tcPr) 안 요소 순서: lnB 뒤에 solidFill이 와야 한다 → fill을 다시 붙여 순서를 맞춘다
         for i in range(nr):
             for j in range(nc):

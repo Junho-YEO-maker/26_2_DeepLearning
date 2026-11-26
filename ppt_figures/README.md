@@ -1,6 +1,17 @@
 # 발표 슬라이드 그림
 
-슬라이드 번호는 `ppt_preview.md` 기준이다. `bash ppt_figures/collect.sh`가 원본에서 복사한다. 원본을 고치면 이 스크립트를 다시 돌린다.
+**최종 발표자료는 `PCB_AD_presentation_v2.pptx`** (본편 24장 + 부록 14장)이고 `python ppt_build/build_deck_v2.py`로 만든다.
+v2는 이 폴더의 그림 일부와 아래 새 그림을 쓰고, 그래프는 pptx 차트로 직접 그린다.
+
+| 파일 | 보여주는 것 | 만드는 스크립트 |
+|---|---|---|
+| `s02_visa_pcb{1,2,3}_{normal,defect}.jpg` | VisA PCB별 정상 · 불량 예시 | `ppt_build/make_dataset_figures.py` |
+| `s02_visa_type_{bent,melt,scratch,missing}.jpg` | 결함 종류 4가지 확대 | `ppt_build/make_dataset_figures.py` |
+| `dataset_counts.json` | 데이터 슬라이드의 장수 (PCB별 정상 · 불량 · 분할) | `ppt_build/make_dataset_figures.py` |
+
+SMT 사진 자리는 비워 두었다. AIHub SMT 사진은 약관상 저장소에 넣을 수 없어, 발표 전에 각자 넣는다.
+
+아래 표는 v1(`PCB_AD_presentation.pptx`, `ppt_build/build_deck.py`) 기준이다. 슬라이드 번호는 `ppt_preview.md` 기준이다. `bash ppt_figures/collect.sh`가 원본에서 복사한다. 원본을 고치면 이 스크립트를 다시 돌린다.
 
 11/19 갱신: 생성 예시(s06 전후, s07, s08)는 bent 핀 잔상을 지운 세트로 다시 만들었다. 생성기 × K × 합성 장수 N 그림(s14_grid)과 공정 K 곡선(s14_fair)도 잔상 제거 후 결과다.
 
