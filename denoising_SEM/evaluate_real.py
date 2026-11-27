@@ -176,17 +176,20 @@ def evaluate_all(data_dir, checkpoint_dir, noise_levels, results_dir, device):
 
         # PSNR ranking
         psnr_ranking = sorted(lr.items(), key=lambda x: x[1]['psnr_mean'], reverse=True)
-        print(f"  PSNR ranking:  {' > '.join([f'{m}({v[\"psnr_mean\"]:.1f})' for m, v in psnr_ranking])}")
+        psnr_str = ' > '.join([f"{m}({v['psnr_mean']:.1f})" for m, v in psnr_ranking])
+        print(f"  PSNR ranking:  {psnr_str}")
 
         # SSIM ranking
         ssim_ranking = sorted(lr.items(), key=lambda x: x[1]['ssim_mean'], reverse=True)
-        print(f"  SSIM ranking:  {' > '.join([f'{m}({v[\"ssim_mean\"]:.3f})' for m, v in ssim_ranking])}")
+        ssim_str = ' > '.join([f"{m}({v['ssim_mean']:.3f})" for m, v in ssim_ranking])
+        print(f"  SSIM ranking:  {ssim_str}")
 
         # CD ranking (lower error = better)
         cd_items = [(m, v) for m, v in lr.items() if 'cd_error_mean' in v]
         if cd_items:
             cd_ranking = sorted(cd_items, key=lambda x: x[1]['cd_error_mean'])
-            print(f"  CD ranking:    {' > '.join([f'{m}({v[\"cd_error_mean\"]:.1f}%)' for m, v in cd_ranking])}")
+            cd_str = ' > '.join([f"{m}({v['cd_error_mean']:.1f}%)" for m, v in cd_ranking])
+            print(f"  CD ranking:    {cd_str}")
 
         # Check if rankings differ
         if cd_items and len(psnr_ranking) >= 2 and len(cd_ranking) >= 2:
