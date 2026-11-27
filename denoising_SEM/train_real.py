@@ -22,8 +22,8 @@ from PIL import Image
 
 # Import models
 from models.dncnn import DnCNN
-from models.gan import UNetGenerator, PatchDiscriminator
-from models.cyclegan import ResNetGenerator, PatchDiscriminator as CycleDiscriminator
+from models.gan import Generator, Discriminator
+from models.cyclegan import CycleGANGenerator, CycleGANDiscriminator
 from models.diffusion import DiffusionUNet, GaussianDiffusion
 
 
@@ -93,8 +93,8 @@ def train_dncnn(train_loader, test_loader, device, epochs=100, lr=1e-3):
 
 
 def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
-    generator = UNetGenerator().to(device)
-    discriminator = PatchDiscriminator().to(device)
+    generator = Generator().to(device)
+    discriminator = Discriminator().to(device)
 
     opt_g = optim.Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
     opt_d = optim.Adam(discriminator.parameters(), lr=lr, betas=(0.5, 0.999))
@@ -145,10 +145,10 @@ def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
 
 
 def train_cyclegan(train_loader, test_loader, device, epochs=100, lr=2e-4):
-    G_n2c = ResNetGenerator().to(device)   # noisy -> clean
-    G_c2n = ResNetGenerator().to(device)   # clean -> noisy
-    D_clean = CycleDiscriminator().to(device)
-    D_noisy = CycleDiscriminator().to(device)
+    G_n2c = CycleGANGenerator().to(device)   # noisy -> clean
+    G_c2n = CycleGANGenerator().to(device)   # clean -> noisy
+    D_clean = CycleGANDiscriminator().to(device)
+    D_noisy = CycleGANDiscriminator().to(device)
 
     opt_g = optim.Adam(
         list(G_n2c.parameters()) + list(G_c2n.parameters()),

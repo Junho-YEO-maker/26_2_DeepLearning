@@ -17,8 +17,8 @@ import torch
 from PIL import Image
 
 from models.dncnn import DnCNN
-from models.gan import UNetGenerator
-from models.cyclegan import ResNetGenerator
+from models.gan import Generator
+from models.cyclegan import CycleGANGenerator
 from models.diffusion import DiffusionUNet, GaussianDiffusion
 from metrics.image_quality import compute_psnr, compute_ssim
 from metrics.metrology import MetrologyEvaluator
@@ -32,10 +32,10 @@ def load_model(model_name, checkpoint_dir, noise_level, device):
         model = DnCNN().to(device)
         model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'dncnn.pth'), map_location=device))
     elif model_name == 'gan':
-        model = UNetGenerator().to(device)
+        model = Generator().to(device)
         model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'gan.pth'), map_location=device))
     elif model_name == 'cyclegan':
-        model = ResNetGenerator().to(device)
+        model = CycleGANGenerator().to(device)
         model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'generator_n2c.pth'), map_location=device))
     elif model_name == 'diffusion':
         unet = DiffusionUNet().to(device)
