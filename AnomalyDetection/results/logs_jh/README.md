@@ -115,6 +115,19 @@ SMT (놓친 불량 %, 괄호 = 실제 몇 장 효과)
 결과: `AnomalyDetection/results/smt/cam_K{1,16}_seed0_{pre,solder}.csv` (사진마다 지표), 실행 로그 `smt_cam_{pre,solder}_K{1,16}.log`.
 그림은 AIHub 사진이 들어 있어 git에 올리지 않는다(`Dataset/aihub_smt/cam/`, `--redraw`로 학습 없이 다시 그림). 한 칸에 A100에서 약 6분(위치 모델 학습이 대부분).
 
+### VisA 모델이 본 곳 그림 다시 그리기 (11/27, `ad/gradcam.py --tag _r2`)
+
+발표 그림에서 VisA 위치 모델 지도가 거의 안 보였다. 계산은 맞다. 지도가 결함 위에 있고(시험 불량에서 가장 높은 곳이 영역 안 86%),
+결함을 지우면 꺼지고(지운 자리 안 비율 5%), 정상에 붙이면 따라간다(74%). 다만 VisA 결함이 작아서 지도 최댓값의 절반을 넘는 곳이
+사진의 0.02–0.12%(수십–수백 픽셀)뿐이다. 그래서 다음 두 가지를 고쳤다.
+
+- `ad/gradcam.figure`의 색 눈금을 "그림 속 D 지도 전체 최댓값"에서 "예시마다 · 열마다 그 예시 D 지도 최댓값"으로 바꿨다. 한 예시의 D · DR · ND는 같은 눈금이다.
+- 본편 10 · 17번 그림은 `ppt_build/make_visa_cam_panels.py`로 결함 주변 확대 칸을 붙였다(`ppt_figures/s17_visa_cam_*.jpg`).
+
+예시 지도 파일(`_maps.npz`)이 이 서버에 없어서 같은 설정(K=1, 나누기 0)으로 다시 돌렸다(`visa_gradcam_r2_*.log`, PCB 3개 병렬 약 11분).
+요약 `AnomalyDetection/results/gradcam_K1_seed0_r2.csv`는 처음 실행과 0.01 안팎으로 같다. 위치 모델은 거의 같고(상자 안 0.747 → 0.752),
+DevNet은 GPU 비결정성으로 조금 다르다(가장 높은 곳이 영역 안 11% → 8%). 부록 3번 그림과 표는 다시 돌린 결과로 바꿨다.
+
 ## 파일
 
 | 파일 | 내용 |

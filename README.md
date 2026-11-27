@@ -3,7 +3,7 @@
 2026-2 딥러닝 팀 프로젝트. 신규 라인처럼 **정상 사진은 많고 불량 사진은 결함 종류마다 몇 장(K장)뿐일 때**,
 불량 사진을 어떻게 써야 탐지가 나아지는지, 그리고 생성 모델로 만든 합성 불량이 **실제 불량 몇 장의 효과**를 내는지를 잰다.
 
-- 최종 발표자료: [`PCB_AD_presentation_v4.pptx`](PCB_AD_presentation_v4.pptx) (본편 30장 + 부록 24장, 발표 메모 포함). 부록 15–24는 데이터 설명과 결함 유형별 정상 · 불량 예시. SMT 사진이 들어간 발표용은 `PCB_AD_presentation_v4_local.pptx`(AIHub 약관상 git 제외, `ppt_build/make_smt_figures.py` 후 빌드). "왜 이 문제인가"로 시작하고 흰 바탕 카드 디자인. v3(18장, 줄인 판) · v2(24장)는 같은 내용의 이전 판
+- 최종 발표자료: [`PCB_AD_presentation_v5.pptx`](PCB_AD_presentation_v5.pptx) (본편 21장 + 부록 39장, 발표 메모 포함, `ppt_build/build_deck_v5.py`). 15분에 맞춰 v4 본편 31장을 21장으로 줄이고 말을 쉽게 했다. 본편에서 뺀 10장은 부록 20–29로 옮겼다. 부록 15–19는 SMT 사진 단위 모델 비교와 모델이 본 곳, 부록 30–39는 데이터 설명과 결함 유형별 정상 · 불량 예시. SMT 사진이 들어간 발표용은 `PCB_AD_presentation_v5_local.pptx`(AIHub 약관상 git 제외, `ppt_build/make_smt_figures.py` 후 빌드). v4(본편 31장) · v3 · v2는 이전 판
 - 데이터: VisA PCB1–3(공개), AIHub 「SMT 공정 개선 멀티모달 데이터」(실제 생산 라인, 원본 이미지는 저장소에 없음)
 - 생성 모델: cTransGAN(불량 K장만으로 처음부터 학습), SD1.5 인페인팅 + LoRA
 - 탐지 모델: PatchCore(정상만), KNN+MLP · DevNet(사진 단위), 위치 모델(seg, 결함 위치를 정답으로 학습)
@@ -32,7 +32,7 @@
 
 ```
 26_2_DeepLearning/
-├─ PCB_AD_presentation_v4.pptx  최종 발표자료 (이전 판: v3 · v2, v1 = PCB_AD_presentation.pptx)
+├─ PCB_AD_presentation_v5.pptx  최종 발표자료 (이전 판: v4 · v3 · v2, v1 = PCB_AD_presentation.pptx)
 ├─ Dataset/
 │  ├─ visa/
 │  │  ├─ raw/                원본 VisA PCB1–3 자리. git 제외 → 받는 법: raw/README.md
@@ -50,7 +50,7 @@
 │  ├─ ad/                    VisA: 모델, 배경 섞은 시험셋(fair_ad.py), 요약 · 그림 스크립트
 │  ├─ smt/                   SMT: 위치 모델(seg_ad.py), 합성 양 · 품질 실험
 │  └─ results/               결과 csv와 요약 md (results/ppt/*.md, results/smt/, results/logs_jh/)
-├─ ppt_build/                발표자료 만드는 코드 (build_deck_v4.py, deck_v4_appendix.py, deck_lib.py. 이전 판은 build_deck_v3.py · v2.py)
+├─ ppt_build/                발표자료 만드는 코드 (build_deck_v5.py, deck_v4_appendix.py, deck_lib.py. 이전 판은 build_deck_v4.py · v3.py · v2.py)
 ├─ ppt_figures/              발표 그림 (ppt_figures/README.md)
 ├─ scripts/                  VisA 분할표 만들기 (make_splits.py, add_k_splits.py)
 └─ colab/                    초기 Colab 노트북
@@ -114,7 +114,9 @@ python AnomalyDetection/results/logs_jh/equiv_smt.py
 
 # 5) 발표자료 (Pretendard 글꼴 필요)
 python ppt_build/make_dataset_figures.py    # VisA 예시 사진 (VisA 원본 필요)
-python ppt_build/build_deck_v4.py           # → PCB_AD_presentation_v4.pptx
+python ppt_build/make_visa_cam_panels.py   # VisA 모델이 본 곳 확대 그림 (ad/gradcam.py --tag _r2 결과 필요)
+python ppt_build/make_smt_figures.py       # SMT 사진 그림, git 제외 (AIHub 원본 필요, 없으면 사진 자리만)
+python ppt_build/build_deck_v5.py           # → PCB_AD_presentation_v5.pptx
 ```
 
 SD+LoRA 학습 · 생성은 [`Augmentation/sd_lora/README.md`](Augmentation/sd_lora/README.md),

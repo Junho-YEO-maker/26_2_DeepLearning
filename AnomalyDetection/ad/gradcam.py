@@ -17,8 +17,10 @@
   flagged   점수가 시험 정상 과검률 1% 임계값을 넘었나 (불량 판정)
 예시 그림: PCB마다 공정 시험셋 불량 --n-examples쌍을 rng(--fig-seed)로 무작위로 고른다. 헤드 시드 0.
   열 = 사진 / DevNet 실제만 / DevNet +생성 / seg 실제만 / seg +생성, 행 = D / DR / ND. 흰 선 = 결함 영역, 자홍 원 = 지도 최고점.
-  색 범위는 열마다 그 그림에 나온 D 지도들의 최댓값으로 고정한다(Grad-CAM·seg 같은 규칙). 그래서 한 열 안에서 D·DR·ND는
-  같은 눈금이고, 열끼리는 눈금이 다르다(점수 단위가 모델마다 다름). 예시 지도는 _maps.npz에 있어 --summarize가 다시 그린다.
+  색 범위는 예시마다 · 열마다 그 예시 D 지도의 최댓값으로 맞춘다(Grad-CAM·seg 같은 규칙). 그래서 한 예시의 D·DR·ND는
+  같은 눈금이라 결함을 지우면 지도가 꺼지는 것이 보이고, 예시끼리 · 열끼리는 눈금이 다르다(점수 단위가 모델마다 다름).
+  (11/27 고침: 전에는 그림 속 D 지도 전체의 최댓값이라, 지도 값이 작은 예시의 위치 모델 지도가 거의 보이지 않았다.)
+  예시 지도는 _maps.npz에 있어 --summarize가 다시 그린다.
 
     python -m AnomalyDetection.ad.gradcam --pcbs pcb1 --data-root ...      # PCB마다 따로 (병렬)
     python -m AnomalyDetection.ad.gradcam --summarize                      # PCB 결과 합치기 + 3 PCB 예시 그림
@@ -139,7 +141,7 @@ def figure(path, ex_maps, title):
         ax.contour(reg, levels=[.5], colors='w', linewidths=.8)
         ax.set_ylabel(f'{ex_maps["names"][j]}\n{names[p]}', fontsize=8)
         for c, (cname, maps, sc, fl, _) in enumerate(cols, 1):
-            vmax = max(float(maps['D'].max()), 1e-6)    # 열마다 그림 속 D 지도 최댓값
+            vmax = max(float(maps['D'][j].max()), 1e-6)    # 예시마다 · 열마다 그 예시 D 지도 최댓값
             ax = axes[r, c]
             ax.imshow(img)
             ax.imshow(overlay(maps[p][j], vmax))

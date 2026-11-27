@@ -1,0 +1,7 @@
+pcb1: 공정 시험셋 60쌍, 결함 영역 면적 D 0.030 ND 0.030 (66s)
+  pcb1 canon 임베딩 끝 (150s)
+  pcb1 devnet 끝 (262s)
+  pcb1 mlp 끝 (373s)
+  pcb1 seg none 시드 0 (119s)
+  pcb1 seg +sd_lora_v3 시드 0 (138s)
+  pcb1 저장: /home/jaehyun/26_2_DeepLearning/AnomalyDetection/results/gradcam/K1_seed0_r2_pcb1.csv, .jpg (640s)

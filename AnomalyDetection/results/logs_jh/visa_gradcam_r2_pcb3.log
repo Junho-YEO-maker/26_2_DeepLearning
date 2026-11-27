@@ -1,0 +1,7 @@
+pcb3: 공정 시험셋 60쌍, 결함 영역 면적 D 0.027 ND 0.027 (57s)
+  pcb3 canon 임베딩 끝 (142s)
+  pcb3 devnet 끝 (272s)
+  pcb3 mlp 끝 (403s)
+  pcb3 seg none 시드 0 (140s)
+  pcb3 seg +sd_lora_v3 시드 0 (104s)
+  pcb3 저장: /home/jaehyun/26_2_DeepLearning/AnomalyDetection/results/gradcam/K1_seed0_r2_pcb3.csv, .jpg (658s)

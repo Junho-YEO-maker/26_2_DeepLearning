@@ -74,6 +74,7 @@ ppt_build/preview/
 ppt_build/preview_v2/
 ppt_build/preview_v3/
 ppt_build/preview_v4/
+ppt_build/preview_v5/
 
 # 실험 전에 떠 둔 결과 csv 백업 (서버에만)
 AnomalyDetection/results/logs_jh/smt_bak/
