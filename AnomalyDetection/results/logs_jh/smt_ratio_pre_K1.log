@@ -1,0 +1,7 @@
+pre K=1: 데이터 준비 35s (정상 500, 시험 1300, 진단 pool 192)
+pre K=1 seed=0 sd_lora_fix:40:0.25      FNR=0.140 AUROC=0.987 loc=0.89 D=0.81 DR=0.08 ND=0.29 (276s)
+pre K=1 seed=0 ctransgan:40:0.25        FNR=0.137 AUROC=0.983 loc=0.95 D=0.85 DR=0.06 ND=0.39 (276s)
+pre K=1 seed=1 sd_lora_fix:40:0.25      FNR=0.190 AUROC=0.980 loc=0.94 D=0.92 DR=0.24 ND=0.51 (251s)
+pre K=1 seed=1 ctransgan:40:0.25        FNR=0.267 AUROC=0.972 loc=0.88 D=0.86 DR=0.18 ND=0.54 (275s)
+pre K=1 seed=2 sd_lora_fix:40:0.25      FNR=0.070 AUROC=0.985 loc=0.92 D=0.89 DR=0.13 ND=0.53 (284s)
+pre K=1 seed=2 ctransgan:40:0.25        FNR=0.117 AUROC=0.982 loc=0.94 D=0.87 DR=0.10 ND=0.60 (283s)

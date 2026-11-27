@@ -1,0 +1,7 @@
+solder K=16: 데이터 준비 47s (정상 500, 시험 1540, 진단 pool 384)
+solder K=16 seed=0 sd_lora_fix:40:0.25      FNR=0.370 AUROC=0.954 loc=0.96 D=0.65 DR=0.12 ND=0.52 (300s)
+solder K=16 seed=0 ctransgan:40:0.25        FNR=0.528 AUROC=0.943 loc=0.94 D=0.58 DR=0.01 ND=0.01 (285s)
+solder K=16 seed=1 sd_lora_fix:40:0.25      FNR=0.400 AUROC=0.940 loc=0.94 D=0.67 DR=0.05 ND=0.31 (257s)
+solder K=16 seed=1 ctransgan:40:0.25        FNR=0.620 AUROC=0.939 loc=0.94 D=0.69 DR=0.06 ND=0.30 (289s)
+solder K=16 seed=2 sd_lora_fix:40:0.25      FNR=0.493 AUROC=0.948 loc=0.95 D=0.58 DR=0.05 ND=0.24 (292s)
+solder K=16 seed=2 ctransgan:40:0.25        FNR=0.656 AUROC=0.944 loc=0.93 D=0.61 DR=0.01 ND=0.03 (245s)
