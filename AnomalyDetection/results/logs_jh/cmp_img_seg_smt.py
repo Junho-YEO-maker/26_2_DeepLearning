@@ -29,7 +29,7 @@ for cat in ('pre', 'solder'):
         print(f'-- {name}')
         print(x.round(3 if col == 'auroc' else 1).to_string())
     # 짝 비교: DevNet − seg (같은 K, 나누기)
-    p = img[img.model == 'devnet'].set_index(['K', 'seed'])[['fnr', 'DR', 'ND']].join(seg[['fnr', 'DR', 'ND']], rsuffix='_seg', how='inner')
+    p = img[img.model == 'devnet'].set_index(['K', 'seed'])[['fnr', 'DR', 'ND']].join(seg[['fnr', 'DR', 'ND']].add_suffix('_seg'), how='inner')
     print('-- DevNet − seg (같은 K · 나누기 짝, %p, 괄호 = DevNet이 큰 나누기 수)')
     for k, g in p.groupby(level='K'):
         parts = []

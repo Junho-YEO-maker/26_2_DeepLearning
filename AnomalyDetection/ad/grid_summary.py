@@ -101,7 +101,14 @@ def smt_cells(cond_prefix='sd_lora_fix'):
                     continue
                 n = int(m.group(1))
             rows.append(dict(cat=cat, K=int(r.K), seed=int(r.seed), N=n, value=r.fnr, per_type=r.per_type))
-    return pd.DataFrame(rows)
+    d = pd.DataFrame(rows)
+    if not len(d):
+        return d
+    # N=0(실제만)은 그 (공정, K)에서 합성 칸이 있는 seed만 쓴다. 실제만 실험(run_smt_equiv.sh)이 seed 3–4를 더해
+    # 그대로 평균하면 N=0과 N>0이 서로 다른 분할의 평균이 된다. 합성 칸이 없는 K(2 · 8 · 32)는 실제만 seed를 다 쓴다.
+    syn = d[d.N > 0].groupby(['cat', 'K']).seed.agg(set)
+    keep = [r.N > 0 or (r.cat, r.K) not in syn.index or r.seed in syn[(r.cat, r.K)] for r in d.itertuples()]
+    return d[keep].reset_index(drop=True)
 
 
 def summarize(c, keys):

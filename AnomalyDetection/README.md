@@ -696,7 +696,7 @@ K=1, seed 0, 해상도 512, PCB1–3, 헤드 시드 5개 평균. FNR@FPR1%(낮�
 
 ---
 
-## 14. 11/19 이후 결과와 최종 정리 (11/26)
+## 14. 11/19 이후 결과와 최종 정리 (11/27)
 
 11/17 이후에는 평가를 **배경 섞은 시험셋**(공정 시험셋, `ad/fair_ad.py`)으로 바꾸고, 주 모델을 **위치 모델 + 촬영 조건 섞기**(`seg_aug`)로 정했다.
 지표는 과검 5%에서 놓친 불량 비율(`fair_fnr5`)이다. SMT는 표준 시험셋에서 과검 1%로 잰다.
@@ -713,8 +713,11 @@ K=1, seed 0, 해상도 512, PCB1–3, 헤드 시드 5개 평균. FNR@FPR1%(낮�
 | 11/22 | 공개 수치 비교 (PatchCore 재현, 공식 분할, DRA · DevNet) | `results/ppt/public_comparison_summary.md` | `ad/official_eval.py` 등 |
 | 11/25–26 | 합성 40장 = 실제 몇 장 (VisA, SMT) | `results/logs_jh/README.md` | `results/logs_jh/equiv_*.py` |
 | 11/26 | SMT 합성 비율 1/2 → 1/4 | `results/logs_jh/README.md` | `results/logs_jh/run_smt_ratio.sh` |
+| 11/27 | SMT 사진 단위 모델(DevNet · MLP) vs 위치 모델, 같은 데이터 · 같은 확인 | `results/logs_jh/README.md`, `results/logs_jh/cmp_img_seg_smt.txt` | `smt/img_ad.py`, `results/logs_jh/cmp_img_seg_smt.py` |
+| 11/27 | 모델이 본 곳: SMT Grad-CAM vs 위치 모델 지도 | `results/logs_jh/README.md`, `results/smt/cam_K{1,16}_seed0_{pre,solder}.csv` | `smt/cam.py` |
+| 11/27 | 모델이 본 곳: VisA 다시 돌림 (그림 색 눈금을 예시마다) | `results/gradcam_K1_seed0_r2.csv`, `results/gradcam/K1_seed0_r2_all.jpg` | `ad/gradcam.py --tag _r2` |
 
-### 14.1 최종 정리 (발표자료 v4 기준)
+### 14.1 최종 정리 (발표자료 v5 기준)
 
 - **RQ1. 불량 라벨을 어떻게 쓰나**: 같은 불량 1장이라도 사진 단위 DevNet은 배경 섞은 시험에서 불량의 87%를 놓치고, 위치 모델은 24%만 놓친다.
   촬영 조건 섞기를 쓴 위치 모델에 cTransGAN 합성 40장을 더하면 21.7% → 18.0%(15번 중 12번 좋아짐)다. 정상만 쓰는 PatchCore(18.8%)와는 통계적으로 차이가 없다.
@@ -723,4 +726,5 @@ K=1, seed 0, 해상도 512, PCB1–3, 헤드 시드 5개 평균. FNR@FPR1%(낮�
 - **RQ3. 현장 데이터(AIHub SMT)**: 사전 공정에서 PatchCore는 불량의 91%를 놓치고, 불량 1장으로 학습한 위치 모델은 19.9%만 놓친다.
   합성 40장은 실제 1–4장일 때 실제 1.2–6.3장 효과로 VisA와 같은 흐름이다. 실제 16장에서는 사전 공정은 계속 좋아지고(실제 32장보다 나음) 납땜 공정은 나빠진다.
   학습 배치의 합성 비율을 1/2에서 1/4로 줄이면 납땜 16장의 SD+LoRA는 49.6% → 42.1%(실제만 40.9%)로 해가 거의 사라지고, cTransGAN은 72.8% → 60.1%로 여전히 나쁘다(결함을 실제의 8.7배로 과장한 세트). 실제 1 · 4장에서는 비율을 줄여도 이득이 그대로다.
+  SMT는 결함이 사진의 20–50%로 커서 사진 단위 DevNet도 원래 시험 점수는 위치 모델과 비슷하다(사전 16장 5.0% vs 3.5%). 하지만 결함을 지운 사진을 위치 모델보다 10–14%p 더 불량이라 하고, Grad-CAM으로 본 곳은 납땜 공정에서 아무 데나 본 수준이다(상자 안 50%, 무작위 48%). 위치 모델은 실제 16장에서 지도 최고점의 95–99%가 결함 상자 안이다. 결함이 커도 위치 정보가 필요하다.
 - 실제 K = 1·2·4는 나누기 5번이다. VisA K = 8 + 합성과 SMT 납땜 · cTransGAN은 나누기 1–3번뿐이라 약한 근거다.
