@@ -29,18 +29,17 @@ def load_model(model_name, checkpoint_dir, noise_level, device):
     ckpt_dir = os.path.join(checkpoint_dir, f"{model_name}_{noise_level}")
 
     if model_name == 'dncnn':
-        model = DnCNN().to(device)
-        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'dncnn.pth'), map_location=device))
+        model = DnCNN(1, 8, 64).to(device)
+        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'best.pth'), map_location=device))
     elif model_name == 'gan':
-        model = Generator().to(device)
-        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'gan.pth'), map_location=device))
+        model = Generator(1, 1, 64).to(device)
+        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'G_last.pth'), map_location=device))
     elif model_name == 'cyclegan':
-        model = CycleGANGenerator().to(device)
-        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'generator_n2c.pth'), map_location=device))
+        model = CycleGANGenerator(1, 1, 64, 6).to(device)
+        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'G_N2C_last.pth'), map_location=device))
     elif model_name == 'diffusion':
-        unet = DiffusionUNet().to(device)
-        model = GaussianDiffusion(unet, T=500).to(device)
-        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'diffusion.pth'), map_location=device))
+        model = DiffusionUNet(1, 1, 64).to(device)
+        model.load_state_dict(torch.load(os.path.join(ckpt_dir, 'model_last.pth'), map_location=device))
 
     model.eval()
     return model
@@ -52,7 +51,8 @@ def denoise_image(model, model_name, noisy_tensor, device):
         noisy = noisy_tensor.unsqueeze(0).to(device)
 
         if model_name == 'diffusion':
-            output = model.sample(noisy, n_samples=1)
+            diffusion = GaussianDiffusion(500, device=device)
+            output = diffusion.sample(model, noisy, 1).squeeze(0)
         else:
             output = model(noisy)
 

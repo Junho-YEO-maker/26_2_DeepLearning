@@ -67,7 +67,7 @@ class RealSEMDataset(Dataset):
 # ---------------------------------------------------------------------------
 
 def train_dncnn(train_loader, test_loader, device, epochs=100, lr=1e-3):
-    model = DnCNN().to(device)
+    model = DnCNN(1, 8, 64).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     criterion = nn.MSELoss()
@@ -93,8 +93,8 @@ def train_dncnn(train_loader, test_loader, device, epochs=100, lr=1e-3):
 
 
 def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
-    generator = Generator().to(device)
-    discriminator = Discriminator().to(device)
+    generator = Generator(1, 1, 64).to(device)
+    discriminator = Discriminator(2, 64).to(device)
 
     opt_g = optim.Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
     opt_d = optim.Adam(discriminator.parameters(), lr=lr, betas=(0.5, 0.999))
@@ -114,10 +114,8 @@ def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
 
             # Train Discriminator
             opt_d.zero_grad()
-            real_pair = torch.cat([noisy, clean], dim=1)
-            fake_pair = torch.cat([noisy, fake.detach()], dim=1)
-            pred_real = discriminator(real_pair)
-            pred_fake = discriminator(fake_pair)
+            pred_real = discriminator(noisy, clean)
+            pred_fake = discriminator(noisy, fake.detach())
             loss_d = 0.5 * (
                 criterion_gan(pred_real, torch.ones_like(pred_real)) +
                 criterion_gan(pred_fake, torch.zeros_like(pred_fake))
@@ -127,8 +125,7 @@ def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
 
             # Train Generator
             opt_g.zero_grad()
-            fake_pair = torch.cat([noisy, fake], dim=1)
-            pred_fake = discriminator(fake_pair)
+            pred_fake = discriminator(noisy, fake)
             loss_g_gan = criterion_gan(pred_fake, torch.ones_like(pred_fake))
             loss_g_l1 = criterion_l1(fake, clean)
             loss_g = loss_g_gan + lambda_l1 * loss_g_l1
@@ -145,10 +142,10 @@ def train_gan(train_loader, test_loader, device, epochs=100, lr=2e-4):
 
 
 def train_cyclegan(train_loader, test_loader, device, epochs=100, lr=2e-4):
-    G_n2c = CycleGANGenerator().to(device)   # noisy -> clean
-    G_c2n = CycleGANGenerator().to(device)   # clean -> noisy
-    D_clean = CycleGANDiscriminator().to(device)
-    D_noisy = CycleGANDiscriminator().to(device)
+    G_n2c = CycleGANGenerator(1, 1, 64, 6).to(device)   # noisy -> clean
+    G_c2n = CycleGANGenerator(1, 1, 64, 6).to(device)   # clean -> noisy
+    D_clean = CycleGANDiscriminator(1, 64).to(device)
+    D_noisy = CycleGANDiscriminator(1, 64).to(device)
 
     opt_g = optim.Adam(
         list(G_n2c.parameters()) + list(G_c2n.parameters()),
@@ -216,28 +213,28 @@ def train_cyclegan(train_loader, test_loader, device, epochs=100, lr=2e-4):
 
 
 def train_diffusion(train_loader, test_loader, device, epochs=100, lr=2e-4):
-    unet = DiffusionUNet().to(device)
-    diffusion = GaussianDiffusion(unet, T=500).to(device)
-    optimizer = optim.Adam(unet.parameters(), lr=lr)
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    model = DiffusionUNet(1, 1, 64).to(device)
+    diffusion = GaussianDiffusion(500, device=device)
+    optimizer = optim.AdamW(model.parameters(), lr=lr)
 
     for epoch in range(1, epochs + 1):
-        unet.train()
+        model.train()
         total_loss = 0
         for noisy, clean in train_loader:
             noisy, clean = noisy.to(device), clean.to(device)
+            t = torch.randint(0, diffusion.T, (clean.shape[0],), device=device)
+            noisy_t, noise = diffusion.q_sample(clean, t)
+            loss = nn.MSELoss()(model(noisy_t, t, noisy), noise)
             optimizer.zero_grad()
-            loss = diffusion.train_loss(clean, noisy)
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
-        scheduler.step()
 
         avg_loss = total_loss / len(train_loader)
         if epoch % 10 == 0 or epoch == 1:
             print(f"  E{epoch}/{epochs} | Loss: {avg_loss:.6f}")
 
-    return diffusion
+    return model
 
 
 # ---------------------------------------------------------------------------
@@ -302,13 +299,14 @@ def main():
             ckpt_dir = os.path.join(args.checkpoint_dir, f"{model_name}_{noise_level}")
             os.makedirs(ckpt_dir, exist_ok=True)
 
-            if model_name == 'cyclegan':
-                # model is G_n2c
-                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'generator_n2c.pth'))
+            if model_name == 'dncnn':
+                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'best.pth'))
+            elif model_name == 'gan':
+                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'G_last.pth'))
+            elif model_name == 'cyclegan':
+                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'G_N2C_last.pth'))
             elif model_name == 'diffusion':
-                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'diffusion.pth'))
-            else:
-                torch.save(model.state_dict(), os.path.join(ckpt_dir, f'{model_name}.pth'))
+                torch.save(model.state_dict(), os.path.join(ckpt_dir, 'model_last.pth'))
 
             print(f"  Checkpoint saved: {ckpt_dir}/")
 
