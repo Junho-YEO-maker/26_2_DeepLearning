@@ -21,7 +21,7 @@ from models.gan import Generator
 from models.cyclegan import CycleGANGenerator
 from models.diffusion import DiffusionUNet, GaussianDiffusion
 from metrics.image_quality import compute_psnr, compute_ssim
-from metrics.metrology import MetrologyEvaluator
+from metrics.metrology import measure_cd, measure_ler
 
 
 def load_model(model_name, checkpoint_dir, noise_level, device):
@@ -63,7 +63,6 @@ def evaluate_all(data_dir, checkpoint_dir, noise_levels, results_dir, device):
     """Evaluate all models on all noise levels."""
 
     model_names = ['dncnn', 'gan', 'cyclegan', 'diffusion']
-    metrology = MetrologyEvaluator()
 
     all_results = {}
 
@@ -113,18 +112,26 @@ def evaluate_all(data_dir, checkpoint_dir, noise_levels, results_dir, device):
                 ssim_list.append(ssim_val)
 
                 # Metrology metrics (CD and LER)
+                # Real SEM images may not have clear line patterns,
+                # so we use edge detection and compare clean vs denoised
                 try:
-                    cd_clean = metrology.measure_cd(clean_np)
-                    cd_denoised = metrology.measure_cd(denoised)
-                    ler_clean = metrology.measure_ler(clean_np)
-                    ler_denoised = metrology.measure_ler(denoised)
+                    cd_results_clean = measure_cd(clean_np)
+                    cd_results_denoised = measure_cd(denoised)
 
-                    if cd_clean > 0 and cd_denoised > 0:
-                        cd_errors.append(abs(cd_denoised - cd_clean) / cd_clean * 100)
-                    if ler_clean > 0 and ler_denoised > 0:
-                        ler_errors.append(abs(ler_denoised - ler_clean) / ler_clean * 100)
+                    if cd_results_clean and cd_results_denoised:
+                        cd_c = np.mean([r['cd_mean'] for r in cd_results_clean])
+                        cd_d = np.mean([r['cd_mean'] for r in cd_results_denoised])
+                        if cd_c > 0:
+                            cd_errors.append(abs(cd_d - cd_c) / cd_c * 100)
+
+                        # LER from edge profiles
+                        for rc, rd in zip(cd_results_clean, cd_results_denoised):
+                            ler_c = measure_ler(rc['left_profile'])
+                            ler_d = measure_ler(rd['left_profile'])
+                            if ler_c > 0:
+                                ler_errors.append(abs(ler_d - ler_c) / ler_c * 100)
                 except Exception:
-                    pass  # Some images may not have clear line patterns for metrology
+                    pass  # Some images may not have detectable edges
 
             # Aggregate
             result = {
