@@ -65,11 +65,15 @@ Dataset/generated/_before_pinfix/
 Dataset/generated/sd_lora_v3raw/
 # 발표 그림 중 AIHub SMT 파생 (약관상 제3자 제공 금지)
 ppt_figures/local_only/
+# 발표용 pptx (SMT 사진 포함, build_deck_v4.py가 만든다)
+*_local.pptx
 Augmentation/copypaste/*.log
 
-# 발표 pptx 미리보기 PNG (ppt_build/build_deck.py, build_deck_v2.py가 다시 만든다)
+# 발표 pptx 미리보기 PNG (ppt_build/build_deck*.py가 다시 만든다)
 ppt_build/preview/
 ppt_build/preview_v2/
+ppt_build/preview_v3/
+ppt_build/preview_v4/
 
 # 실험 전에 떠 둔 결과 csv 백업 (서버에만)
 AnomalyDetection/results/logs_jh/smt_bak/

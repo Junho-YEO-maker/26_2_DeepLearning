@@ -3,26 +3,26 @@
 2026-2 딥러닝 팀 프로젝트. 신규 라인처럼 **정상 사진은 많고 불량 사진은 결함 종류마다 몇 장(K장)뿐일 때**,
 불량 사진을 어떻게 써야 탐지가 나아지는지, 그리고 생성 모델로 만든 합성 불량이 **실제 불량 몇 장의 효과**를 내는지를 잰다.
 
-- 최종 발표자료: [`PCB_AD_presentation_v2.pptx`](PCB_AD_presentation_v2.pptx) (본편 24장 + 부록 14장, 발표 메모 포함)
+- 최종 발표자료: [`PCB_AD_presentation_v4.pptx`](PCB_AD_presentation_v4.pptx) (본편 30장 + 부록 24장, 발표 메모 포함). 부록 15–24는 데이터 설명과 결함 유형별 정상 · 불량 예시. SMT 사진이 들어간 발표용은 `PCB_AD_presentation_v4_local.pptx`(AIHub 약관상 git 제외, `ppt_build/make_smt_figures.py` 후 빌드). "왜 이 문제인가"로 시작하고 흰 바탕 카드 디자인. v3(18장, 줄인 판) · v2(24장)는 같은 내용의 이전 판
 - 데이터: VisA PCB1–3(공개), AIHub 「SMT 공정 개선 멀티모달 데이터」(실제 생산 라인, 원본 이미지는 저장소에 없음)
 - 생성 모델: cTransGAN(불량 K장만으로 처음부터 학습), SD1.5 인페인팅 + LoRA
 - 탐지 모델: PatchCore(정상만), KNN+MLP · DevNet(사진 단위), 위치 모델(seg, 결함 위치를 정답으로 학습)
 
 ## 연구 질문과 답
 
-| | 질문 | 답 (발표자료 v2 기준) |
+| | 질문 | 답 (발표자료 v4 기준) |
 |---|---|---|
-| RQ1 | 불량 라벨은 어떻게 써야 하나? | 사진 단위로 배우면 배경(촬영 조건)을 보고 맞힌다. 결함 위치로 배우면 배경 섞은 시험에서 놓친 불량이 87% → 24%로 준다. 여기에 cTransGAN 합성 40장을 더하면 21.7% → 18.0% |
+| RQ1 | 불량 라벨은 어떻게 써야 하나? | 사진 단위로 배우면 배경(촬영 조건)을 보고 맞힌다. 결함 위치로 배우면 결함 바꾼 시험에서 놓친 불량이 87% → 24%로 준다. 실제 1장으로는 정상만 쓰는 PatchCore와 비슷하고, 3장부터 확실히 낫다 |
 | RQ2 | 합성은 얼마나 늘려야 하나? 실제 몇 장 효과인가? | 종류마다 20장 안팎이면 충분하다. 합성 40장은 실제 1장일 때 1.4장, 2장일 때 2.7장, 4장일 때 6.6장 효과(cTransGAN, VisA) |
-| RQ3 | 현장 데이터(SMT)에서도 같은가? | 정상만 쓰는 PatchCore는 불량의 91%를 놓친다. 합성은 실제 1–4장일 때 실제를 1.2–2.6배 모은 효과이고, 16장쯤 모이면 효과가 없거나 해가 된다 |
+| RQ3 | 현장 데이터(SMT)에서도 같은가? | 정상만 쓰는 PatchCore는 불량의 91%를 놓치고, 위치 모델은 불량 1장으로 20%. 합성은 실제 1–4장일 때 실제를 1.2–2.6배 모은 효과. 실제 16장에서는 사전 공정은 계속 좋아지고 납땜 공정은 나빠지는데, 합성 비율을 줄이면 SD+LoRA는 해가 거의 사라지고 cTransGAN(결함을 과장한 세트)은 여전히 나쁘다 |
 
-현장 권고: 불량 사진에 결함 위치를 상자로 표시하고, 위치 모델을 촬영 조건 섞기와 함께 학습한다.
-실제 불량이 종류마다 4장 이하면 합성 20–40장을 더하고, 16장쯤 모이면 뺀다.
+현장 권고: 불량 사진에 결함 위치를 상자로 표시하고, 위치 모델을 밝기·색 바꾸기와 함께 학습한다.
+실제 불량이 종류마다 4장 이하면 합성 20–40장을 더하고, 실제가 많아지면 합성 비중을 줄이고 결함을 과장한 합성 세트는 뺀다.
 
 ## 평가 방법 (요약)
 
 - **놓친 불량 비율(미검률)**: 정상 사진의 5%(SMT는 1%)를 잘못 거르도록 기준을 정했을 때 놓친 불량의 비율. 낮을수록 좋다.
-- **배경 섞은 시험셋**(코드와 팀 문서에서는 "공정 시험셋", `AnomalyDetection/ad/fair_ad.py`):
+- **결함 바꾼 시험셋**(v2 발표자료의 "배경 섞은 시험셋", 코드와 팀 문서에서는 "공정 시험셋", `AnomalyDetection/ad/fair_ad.py`):
   VisA 불량 사진은 정상과 다른 날 다른 조건으로 찍혀서, 모델이 결함 대신 배경을 보고도 원래 시험셋 점수가 높게 나온다.
   그래서 결함을 지운 불량 사진(정상으로 맞혀야 함)과 정상 사진에 결함을 붙인 사진(불량으로 맞혀야 함)을 시험셋에 더했다.
 - **나누기**: 실제 불량 K장을 고르는 무작위 분할. 분할 seed 0–4로 5번 반복하고, PCB 3개와 곱해 15단위로 비교한다.
@@ -32,7 +32,7 @@
 
 ```
 26_2_DeepLearning/
-├─ PCB_AD_presentation_v2.pptx  최종 발표자료 (v1: PCB_AD_presentation.pptx)
+├─ PCB_AD_presentation_v4.pptx  최종 발표자료 (이전 판: v3 · v2, v1 = PCB_AD_presentation.pptx)
 ├─ Dataset/
 │  ├─ visa/
 │  │  ├─ raw/                원본 VisA PCB1–3 자리. git 제외 → 받는 법: raw/README.md
@@ -50,7 +50,7 @@
 │  ├─ ad/                    VisA: 모델, 배경 섞은 시험셋(fair_ad.py), 요약 · 그림 스크립트
 │  ├─ smt/                   SMT: 위치 모델(seg_ad.py), 합성 양 · 품질 실험
 │  └─ results/               결과 csv와 요약 md (results/ppt/*.md, results/smt/, results/logs_jh/)
-├─ ppt_build/                발표자료 만드는 코드 (build_deck_v2.py, deck_v2_appendix.py, deck_lib.py)
+├─ ppt_build/                발표자료 만드는 코드 (build_deck_v4.py, deck_v4_appendix.py, deck_lib.py. 이전 판은 build_deck_v3.py · v2.py)
 ├─ ppt_figures/              발표 그림 (ppt_figures/README.md)
 ├─ scripts/                  VisA 분할표 만들기 (make_splits.py, add_k_splits.py)
 └─ colab/                    초기 Colab 노트북
@@ -114,7 +114,7 @@ python AnomalyDetection/results/logs_jh/equiv_smt.py
 
 # 5) 발표자료 (Pretendard 글꼴 필요)
 python ppt_build/make_dataset_figures.py    # VisA 예시 사진 (VisA 원본 필요)
-python ppt_build/build_deck_v2.py           # → PCB_AD_presentation_v2.pptx
+python ppt_build/build_deck_v4.py           # → PCB_AD_presentation_v4.pptx
 ```
 
 SD+LoRA 학습 · 생성은 [`Augmentation/sd_lora/README.md`](Augmentation/sd_lora/README.md),

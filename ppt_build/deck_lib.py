@@ -24,6 +24,10 @@ FONT = 'Arial'
 PX = 100                      # 미리보기: 1인치 = 100px
 FONT_DIR = '/home/junho/miniforge3/envs/pptx/lib/python3.11/site-packages/koreanize_matplotlib/fonts/'
 WIDTH_SLACK = 1.06
+TITLE_Y, TITLE_H = 0.62, 0.8     # 제목 상자 위치 (v4는 빌드 스크립트에서 바꾼다)
+PAGE_NUM = 'bottom'              # 'bottom' = 오른쪽 아래 숫자, None = 빌드 스크립트가 직접 그린다
+GRID = 'E1E7E3'                  # 차트 눈금선 색
+LEGEND_POS = 'bottom'            # 차트 범례 위치 ('bottom' 또는 'top')
 
 # 색 (PCB 솔더마스크 초록 + 구리 강조)
 DARK = '10261F'
@@ -176,7 +180,7 @@ class Deck:
 
     def save(self, path):
         for sl in self.slides:
-            if sl.number > 1:
+            if sl.number > 1 and PAGE_NUM == 'bottom':
                 sl.text(W - 1.1, H - 0.45, 0.6, 0.3, str(sl.number), size=11, color=('B8C7BF' if sl.dark else MUTED), align='r')
         self._write_sections()
         self.prs.save(path)
@@ -262,7 +266,7 @@ class Slide:
     # -------------------------------------------------------------- 제목·배지
     def set_title(self, title, size):
         t = self.pslide.shapes.title
-        x, y, w, h = 0.6, 0.62, W - 1.2, 0.8
+        x, y, w, h = 0.6, TITLE_Y, W - 1.2, TITLE_H
         t.left, t.top, t.width, t.height = Inches(x), Inches(y), Inches(w), Inches(h)
         color = WHITE if self.dark else INK
         paras = as_paras(title, size, color, True, 'l', 0)
@@ -299,12 +303,20 @@ class Slide:
             shape.line.fill.background()
 
     def box(self, x, y, w, h, text='', fill=TINT, line=None, size=14, color=INK, bold=False, align='c',
-            anchor='m', radius=0.08, margin=(0.1, 0.06), line_w=1.0, dash=False, after=2, name=None):
+            anchor='m', radius=0.08, margin=(0.1, 0.06), line_w=1.0, dash=False, after=2, name=None, shadow=False):
         kind = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
         s = self.shapes.add_shape(kind, Inches(x), Inches(y), Inches(w), Inches(h))
         if radius:
             s.adjustments[0] = min(0.5, radius / min(w, h))
         self._style(s, fill, line, line_w, dash)
+        if shadow:                     # 아래로 살짝 퍼지는 옅은 그림자 (카드)
+            spPr = s._element.spPr
+            eff = etree.SubElement(spPr, qn('a:effectLst'))
+            sh = etree.SubElement(eff, qn('a:outerShdw'), blurRad=str(int(Pt(14))), dist=str(int(Pt(2))), dir='5400000',
+                                  algn='t', rotWithShape='0')
+            clr = etree.SubElement(sh, qn('a:srgbClr'), val='1E2A4A')
+            etree.SubElement(clr, qn('a:alpha'), val='11000')
+            self.ops.append(('shadow', x, y, w, h, radius))
         paras = as_paras(text, size, color, bold, align, after) if text != '' else []
         if paras:
             self._fill_tf(s.text_frame, paras, margin, anchor)
@@ -375,8 +387,8 @@ class Slide:
 
     # -------------------------------------------------------------- 표
     def table(self, x, y, col_w, rows, size=13, header_fill=GREEN, header_color=WHITE, fills=None, row_h=0.36,
-              bold_first_col=True, align=None, colors=None, header_h=None):
-        """header_h: 머리 행 높이 (없으면 row_h)."""
+              bold_first_col=True, align=None, colors=None, header_h=None, header_line=None):
+        """header_h: 머리 행 높이 (없으면 row_h). header_line: 머리 행 아래 굵은 선 색 (없으면 다른 행과 같은 얇은 선)."""
         nr, nc = len(rows), len(col_w)
         rh = [header_h if (i == 0 and header_h) else row_h for i in range(nr)]
         shp = self.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(sum(col_w)), Inches(sum(rh)))
@@ -427,9 +439,10 @@ class Slide:
                 # 아래 테두리 (얇은 선)
                 tcPr = cell._tc.get_or_add_tcPr()
                 for side in ('a:lnB',):
-                    ln = etree.SubElement(tcPr, qn(side), w=str(int(Pt(0.75))))
+                    hl = header_line if (i == 0 and header_line) else None
+                    ln = etree.SubElement(tcPr, qn(side), w=str(int(Pt(1.25 if hl else 0.75))))
                     sf = etree.SubElement(ln, qn('a:solidFill'))
-                    etree.SubElement(sf, qn('a:srgbClr'), val=LINE)
+                    etree.SubElement(sf, qn('a:srgbClr'), val=hl or LINE)
                 # 미리보기 높이
                 hh = sum(lh for para in paras for _, lh in wrap_lines(para, col_w[j] - 0.12)) / PX + 0.06
                 line_h = max(line_h, hh)
@@ -443,7 +456,7 @@ class Slide:
                     tcPr.remove(f)
                     tcPr.append(f)
         self.ops.append(('table', x, y, col_w, rows, size, header_fill, header_color, fills, heights, align, colors,
-                         bold_first_col))
+                         bold_first_col, header_line))
         return sum(heights)
 
     # -------------------------------------------------------------- 차트
@@ -463,7 +476,7 @@ class Slide:
         va = chart.value_axis
         va.minimum_scale, va.maximum_scale, va.major_unit = vmin, vmax, major
         va.has_major_gridlines = True
-        va.major_gridlines.format.line.color.rgb = rgb('E1E7E3')
+        va.major_gridlines.format.line.color.rgb = rgb(GRID)
         va.major_gridlines.format.line.width = Pt(0.75)
         va.format.line.fill.background()
         va.tick_labels.font.size = Pt(12)
@@ -507,7 +520,7 @@ class Slide:
                     pt.format.fill.fore_color.rgb = rgb(c)
         ch.has_legend = legend
         if legend:
-            ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+            ch.legend.position = XL_LEGEND_POSITION.TOP if LEGEND_POS == 'top' else XL_LEGEND_POSITION.BOTTOM
             ch.legend.include_in_layout = False
             ch.legend.font.size = Pt(12)
         self._plot_layout(ch, *lay)
@@ -539,7 +552,7 @@ class Slide:
             s.marker.format.line.color.rgb = rgb(WHITE)
         ch.has_legend = legend
         if legend:
-            ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+            ch.legend.position = XL_LEGEND_POSITION.TOP if LEGEND_POS == 'top' else XL_LEGEND_POSITION.BOTTOM
             ch.legend.include_in_layout = False
             ch.legend.font.size = Pt(12)
         self._plot_layout(ch, *lay)
@@ -563,7 +576,14 @@ class Slide:
         P = lambda v: int(round(v * PX))  # noqa: E731
         for op in self.ops:
             k = op[0]
-            if k == 'box':
+            if k == 'shadow':
+                from PIL import ImageFilter
+                _, x, y, w, h, radius = op
+                m = Image.new('L', img.size, 0)
+                ImageDraw.Draw(m).rounded_rectangle([P(x), P(y + 0.03), P(x + w), P(y + h + 0.03)], radius=P(radius), fill=34)
+                m = m.filter(ImageFilter.GaussianBlur(9))
+                img.paste(Image.new('RGB', img.size, '#1E2A4A'), (0, 0), m)
+            elif k == 'box':
                 _, x, y, w, h, fill, line, radius, lw, dash = op
                 kw = dict(fill=_hex(fill) if fill else None, outline=_hex(line) if line else None,
                           width=max(1, int(lw)) if line else 0)
@@ -652,15 +672,17 @@ class Slide:
             self.deck.warnings.append(f'slide {self.number}: 슬라이드 밖 {what}')
 
     def _render_table(self, d, op):
-        _, x, y, col_w, rows, size, hf, hc, fills, heights, align, colors, bfc = op
+        _, x, y, col_w, rows, size, hf, hc, fills, heights, align, colors, bfc, hline = op
         P = lambda v: int(round(v * PX))  # noqa: E731
         yy = y
+        lines_ = []
         for i, row in enumerate(rows):
             xx = x
             for j, val in enumerate(row):
                 fill = hf if i == 0 else (fills[i][j] if fills and fills[i][j] else WHITE)
                 d.rectangle([P(xx), P(yy), P(xx + col_w[j]), P(yy + heights[i])], fill=_hex(fill))
-                d.line([P(xx), P(yy + heights[i]), P(xx + col_w[j]), P(yy + heights[i])], fill=_hex(LINE), width=1)
+                lines_.append(([P(xx), P(yy + heights[i]), P(xx + col_w[j]), P(yy + heights[i])],
+                               _hex(hline if (i == 0 and hline) else LINE), 2 if (i == 0 and hline) else 1))
                 col = hc if i == 0 else (colors[i][j] if colors and colors[i][j] else INK)
                 al = align[j] if align else ('l' if j == 0 else 'c')
                 b = i == 0 or (j == 0 and bfc)
@@ -669,6 +691,8 @@ class Slide:
                 self._render_text(d, op2)
                 xx += col_w[j]
             yy += heights[i]
+        for xy, c, wd in lines_:          # 선은 칸을 다 칠한 뒤에 (아래 칸이 덮지 않게)
+            d.line(xy, fill=c, width=wd)
         if yy > H - 0.3:
             self.deck.warnings.append(f'slide {self.number}: 표가 아래로 넘침 ({yy:.2f}in)')
 
@@ -685,7 +709,7 @@ class Slide:
         v = vmin
         while v <= vmax + 1e-9:
             yy = py0 + ph * (1 - (v - vmin) / (vmax - vmin))
-            d.line([P(px0), P(yy), P(px0 + pw), P(yy)], fill='#E1E7E3', width=1)
+            d.line([P(px0), P(yy), P(px0 + pw), P(yy)], fill=_hex(GRID), width=1)
             d.text((P(px0) - 42, P(yy) - 8), f'{v:.2f}', font=f, fill=_hex(MUTED))
             v += major
         n = len(cats)
@@ -713,8 +737,11 @@ class Slide:
                 for p in pts:
                     d.ellipse([p[0] - 4, p[1] - 4, p[0] + 4, p[1] + 4], fill=_hex(colors[si]))
         if legend:
-            lx_ = x + 0.3
-            for si, (name, _) in enumerate(series):
-                d.rectangle([P(lx_), P(y + h - 0.22), P(lx_ + 0.12), P(y + h - 0.1)], fill=_hex(colors[si]))
-                d.text((P(lx_ + 0.17), P(y + h - 0.27)), name, font=f, fill=_hex(INK))
+            ly_ = y + 0.06 if LEGEND_POS == 'top' else y + h - 0.27
+            names = [n for n, _ in series]
+            tot = sum(0.35 + f.getlength(n) / PX for n in names)
+            lx_ = x + (w - tot) / 2 if LEGEND_POS == 'top' else x + 0.3
+            for si, name in enumerate(names):
+                d.rectangle([P(lx_), P(ly_ + 0.05), P(lx_ + 0.12), P(ly_ + 0.17)], fill=_hex(colors[si]))
+                d.text((P(lx_ + 0.17), P(ly_)), name, font=f, fill=_hex(INK))
                 lx_ += 0.35 + f.getlength(name) / PX

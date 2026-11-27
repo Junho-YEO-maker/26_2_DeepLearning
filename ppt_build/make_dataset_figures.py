@@ -5,6 +5,8 @@
 VisA (공개 데이터, git에 올려도 됨): Dataset/visa/raw 또는 Dataset/visa/VisA_official/VisA_PCB 원본에서
   ppt_figures/s02_visa_pcb{1,2,3}_{normal,defect}.jpg   PCB별 정상 1장 · 불량 1장(빨간 상자 = 결함)
   ppt_figures/s02_visa_type_{bent,melt,scratch,missing}.jpg   결함 유형별 확대(빨간 선 = 결함 마스크)
+  ppt_figures/app_visa_{pcb}_{type}_{normal,defect}.jpg   부록용: PCB · 결함 유형마다 정상 1장과 불량 1장을 같은 자리로 확대
+    (정상 사진을 불량 사진에 기판 정렬(Augmentation/common/kshot.board_transform)한 뒤 같은 칸을 자름)
 장수: ppt_figures/dataset_counts.json (숫자만 담는다).
 AIHub SMT 사진은 약관상 제3자 제공 금지라 여기서 만들지 않는다. 덱의 SMT 사진 칸은 비워 두고 직접 넣는다.
 """
@@ -115,9 +117,63 @@ def visa(counts):
     del test, pool
 
 
+def crop_box(m, w, h, scale=2.4, min_side=260):
+    x0, y0, x1, y1 = mask_bbox(m)
+    side = int(max(x1 - x0, y1 - y0, min_side / scale) * scale)
+    cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+    l = int(np.clip(cx - side // 2, 0, max(0, w - side)))
+    tp = int(np.clip(cy - side // 2, 0, max(0, h - side)))
+    return (l, tp, l + side, tp + side)
+
+
+def visa_type_pairs(n_normals=12, size=420):
+    """부록용: PCB · 결함 유형마다 [정상 | 불량]을 같은 자리로 확대. 정상은 정렬이 가장 잘 맞는 시험 정상 사진."""
+    import sys
+    sys.path.insert(0, str(ROOT / 'Augmentation'))
+    from common.kshot import board_transform
+    root = visa_root()
+    if root is None:
+        print('VisA 원본이 없어 부록 유형 그림은 건너뜀')
+        return
+    test = pd.read_csv(ROOT / 'Dataset/visa/splits/test.csv')
+    for pcb in ('pcb1', 'pcb2', 'pcb3'):
+        anno = pd.read_csv(root / pcb / 'image_anno.csv')
+        anno['image'] = anno['image'].str.replace(f'^{pcb}/', '', regex=True)
+        anno['mask'] = anno['mask'].fillna('').str.replace(f'^{pcb}/', '', regex=True)
+        base = root / pcb
+        names = sorted(Path(p).name for p in test[(test.category == pcb) & (test.label == 0)].image)[:n_normals]
+        normals = [base / 'Data/Images/Normal' / n for n in names]
+        for t_ in ('bent', 'melt', 'scratch', 'missing'):
+            r = pick(anno[anno.label == t_], base, q=0.5)
+            m = np.array(Image.open(base / r['mask']).convert('L')) > 0
+            with Image.open(base / r['image']) as im:
+                dimg = im.convert('RGB')
+            best = None
+            for npth in normals:                       # 정렬 점수가 가장 높은 정상 사진
+                with Image.open(npth) as im:
+                    nimg = im.convert('RGB')
+                tf = board_transform(nimg, dimg)
+                if best is None or tf['score'] > best[0]['score']:
+                    best = (tf, nimg, npth.name)
+            tf, nimg, nname = best
+            if tf['rot180']:
+                nimg = nimg.rotate(180)
+            aligned = Image.new('RGB', dimg.size, (128, 128, 128))
+            aligned.paste(nimg, (int(tf['dx']), int(tf['dy'])))
+            box = crop_box(m, dimg.width, dimg.height)
+            aligned.crop(box).resize((size, size), Image.LANCZOS).save(FIG / f'app_visa_{pcb}_{t_}_normal.jpg', quality=90)
+            crop = dimg.crop(box).resize((size, size), Image.LANCZOS)
+            mk = Image.fromarray((m * 255).astype(np.uint8)).crop(box).resize((size, size), Image.NEAREST)
+            edge = mk.filter(ImageFilter.MaxFilter(15)).filter(ImageFilter.FIND_EDGES).filter(ImageFilter.MaxFilter(3))
+            crop.paste(Image.new('RGB', crop.size, RED), (0, 0), edge.point(lambda v: 255 if v > 0 else 0))
+            crop.save(FIG / f'app_visa_{pcb}_{t_}_defect.jpg', quality=90)
+            print('부록', pcb, t_, '불량', r['image'], '| 정상', nname, f"(정렬 점수 {tf['score']:.2f})")
+
+
 if __name__ == '__main__':
     out = FIG / 'dataset_counts.json'
     counts = json.loads(out.read_text()) if out.exists() else {}
     visa(counts)
+    visa_type_pairs()
     out.write_text(json.dumps(counts, ensure_ascii=False, indent=1))
     print('저장:', out)

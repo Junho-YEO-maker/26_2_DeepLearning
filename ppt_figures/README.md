@@ -1,12 +1,15 @@
 # 발표 슬라이드 그림
 
-**최종 발표자료는 `PCB_AD_presentation_v2.pptx`** (본편 24장 + 부록 14장)이고 `python ppt_build/build_deck_v2.py`로 만든다.
-v2는 이 폴더의 그림 일부와 아래 새 그림을 쓰고, 그래프는 pptx 차트로 직접 그린다.
+**최종 발표자료는 `PCB_AD_presentation_v4.pptx`** (본편 30장 + 부록 24장)이고 `python ppt_build/build_deck_v4.py`로 만든다.
+이전 판 v3(18장) · v2(24장)와 같은 그림을 쓴다. 이 폴더의 그림 일부와 아래 새 그림을 쓰고, 그래프는 pptx 차트로 직접 그린다.
 
 | 파일 | 보여주는 것 | 만드는 스크립트 |
 |---|---|---|
 | `s02_visa_pcb{1,2,3}_{normal,defect}.jpg` | VisA PCB별 정상 · 불량 예시 | `ppt_build/make_dataset_figures.py` |
 | `s02_visa_type_{bent,melt,scratch,missing}.jpg` | 결함 종류 4가지 확대 | `ppt_build/make_dataset_figures.py` |
+| `app_visa_{pcb1,2,3}_{bent,melt,scratch,missing}_{normal,defect}.jpg` | 부록 16–18: PCB · 유형마다 정상과 불량을 같은 자리로 확대 (정상은 기판 정렬 후 같은 칸) | `ppt_build/make_dataset_figures.py` |
+| `local_only/smt_{pre,solder}_{normal,defect}.jpg` | 본편 22번 SMT 예시 (git 제외) | `ppt_build/make_smt_figures.py` |
+| `local_only/smt_type_{공정}_{유형}_{normal,defect}.jpg` | 부록 20–24: SMT 18개 유형 정상 · 불량 (git 제외) | `ppt_build/make_smt_figures.py` |
 | `dataset_counts.json` | 데이터 슬라이드의 장수 (PCB별 정상 · 불량 · 분할) | `ppt_build/make_dataset_figures.py` |
 
 SMT 사진 자리는 비워 두었다. AIHub SMT 사진은 약관상 저장소에 넣을 수 없어, 발표 전에 각자 넣는다.
