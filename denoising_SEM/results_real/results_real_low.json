@@ -1,0 +1,54 @@
+{
+  "dncnn": {
+    "psnr_mean": 75.33259294587194,
+    "psnr_std": 1.6537077026324014,
+    "ssim_mean": 0.9999536787985324,
+    "ssim_std": 1.536329327797611e-05,
+    "n_images": 40,
+    "cd_error_mean": 84.32765755423165,
+    "cd_error_std": 161.0145507731768,
+    "n_cd_measured": 40,
+    "ler_error_mean": 77.31272305263725,
+    "ler_error_std": 156.6622553908652,
+    "n_ler_measured": 163
+  },
+  "gan": {
+    "psnr_mean": 74.7983663654025,
+    "psnr_std": 1.7015119760238377,
+    "ssim_mean": 0.9999298325170756,
+    "ssim_std": 3.9375104802719144e-05,
+    "n_images": 40,
+    "cd_error_mean": 94.44373907143965,
+    "cd_error_std": 129.3095789809729,
+    "n_cd_measured": 40,
+    "ler_error_mean": 110.0529084504916,
+    "ler_error_std": 304.4397060305777,
+    "n_ler_measured": 156
+  },
+  "cyclegan": {
+    "psnr_mean": 72.51206759822757,
+    "psnr_std": 2.5165499890910494,
+    "ssim_mean": 0.9997475522850513,
+    "ssim_std": 0.00024579340117905304,
+    "n_images": 40,
+    "cd_error_mean": 37.01432350627444,
+    "cd_error_std": 34.59986813996175,
+    "n_cd_measured": 40,
+    "ler_error_mean": 95.17264215116012,
+    "ler_error_std": 189.1803290799176,
+    "n_ler_measured": 173
+  },
+  "diffusion": {
+    "psnr_mean": 68.33831208711857,
+    "psnr_std": 0.4748984926787322,
+    "ssim_mean": 0.9990408658248423,
+    "ssim_std": 0.00010348820600462283,
+    "n_images": 40,
+    "cd_error_mean": 51.565284548230615,
+    "cd_error_std": 93.91194125020044,
+    "n_cd_measured": 40,
+    "ler_error_mean": 77.09159155789338,
+    "ler_error_std": 145.69320031944193,
+    "n_ler_measured": 184
+  }
+}
