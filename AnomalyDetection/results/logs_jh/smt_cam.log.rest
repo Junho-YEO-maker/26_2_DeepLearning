@@ -1,0 +1,3 @@
+solder K=1 seed=0: 데이터 19s (시험 불량 540, pool 372)
+pre K=16 seed=0: 데이터 12s (시험 불량 300, pool 96)
+solder K=16 seed=0: 데이터 18s (시험 불량 540, pool 192)

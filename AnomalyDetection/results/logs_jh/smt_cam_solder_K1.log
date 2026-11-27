@@ -1,0 +1,12 @@
+solder K=1 seed=0: 데이터 18s (시험 불량 540, pool 372)
+  DevNet Grad-CAM 93s
+  위치 모델 344s
+  devnet test n=540 mass_in=0.47 top_in=0.48 peak_in=0.46 area=0.48 flagged=0.24
+  devnet D    n=372 mass_in=0.47 top_in=0.47 peak_in=0.44 area=0.47 flagged=0.24
+  devnet DR   n=372 mass_in=0.45 top_in=0.44 peak_in=0.36 area=0.47 flagged=0.06
+  devnet ND   n=372 mass_in=0.48 top_in=0.49 peak_in=0.44 area=0.47 flagged=0.13
+  seg    test n=540 mass_in=0.61 top_in=0.57 peak_in=0.58 area=0.48 flagged=0.17
+  seg    D    n=372 mass_in=0.62 top_in=0.57 peak_in=0.60 area=0.47 flagged=0.16
+  seg    DR   n=372 mass_in=0.50 top_in=0.49 peak_in=0.39 area=0.47 flagged=0.04
+  seg    ND   n=372 mass_in=0.61 top_in=0.57 peak_in=0.58 area=0.47 flagged=0.13
+  결과: AnomalyDetection/results/smt/cam_K1_seed0_solder.csv | 그림: Dataset/aihub_smt/cam/K1_seed0_solder.jpg

@@ -1,0 +1,200 @@
+pre: 임베딩 준비 52s (정상 500, 시험 1300, 진단 pool 192)
+pre K=1 seed=1 devnet FNR=0.290 AUROC=0.947 D=0.80 DR=0.40 ND=0.50 (4s)
+pre K=1 seed=1 mlp    FNR=0.345 AUROC=0.931 D=0.67 DR=0.16 ND=0.27 (4s)
+pre K=1 seed=2 devnet FNR=0.122 AUROC=0.984 D=0.90 DR=0.20 ND=0.44 (4s)
+pre K=1 seed=2 mlp    FNR=0.263 AUROC=0.963 D=0.76 DR=0.05 ND=0.28 (4s)
+pre K=1 seed=3 devnet FNR=0.253 AUROC=0.952 D=0.83 DR=0.42 ND=0.61 (4s)
+pre K=1 seed=3 mlp    FNR=0.300 AUROC=0.917 D=0.73 DR=0.24 ND=0.34 (5s)
+pre K=1 seed=4 devnet FNR=0.265 AUROC=0.939 D=0.77 DR=0.35 ND=0.44 (5s)
+pre K=1 seed=4 mlp    FNR=0.332 AUROC=0.899 D=0.65 DR=0.14 ND=0.24 (4s)
+pre K=2 seed=0 devnet FNR=0.123 AUROC=0.988 D=0.87 DR=0.26 ND=0.52 (4s)
+pre K=2 seed=0 mlp    FNR=0.253 AUROC=0.973 D=0.70 DR=0.09 ND=0.29 (3s)
+pre K=2 seed=1 devnet FNR=0.282 AUROC=0.972 D=0.83 DR=0.39 ND=0.55 (4s)
+pre K=2 seed=1 mlp    FNR=0.340 AUROC=0.971 D=0.73 DR=0.15 ND=0.29 (4s)
+pre K=2 seed=2 devnet FNR=0.160 AUROC=0.982 D=0.90 DR=0.18 ND=0.42 (3s)
+pre K=2 seed=2 mlp    FNR=0.193 AUROC=0.977 D=0.83 DR=0.05 ND=0.24 (4s)
+pre K=2 seed=3 devnet FNR=0.188 AUROC=0.976 D=0.87 DR=0.27 ND=0.39 (5s)
+pre K=2 seed=3 mlp    FNR=0.195 AUROC=0.976 D=0.84 DR=0.19 ND=0.30 (3s)
+pre K=2 seed=4 devnet FNR=0.165 AUROC=0.965 D=0.85 DR=0.32 ND=0.51 (4s)
+pre K=2 seed=4 mlp    FNR=0.257 AUROC=0.951 D=0.70 DR=0.14 ND=0.29 (3s)
+pre K=4 seed=0 devnet FNR=0.102 AUROC=0.991 D=0.89 DR=0.31 ND=0.52 (2s)
+pre K=4 seed=0 mlp    FNR=0.160 AUROC=0.988 D=0.80 DR=0.15 ND=0.29 (2s)
+pre K=4 seed=1 devnet FNR=0.165 AUROC=0.987 D=0.87 DR=0.29 ND=0.53 (2s)
+pre K=4 seed=1 mlp    FNR=0.265 AUROC=0.980 D=0.80 DR=0.14 ND=0.35 (3s)
+pre K=4 seed=2 devnet FNR=0.093 AUROC=0.987 D=0.93 DR=0.22 ND=0.46 (3s)
+pre K=4 seed=2 mlp    FNR=0.182 AUROC=0.985 D=0.88 DR=0.12 ND=0.32 (3s)
+pre K=4 seed=3 devnet FNR=0.143 AUROC=0.978 D=0.87 DR=0.36 ND=0.50 (3s)
+pre K=4 seed=3 mlp    FNR=0.165 AUROC=0.980 D=0.87 DR=0.15 ND=0.27 (3s)
+pre K=4 seed=4 devnet FNR=0.115 AUROC=0.978 D=0.87 DR=0.34 ND=0.53 (3s)
+pre K=4 seed=4 mlp    FNR=0.187 AUROC=0.977 D=0.79 DR=0.21 ND=0.37 (3s)
+pre K=8 seed=0 devnet FNR=0.082 AUROC=0.993 D=0.90 DR=0.28 ND=0.50 (4s)
+pre K=8 seed=0 mlp    FNR=0.078 AUROC=0.993 D=0.88 DR=0.16 ND=0.34 (3s)
+pre K=8 seed=1 devnet FNR=0.068 AUROC=0.991 D=0.92 DR=0.29 ND=0.48 (4s)
+pre K=8 seed=1 mlp    FNR=0.128 AUROC=0.991 D=0.89 DR=0.18 ND=0.35 (3s)
+pre K=8 seed=2 devnet FNR=0.065 AUROC=0.995 D=0.97 DR=0.34 ND=0.54 (3s)
+pre K=8 seed=2 mlp    FNR=0.127 AUROC=0.993 D=0.94 DR=0.20 ND=0.37 (4s)
+pre K=8 seed=3 devnet FNR=0.072 AUROC=0.993 D=0.95 DR=0.31 ND=0.51 (4s)
+pre K=8 seed=3 mlp    FNR=0.070 AUROC=0.993 D=0.91 DR=0.15 ND=0.31 (4s)
+pre K=8 seed=4 devnet FNR=0.052 AUROC=0.994 D=0.93 DR=0.28 ND=0.50 (3s)
+pre K=8 seed=4 mlp    FNR=0.083 AUROC=0.992 D=0.92 DR=0.17 ND=0.35 (3s)
+pre K=16 seed=0 devnet FNR=0.050 AUROC=0.995 D=0.94 DR=0.24 ND=0.53 (4s)
+pre K=16 seed=0 mlp    FNR=0.045 AUROC=0.995 D=0.92 DR=0.18 ND=0.31 (3s)
+pre K=16 seed=1 devnet FNR=0.072 AUROC=0.994 D=0.96 DR=0.31 ND=0.55 (3s)
+pre K=16 seed=1 mlp    FNR=0.080 AUROC=0.995 D=0.95 DR=0.20 ND=0.33 (3s)
+pre K=16 seed=2 devnet FNR=0.035 AUROC=0.995 D=0.97 DR=0.26 ND=0.45 (4s)
+pre K=16 seed=2 mlp    FNR=0.058 AUROC=0.995 D=0.98 DR=0.21 ND=0.33 (3s)
+pre K=16 seed=3 devnet FNR=0.048 AUROC=0.995 D=0.96 DR=0.29 ND=0.51 (4s)
+pre K=16 seed=3 mlp    FNR=0.052 AUROC=0.996 D=0.95 DR=0.20 ND=0.38 (4s)
+pre K=16 seed=4 devnet FNR=0.043 AUROC=0.997 D=0.97 DR=0.24 ND=0.42 (4s)
+pre K=16 seed=4 mlp    FNR=0.060 AUROC=0.995 D=0.94 DR=0.18 ND=0.33 (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=0 devnet FNR=0.038 AUROC=0.997 D=nan DR=nan ND=nan (4s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=0 mlp    FNR=0.040 AUROC=0.997 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=1 devnet FNR=0.035 AUROC=0.997 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=1 mlp    FNR=0.043 AUROC=0.997 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=2 devnet FNR=0.038 AUROC=0.997 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=2 mlp    FNR=0.043 AUROC=0.996 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=3 devnet FNR=0.042 AUROC=0.996 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=3 mlp    FNR=0.047 AUROC=0.996 D=nan DR=nan ND=nan (2s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=4 devnet FNR=0.037 AUROC=0.996 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+pre K=32 seed=4 mlp    FNR=0.042 AUROC=0.996 D=nan DR=nan ND=nan (3s)
+solder: 임베딩 준비 66s (정상 500, 시험 1540, 진단 pool 384)
+solder K=1 seed=0 devnet FNR=0.763 AUROC=0.828 D=0.14 DR=0.04 ND=0.11 (4s)
+solder K=1 seed=0 mlp    FNR=0.755 AUROC=0.793 D=0.17 DR=0.05 ND=0.04 (4s)
+solder K=1 seed=1 devnet FNR=0.777 AUROC=0.818 D=0.29 DR=0.07 ND=0.11 (4s)
+solder K=1 seed=1 mlp    FNR=0.757 AUROC=0.793 D=0.30 DR=0.04 ND=0.02 (3s)
+solder K=1 seed=2 devnet FNR=0.888 AUROC=0.823 D=0.21 DR=0.13 ND=0.18 (4s)
+solder K=1 seed=2 mlp    FNR=0.835 AUROC=0.804 D=0.18 DR=0.07 ND=0.03 (4s)
+solder K=1 seed=3 devnet FNR=0.697 AUROC=0.840 D=0.24 DR=0.09 ND=0.22 (3s)
+solder K=1 seed=3 mlp    FNR=0.712 AUROC=0.805 D=0.21 DR=0.03 ND=0.03 (3s)
+solder K=1 seed=4 devnet FNR=0.727 AUROC=0.842 D=0.25 DR=0.13 ND=0.23 (4s)
+solder K=1 seed=4 mlp    FNR=0.791 AUROC=0.800 D=0.20 DR=0.08 ND=0.08 (5s)
+solder K=2 seed=0 devnet FNR=0.633 AUROC=0.860 D=0.35 DR=0.09 ND=0.24 (3s)
+solder K=2 seed=0 mlp    FNR=0.712 AUROC=0.839 D=0.32 DR=0.09 ND=0.11 (3s)
+solder K=2 seed=1 devnet FNR=0.628 AUROC=0.871 D=0.39 DR=0.08 ND=0.22 (3s)
+solder K=2 seed=1 mlp    FNR=0.619 AUROC=0.855 D=0.36 DR=0.05 ND=0.11 (3s)
+solder K=2 seed=2 devnet FNR=0.771 AUROC=0.862 D=0.31 DR=0.11 ND=0.20 (3s)
+solder K=2 seed=2 mlp    FNR=0.636 AUROC=0.860 D=0.31 DR=0.08 ND=0.09 (3s)
+solder K=2 seed=3 devnet FNR=0.591 AUROC=0.882 D=0.31 DR=0.11 ND=0.24 (4s)
+solder K=2 seed=3 mlp    FNR=0.579 AUROC=0.859 D=0.34 DR=0.04 ND=0.08 (3s)
+solder K=2 seed=4 devnet FNR=0.661 AUROC=0.870 D=0.35 DR=0.11 ND=0.20 (3s)
+solder K=2 seed=4 mlp    FNR=0.666 AUROC=0.872 D=0.31 DR=0.09 ND=0.11 (3s)
+solder K=4 seed=0 devnet FNR=0.562 AUROC=0.897 D=0.43 DR=0.11 ND=0.22 (4s)
+solder K=4 seed=0 mlp    FNR=0.582 AUROC=0.900 D=0.43 DR=0.12 ND=0.15 (3s)
+solder K=4 seed=1 devnet FNR=0.530 AUROC=0.900 D=0.50 DR=0.14 ND=0.35 (3s)
+solder K=4 seed=1 mlp    FNR=0.531 AUROC=0.886 D=0.48 DR=0.12 ND=0.23 (3s)
+solder K=4 seed=2 devnet FNR=0.593 AUROC=0.897 D=0.44 DR=0.11 ND=0.28 (3s)
+solder K=4 seed=2 mlp    FNR=0.550 AUROC=0.885 D=0.45 DR=0.09 ND=0.16 (3s)
+solder K=4 seed=3 devnet FNR=0.639 AUROC=0.888 D=0.39 DR=0.10 ND=0.23 (3s)
+solder K=4 seed=3 mlp    FNR=0.594 AUROC=0.893 D=0.49 DR=0.07 ND=0.14 (3s)
+solder K=4 seed=4 devnet FNR=0.612 AUROC=0.897 D=0.40 DR=0.15 ND=0.25 (4s)
+solder K=4 seed=4 mlp    FNR=0.527 AUROC=0.905 D=0.44 DR=0.12 ND=0.20 (4s)
+solder K=8 seed=0 devnet FNR=0.507 AUROC=0.909 D=0.43 DR=0.12 ND=0.24 (5s)
+solder K=8 seed=0 mlp    FNR=0.462 AUROC=0.921 D=0.52 DR=0.12 ND=0.19 (3s)
+solder K=8 seed=1 devnet FNR=0.439 AUROC=0.914 D=0.60 DR=0.14 ND=0.36 (3s)
+solder K=8 seed=1 mlp    FNR=0.443 AUROC=0.920 D=0.55 DR=0.09 ND=0.22 (3s)
+solder K=8 seed=2 devnet FNR=0.526 AUROC=0.924 D=0.52 DR=0.09 ND=0.21 (3s)
+solder K=8 seed=2 mlp    FNR=0.469 AUROC=0.930 D=0.54 DR=0.10 ND=0.19 (3s)
+solder K=8 seed=3 devnet FNR=0.556 AUROC=0.914 D=0.47 DR=0.11 ND=0.22 (5s)
+solder K=8 seed=3 mlp    FNR=0.481 AUROC=0.920 D=0.55 DR=0.13 ND=0.20 (4s)
+solder K=8 seed=4 devnet FNR=0.541 AUROC=0.920 D=0.48 DR=0.12 ND=0.27 (4s)
+solder K=8 seed=4 mlp    FNR=0.483 AUROC=0.931 D=0.51 DR=0.14 ND=0.25 (2s)
+solder K=16 seed=0 devnet FNR=0.465 AUROC=0.929 D=0.47 DR=0.14 ND=0.28 (4s)
+solder K=16 seed=0 mlp    FNR=0.380 AUROC=0.940 D=0.59 DR=0.14 ND=0.27 (4s)
+solder K=16 seed=1 devnet FNR=0.426 AUROC=0.939 D=0.59 DR=0.17 ND=0.34 (4s)
+solder K=16 seed=1 mlp    FNR=0.381 AUROC=0.944 D=0.59 DR=0.13 ND=0.26 (3s)
+solder K=16 seed=2 devnet FNR=0.458 AUROC=0.942 D=0.54 DR=0.13 ND=0.30 (3s)
+solder K=16 seed=2 mlp    FNR=0.385 AUROC=0.951 D=0.62 DR=0.10 ND=0.25 (3s)
+solder K=16 seed=3 devnet FNR=0.505 AUROC=0.936 D=0.50 DR=0.18 ND=0.36 (4s)
+solder K=16 seed=3 mlp    FNR=0.428 AUROC=0.942 D=0.60 DR=0.17 ND=0.28 (4s)
+solder K=16 seed=4 devnet FNR=0.482 AUROC=0.938 D=0.51 DR=0.11 ND=0.29 (4s)
+solder K=16 seed=4 mlp    FNR=0.420 AUROC=0.950 D=0.60 DR=0.13 ND=0.30 (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=0 devnet FNR=0.370 AUROC=0.954 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=0 mlp    FNR=0.333 AUROC=0.961 D=nan DR=nan ND=nan (4s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=1 devnet FNR=0.406 AUROC=0.952 D=nan DR=nan ND=nan (3s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=1 mlp    FNR=0.321 AUROC=0.961 D=nan DR=nan ND=nan (2s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=2 devnet FNR=0.407 AUROC=0.952 D=nan DR=nan ND=nan (5s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=2 mlp    FNR=0.336 AUROC=0.961 D=nan DR=nan ND=nan (4s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=3 devnet FNR=0.420 AUROC=0.952 D=nan DR=nan ND=nan (5s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=3 mlp    FNR=0.343 AUROC=0.959 D=nan DR=nan ND=nan (4s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=4 devnet FNR=0.426 AUROC=0.951 D=nan DR=nan ND=nan (7s)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+  return _methods._mean(a, axis=axis, dtype=dtype,
+  ret = ret.dtype.type(ret / rcount)
+solder K=32 seed=4 mlp    FNR=0.355 AUROC=0.959 D=nan DR=nan ND=nan (4s)

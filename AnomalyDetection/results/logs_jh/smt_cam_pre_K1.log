@@ -1,0 +1,12 @@
+pre K=1 seed=0: 데이터 12s (시험 불량 300, pool 186)
+  DevNet Grad-CAM 79s
+  위치 모델 327s
+  devnet test n=300 mass_in=0.61 top_in=0.59 peak_in=0.54 area=0.43 flagged=0.79
+  devnet D    n=186 mass_in=0.57 top_in=0.55 peak_in=0.54 area=0.40 flagged=0.80
+  devnet DR   n=186 mass_in=0.35 top_in=0.39 peak_in=0.25 area=0.40 flagged=0.39
+  devnet ND   n=186 mass_in=0.60 top_in=0.57 peak_in=0.60 area=0.40 flagged=0.65
+  seg    test n=300 mass_in=0.75 top_in=0.70 peak_in=0.78 area=0.43 flagged=0.80
+  seg    D    n=186 mass_in=0.70 top_in=0.66 peak_in=0.75 area=0.40 flagged=0.75
+  seg    DR   n=186 mass_in=0.38 top_in=0.41 peak_in=0.29 area=0.40 flagged=0.47
+  seg    ND   n=186 mass_in=0.75 top_in=0.69 peak_in=0.84 area=0.40 flagged=0.77
+  결과: AnomalyDetection/results/smt/cam_K1_seed0_pre.csv | 그림: Dataset/aihub_smt/cam/K1_seed0_pre.jpg
