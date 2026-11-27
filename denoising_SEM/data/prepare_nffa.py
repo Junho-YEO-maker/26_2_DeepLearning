@@ -34,36 +34,47 @@ def download_nffa_subset(data_dir, max_images=200):
     """
     import subprocess
 
-    zip_url = "https://zenodo.org/records/7615060/files/SEM.zip?download=1"
-    zip_path = os.path.join(data_dir, "SEM.zip")
+    tar_url = "https://zenodo.org/records/7615060/files/Neurobiology.tar?download=1"
+    tar_path = os.path.join(data_dir, "Neurobiology.tar")
     extract_dir = os.path.join(data_dir, "SEM_raw")
 
     os.makedirs(data_dir, exist_ok=True)
 
-    if os.path.exists(extract_dir) and len(glob.glob(os.path.join(extract_dir, "**", "*.tif"), recursive=True)) > 0:
-        print(f"[INFO] Raw SEM data already exists at {extract_dir}")
+    # Check if already extracted
+    img_exts = ["*.tif", "*.tiff", "*.png", "*.jpg", "*.jpeg", "*.bmp"]
+    existing = []
+    for ext in img_exts:
+        existing.extend(glob.glob(os.path.join(extract_dir, "**", ext), recursive=True))
+    if len(existing) > 0:
+        print(f"[INFO] Raw SEM data already exists at {extract_dir} ({len(existing)} images)")
         return extract_dir
 
-    # Try downloading
-    if not os.path.exists(zip_path):
+    # Remove any bad previous download
+    bad_zip = os.path.join(data_dir, "SEM.zip")
+    if os.path.exists(bad_zip):
+        os.remove(bad_zip)
+        print(f"[INFO] Removed bad previous download: {bad_zip}")
+
+    # Download
+    if not os.path.exists(tar_path):
         print(f"[INFO] Downloading NFFA-EUROPE SEM dataset from Zenodo...")
-        print(f"  URL: {zip_url}")
+        print(f"  URL: {tar_url}")
         print(f"  This may take a few minutes (~450MB)...")
 
         try:
             result = subprocess.run(
-                ["wget", "-q", "--show-progress", "-O", zip_path, zip_url],
-                timeout=600,  # 10 min timeout
+                ["wget", "-q", "--show-progress", "-O", tar_path, tar_url],
+                timeout=600,
                 capture_output=False
             )
             if result.returncode != 0:
                 raise RuntimeError("wget failed")
         except Exception as e:
-            print(f"[WARN] Download failed: {e}")
+            print(f"[WARN] wget failed: {e}")
             print(f"[INFO] Trying curl...")
             try:
                 result = subprocess.run(
-                    ["curl", "-L", "-o", zip_path, zip_url],
+                    ["curl", "-L", "-o", tar_path, tar_url],
                     timeout=600,
                     capture_output=False
                 )
@@ -73,20 +84,23 @@ def download_nffa_subset(data_dir, max_images=200):
                 print(f"[ERROR] Both wget and curl failed.")
                 print(f"  Please download manually:")
                 print(f"  1. Go to https://zenodo.org/records/7615060")
-                print(f"  2. Download SEM.zip")
-                print(f"  3. Place it at: {zip_path}")
+                print(f"  2. Download Neurobiology.tar")
+                print(f"  3. Place it at: {tar_path}")
                 sys.exit(1)
 
-    # Extract
-    print(f"[INFO] Extracting {zip_path}...")
+    # Verify download is a valid tar
+    if os.path.getsize(tar_path) < 1_000_000:
+        print(f"[ERROR] Downloaded file too small ({os.path.getsize(tar_path)} bytes) - likely HTML redirect")
+        os.remove(tar_path)
+        sys.exit(1)
+
+    # Extract tar
+    print(f"[INFO] Extracting {tar_path}...")
     os.makedirs(extract_dir, exist_ok=True)
 
-    try:
-        subprocess.run(["unzip", "-q", "-o", zip_path, "-d", extract_dir], check=True)
-    except Exception:
-        import zipfile
-        with zipfile.ZipFile(zip_path, 'r') as zf:
-            zf.extractall(extract_dir)
+    import tarfile
+    with tarfile.open(tar_path, 'r') as tf:
+        tf.extractall(extract_dir)
 
     print(f"[INFO] Extraction complete.")
     return extract_dir
